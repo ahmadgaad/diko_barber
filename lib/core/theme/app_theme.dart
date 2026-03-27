@@ -1,25 +1,34 @@
 import 'package:flutter/material.dart';
 
 import 'app_colors.dart';
+import 'app_text_theme.dart';
 
 abstract final class AppTheme {
-  static ThemeData get light => ThemeData(
+  static ThemeData light(Locale locale) {
+    final base = ThemeData(brightness: Brightness.light);
+    return ThemeData(
+      brightness: Brightness.light,
+      scaffoldBackgroundColor: Colors.white,
+      colorScheme: ColorScheme.fromSeed(
+        seedColor: splashOrange,
         brightness: Brightness.light,
-        scaffoldBackgroundColor: Colors.white,
-        colorScheme: ColorScheme.fromSeed(
-          seedColor: splashOrange,
-          brightness: Brightness.light,
-        ),
-        useMaterial3: true,
-      );
+      ),
+      textTheme: AppTextTheme.forLocale(locale, base.textTheme),
+      useMaterial3: true,
+    );
+  }
 
-  static ThemeData get dark => ThemeData(
+  static ThemeData dark(Locale locale) {
+    final base = ThemeData(brightness: Brightness.dark);
+    return ThemeData(
+      brightness: Brightness.dark,
+      scaffoldBackgroundColor: splashDark,
+      colorScheme: ColorScheme.fromSeed(
+        seedColor: splashOrange,
         brightness: Brightness.dark,
-        scaffoldBackgroundColor: splashDark,
-        colorScheme: ColorScheme.fromSeed(
-          seedColor: splashOrange,
-          brightness: Brightness.dark,
-        ),
-        useMaterial3: true,
-      );
+      ),
+      textTheme: AppTextTheme.forLocale(locale, base.textTheme),
+      useMaterial3: true,
+    );
+  }
 }
