@@ -1,3 +1,22 @@
 {
-  "app_name": "Diko Barber"
+  "app_name": "Diko Barber",
+  "onboarding": {
+    "language_toggle": "العربية",
+    "screen_1": {
+      "heading": "Book Your Look in Seconds",
+      "body": "Choose your barber, pick your service, and lock your time — all in one place."
+    },
+    "screen_2": {
+      "heading": "Pick Your Barber",
+      "body": "Browse available barbers, check their schedules, and book the time that fits you best."
+    },
+    "screen_3": {
+      "heading": "All Services in One Place",
+      "body": "From quick trims to full packages — discover everything your barbershop offers."
+    },
+    "next": "Next",
+    "skip": "Skip",
+    "sign_in": "Sign in",
+    "sign_up": "Sign up"
+  }
 }

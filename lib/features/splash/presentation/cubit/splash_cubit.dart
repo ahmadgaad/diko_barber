@@ -12,8 +12,8 @@ class SplashCubit extends Cubit<SplashState> {
 
   void startAnimation() => emit(const SplashAnimating());
 
-  void onAnimationComplete() {
-    final target = _completeSplashUseCase();
+  Future<void> onAnimationComplete() async {
+    final target = await _completeSplashUseCase();
     emit(SplashComplete(navigationTarget: target));
   }
 }

@@ -63,7 +63,8 @@ class _SplashAnimationViewState extends State<SplashAnimationView>
   void _onAnimationStatus(AnimationStatus status) async {
     await Future.delayed(const Duration(milliseconds: 500));
     if (status == AnimationStatus.completed && mounted) {
-      context.read<SplashCubit>().onAnimationComplete();
+      // sl<SharedPrefCacheClient>().remove(CacheKeys.onboardingSeen);
+      await context.read<SplashCubit>().onAnimationComplete();
     }
   }
 

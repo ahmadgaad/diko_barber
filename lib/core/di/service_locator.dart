@@ -4,6 +4,15 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:diko_barber/core/cache/secure_storage_cache_client.dart';
 import 'package:diko_barber/core/cache/shared_pref_cache_client.dart';
+import 'package:diko_barber/core/locale/data/locale_repository_impl.dart';
+import 'package:diko_barber/core/locale/domain/locale_repository.dart';
+import 'package:diko_barber/core/locale/domain/use_cases/get_locale_use_case.dart';
+import 'package:diko_barber/core/locale/domain/use_cases/save_locale_use_case.dart';
+import 'package:diko_barber/features/onboarding/data/repositories/onboarding_repository_impl.dart';
+import 'package:diko_barber/features/onboarding/domain/repositories/onboarding_repository.dart';
+import 'package:diko_barber/features/onboarding/domain/use_cases/check_onboarding_use_case.dart';
+import 'package:diko_barber/features/onboarding/domain/use_cases/complete_onboarding_use_case.dart';
+import 'package:diko_barber/features/onboarding/presentation/cubit/onboarding_cubit.dart';
 import 'package:diko_barber/features/splash/domain/use_cases/complete_splash_use_case.dart';
 import 'package:diko_barber/features/splash/presentation/cubit/splash_cubit.dart';
 
@@ -25,12 +34,37 @@ Future<void> setupServiceLocator() async {
     () => SecureStorageCacheClient(sl<FlutterSecureStorage>()),
   );
 
+  // ─── Repositories ─────────────────────────────────────────────────────────
+  sl.registerLazySingleton<LocaleRepository>(
+    () => LocaleRepositoryImpl(sl<SharedPrefCacheClient>()),
+  );
+  sl.registerLazySingleton<OnboardingRepository>(
+    () => OnboardingRepositoryImpl(sl<SharedPrefCacheClient>()),
+  );
+
   // ─── Use Cases ────────────────────────────────────────────────────────────
+  sl.registerLazySingleton<GetLocaleUseCase>(
+    () => GetLocaleUseCase(sl<LocaleRepository>()),
+  );
+  sl.registerLazySingleton<SaveLocaleUseCase>(
+    () => SaveLocaleUseCase(sl<LocaleRepository>()),
+  );
+  sl.registerLazySingleton<CheckOnboardingUseCase>(
+    () => CheckOnboardingUseCase(sl<OnboardingRepository>()),
+  );
+  sl.registerLazySingleton<CompleteOnboardingUseCase>(
+    () => CompleteOnboardingUseCase(sl<OnboardingRepository>()),
+  );
   sl.registerLazySingleton<CompleteSplashUseCase>(
-    () => const CompleteSplashUseCase(),
+    () => CompleteSplashUseCase(sl<OnboardingRepository>()),
   );
 
   // ─── Cubits ───────────────────────────────────────────────────────────────
+  sl.registerFactory<OnboardingCubit>(
+    () => OnboardingCubit(
+      completeOnboardingUseCase: sl<CompleteOnboardingUseCase>(),
+    ),
+  );
   sl.registerFactory<SplashCubit>(
     () => SplashCubit(completeSplashUseCase: sl<CompleteSplashUseCase>()),
   );
