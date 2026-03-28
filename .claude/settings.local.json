@@ -20,7 +20,8 @@
       "Bash(git add:*)",
       "mcp__figma-remote-mcp__get_design_context",
       "Bash(git commit -m \"feat\\(auth\\): add sign-in screen with design system tokens:*)",
-      "Bash(git push:*)"
+      "Bash(git push:*)",
+      "Bash(git commit -m \"feat\\(design-system\\): migrate colors to AppColors ThemeExtension:*)"
     ]
   }
 }
