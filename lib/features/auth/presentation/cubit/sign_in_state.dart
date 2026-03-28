@@ -58,10 +58,12 @@ final class SignInFormState extends SignInState {
 }
 
 final class SignInSuccess extends SignInState {
-  const SignInSuccess();
+  const SignInSuccess({required this.email});
+
+  final String email;
 
   @override
-  List<Object?> get props => [];
+  List<Object?> get props => [email];
 }
 
 final class SignInNavigate extends SignInState {

@@ -1,6 +1,3 @@
-import 'package:diko_barber/core/cache/cache_keys.dart';
-import 'package:diko_barber/core/cache/shared_pref_cache_client.dart';
-import 'package:diko_barber/core/di/service_locator.dart';
 import 'package:diko_barber/core/resources/image_resources.dart';
 import 'package:diko_barber/core/theme/app_colors.dart';
 import 'package:diko_barber/features/splash/presentation/components/color_expansion_painter.dart';
@@ -66,7 +63,7 @@ class _SplashAnimationViewState extends State<SplashAnimationView>
   void _onAnimationStatus(AnimationStatus status) async {
     await Future.delayed(const Duration(milliseconds: 500));
     if (status == AnimationStatus.completed && mounted) {
-      sl<SharedPrefCacheClient>().remove(CacheKeys.onboardingSeen);
+      // sl<SharedPrefCacheClient>().remove(CacheKeys.onboardingSeen);
       await context.read<SplashCubit>().onAnimationComplete();
     }
   }

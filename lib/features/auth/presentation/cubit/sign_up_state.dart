@@ -69,10 +69,12 @@ final class SignUpFormState extends SignUpState {
 }
 
 final class SignUpSuccess extends SignUpState {
-  const SignUpSuccess();
+  const SignUpSuccess({required this.email});
+
+  final String email;
 
   @override
-  List<Object?> get props => [];
+  List<Object?> get props => [email];
 }
 
 final class SignUpNavigate extends SignUpState {
