@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 import 'package:diko_barber/features/auth/presentation/screens/sign_in_screen.dart';
+import 'package:diko_barber/features/auth/presentation/screens/sign_up_screen.dart';
 import 'package:diko_barber/features/onboarding/presentation/screens/onboarding_screen.dart';
 import 'package:diko_barber/features/splash/presentation/screens/splash_screen.dart';
 import 'app_routes.dart';
@@ -27,7 +28,7 @@ final appRouter = GoRouter(
     ),
     GoRoute(
       path: AppRoutes.signup,
-      builder: (context, state) => const _SignupPlaceholder(),
+      builder: (context, state) => const SignUpScreen(),
     ),
   ],
 );
@@ -38,14 +39,5 @@ class _HomePlaceholder extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const Scaffold(body: Center(child: Text('Coming Soon')));
-  }
-}
-
-class _SignupPlaceholder extends StatelessWidget {
-  const _SignupPlaceholder();
-
-  @override
-  Widget build(BuildContext context) {
-    return const Scaffold(body: Center(child: Text('Sign Up — Coming Soon')));
   }
 }

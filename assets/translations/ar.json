@@ -34,6 +34,15 @@
     "sign_up": "إنشاء حساب",
     "email_required": "البريد الإلكتروني مطلوب",
     "email_invalid": "أدخل بريدًا إلكترونيًا صالحًا",
-    "password_required": "كلمة المرور مطلوبة"
+    "password_required": "كلمة المرور مطلوبة",
+    "create_account": "إنشاء حساب",
+    "sign_up_subtitle": "سجّل حسابك لحجز إطلالتك القادمة",
+    "full_name_label": "الاسم الكامل",
+    "full_name_hint": "أدخل اسمك",
+    "full_name_required": "الاسم الكامل مطلوب",
+    "password_min_length": "يجب أن تكون كلمة المرور 8 أحرف على الأقل",
+    "password_hint_min": "8 أحرف على الأقل",
+    "have_account": "هل لديك حساب بالفعل؟",
+    "sign_in_link": "تسجيل الدخول"
   }
 }
