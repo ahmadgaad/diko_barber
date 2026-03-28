@@ -17,7 +17,10 @@
       "Bash(curl -fL \"https://fonts.gstatic.com/s/ibmplexsans/v23/zYXGKVElMYYaJe8bpLHnCwDKr932-G7dytD-Dmu1swZSAXcomDVmadSDNF5zAA.ttf\" -o \"IBMPlexSans-SemiBold.ttf\")",
       "Bash(curl -fL \"https://fonts.gstatic.com/s/ibmplexsans/v23/zYXGKVElMYYaJe8bpLHnCwDKr932-G7dytD-Dmu1swZSAXcomDVmadSDDV5zAA.ttf\" -o \"IBMPlexSans-Bold.ttf\")",
       "Bash(curl -fL \"https://fonts.gstatic.com/s/ibmplexsansarabic/v15/Qw3CZRtWPQCuHme67tEYUIx3Kh0PHR9N6bs6.ttf\" -o \"IBMPlexSansArabic-Regular.ttf\")",
-      "Bash(git add:*)"
+      "Bash(git add:*)",
+      "mcp__figma-remote-mcp__get_design_context",
+      "Bash(git commit -m \"feat\\(auth\\): add sign-in screen with design system tokens:*)",
+      "Bash(git push:*)"
     ]
   }
 }
