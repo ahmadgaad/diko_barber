@@ -43,6 +43,11 @@
     "password_min_length": "يجب أن تكون كلمة المرور 8 أحرف على الأقل",
     "password_hint_min": "8 أحرف على الأقل",
     "have_account": "هل لديك حساب بالفعل؟",
-    "sign_in_link": "تسجيل الدخول"
+    "sign_in_link": "تسجيل الدخول",
+    "verify_email_title": "تحقق من بريدك الإلكتروني",
+    "verify_email_subtitle": "لقد أرسلنا رمزًا مكونًا من 4 أرقام للتحقق من بريدك الإلكتروني {}",
+    "resend_code": "إعادة إرسال الرمز",
+    "resend_code_action": "إعادة الإرسال",
+    "otp_invalid": "أدخل الرمز الصحيح، من فضلك."
   }
 }

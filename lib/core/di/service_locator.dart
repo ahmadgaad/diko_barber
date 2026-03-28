@@ -17,8 +17,10 @@ import 'package:diko_barber/features/auth/data/repositories/auth_repository_impl
 import 'package:diko_barber/features/auth/domain/repositories/auth_repository.dart';
 import 'package:diko_barber/features/auth/domain/use_cases/sign_in_use_case.dart';
 import 'package:diko_barber/features/auth/domain/use_cases/sign_up_use_case.dart';
+import 'package:diko_barber/features/auth/domain/use_cases/verify_otp_use_case.dart';
 import 'package:diko_barber/features/auth/presentation/cubit/sign_in_cubit.dart';
 import 'package:diko_barber/features/auth/presentation/cubit/sign_up_cubit.dart';
+import 'package:diko_barber/features/auth/presentation/cubit/verify_otp_cubit.dart';
 import 'package:diko_barber/features/splash/domain/use_cases/complete_splash_use_case.dart';
 import 'package:diko_barber/features/splash/presentation/cubit/splash_cubit.dart';
 
@@ -73,6 +75,9 @@ Future<void> setupServiceLocator() async {
   sl.registerLazySingleton<SignUpUseCase>(
     () => SignUpUseCase(sl<AuthRepository>()),
   );
+  sl.registerLazySingleton<VerifyOtpUseCase>(
+    () => VerifyOtpUseCase(sl<AuthRepository>()),
+  );
 
   // ─── Cubits ───────────────────────────────────────────────────────────────
   sl.registerFactory<OnboardingCubit>(
@@ -88,5 +93,11 @@ Future<void> setupServiceLocator() async {
   );
   sl.registerFactory<SignUpCubit>(
     () => SignUpCubit(signUpUseCase: sl<SignUpUseCase>()),
+  );
+  sl.registerFactoryParam<VerifyOtpCubit, String, void>(
+    (email, _) => VerifyOtpCubit(
+      verifyOtpUseCase: sl<VerifyOtpUseCase>(),
+      email: email,
+    ),
   );
 }

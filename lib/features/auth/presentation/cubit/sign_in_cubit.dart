@@ -62,7 +62,7 @@ class SignInCubit extends Cubit<SignInState> {
         email: _formState.email,
         password: _formState.password,
       );
-      emit(const SignInSuccess());
+      emit(SignInSuccess(email: _formState.email));
     } on Exception {
       emit(_formState.copyWith(isSubmitting: false));
     }

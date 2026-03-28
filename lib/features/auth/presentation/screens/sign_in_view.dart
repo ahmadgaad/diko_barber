@@ -1,6 +1,7 @@
 import 'package:diko_barber/core/components/app_divider_with_text.dart';
 import 'package:diko_barber/core/components/app_gradient_button.dart';
 import 'package:diko_barber/core/components/app_text_form_field.dart';
+import 'package:diko_barber/core/router/app_routes.dart';
 import 'package:diko_barber/core/theme/app_colors.dart';
 import 'package:diko_barber/features/auth/presentation/components/sign_in_footer.dart';
 import 'package:diko_barber/features/auth/presentation/components/sign_in_header.dart';
@@ -38,8 +39,8 @@ class _SignInViewState extends State<SignInView> {
         switch (state) {
           case SignInNavigate(:final target):
             context.go(target);
-          case SignInSuccess():
-            context.go('/home');
+          case SignInSuccess(:final email):
+            context.push(AppRoutes.verifyOtp, extra: email);
           case SignInFormState():
             break;
         }
