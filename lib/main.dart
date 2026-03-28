@@ -8,7 +8,7 @@ import 'package:diko_barber/diko_barber_app.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await EasyLocalization.ensureInitialized();
-  setupServiceLocator();
+  await setupServiceLocator();
   runApp(
     EasyLocalization(
       supportedLocales: AppLocales.supported,
