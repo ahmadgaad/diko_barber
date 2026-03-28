@@ -34,6 +34,15 @@
     "sign_up": "Sign Up",
     "email_required": "Email is required",
     "email_invalid": "Enter a valid email address",
-    "password_required": "Password is required"
+    "password_required": "Password is required",
+    "create_account": "Create Account",
+    "sign_up_subtitle": "Sign up to book your next look",
+    "full_name_label": "Full Name",
+    "full_name_hint": "Enter your name",
+    "full_name_required": "Full name is required",
+    "password_min_length": "Password must be at least 8 characters",
+    "password_hint_min": "At least 8 characters",
+    "have_account": "Already have an account?",
+    "sign_in_link": "Sign In"
   }
 }

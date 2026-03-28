@@ -9,4 +9,14 @@ class AuthRepositoryImpl implements AuthRepository {
     // TODO: Replace with actual API call
     await Future<void>.delayed(const Duration(seconds: 1));
   }
+
+  @override
+  Future<void> signUp({
+    required String fullName,
+    required String email,
+    required String password,
+  }) async {
+    // TODO: Replace with actual API call
+    await Future<void>.delayed(const Duration(seconds: 1));
+  }
 }
