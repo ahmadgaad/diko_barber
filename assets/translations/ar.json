@@ -1,3 +1,53 @@
 {
-  "app_name": "ديكو باربر"
+  "app_name": "ديكو باربر",
+  "onboarding": {
+    "language_toggle": "English",
+    "screen_1": {
+      "heading": "احجز إطلالتك في ثوانٍ",
+      "body": "اختر حلاقك، حدد خدمتك، واحجز موعدك — كل ذلك في مكان واحد."
+    },
+    "screen_2": {
+      "heading": "اختر حلاقك",
+      "body": "تصفح الحلاقين المتاحين، اطلع على جداولهم، واحجز الوقت الذي يناسبك."
+    },
+    "screen_3": {
+      "heading": "جميع الخدمات في مكان واحد",
+      "body": "من القصات السريعة إلى الباقات الكاملة — اكتشف كل ما يقدمه صالون الحلاقة."
+    },
+    "next": "التالي",
+    "skip": "تخطي",
+    "sign_in": "تسجيل الدخول",
+    "sign_up": "إنشاء حساب"
+  },
+  "auth": {
+    "language_toggle": "English",
+    "welcome_back": "مرحبًا بعودتك",
+    "sign_in_subtitle": "سجّل دخولك لحجز إطلالتك القادمة",
+    "email_label": "البريد الإلكتروني",
+    "email_hint": "أدخل بريدك الإلكتروني",
+    "password_label": "كلمة المرور",
+    "password_hint": "أدخل كلمة المرور",
+    "forgot_password": "هل نسيت كلمة المرور؟",
+    "sign_in": "تسجيل الدخول",
+    "or_continue_with": "أو تابع باستخدام",
+    "no_account": "ليس لديك حساب؟",
+    "sign_up": "إنشاء حساب",
+    "email_required": "البريد الإلكتروني مطلوب",
+    "email_invalid": "أدخل بريدًا إلكترونيًا صالحًا",
+    "password_required": "كلمة المرور مطلوبة",
+    "create_account": "إنشاء حساب",
+    "sign_up_subtitle": "سجّل حسابك لحجز إطلالتك القادمة",
+    "full_name_label": "الاسم الكامل",
+    "full_name_hint": "أدخل اسمك",
+    "full_name_required": "الاسم الكامل مطلوب",
+    "password_min_length": "يجب أن تكون كلمة المرور 8 أحرف على الأقل",
+    "password_hint_min": "8 أحرف على الأقل",
+    "have_account": "هل لديك حساب بالفعل؟",
+    "sign_in_link": "تسجيل الدخول",
+    "verify_email_title": "تحقق من بريدك الإلكتروني",
+    "verify_email_subtitle": "لقد أرسلنا رمزًا مكونًا من 4 أرقام للتحقق من بريدك الإلكتروني {}",
+    "resend_code": "إعادة إرسال الرمز",
+    "resend_code_action": "إعادة الإرسال",
+    "otp_invalid": "أدخل الرمز الصحيح، من فضلك."
+  }
 }
