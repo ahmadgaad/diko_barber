@@ -60,13 +60,11 @@ class _SignInViewState extends State<SignInView> {
   }
 
   Widget _buildContent(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const SignInHeader(),
-        _buildHeadingSection(isDark),
+        _buildHeadingSection(context),
         _buildFormSection(context),
         _buildDividerSection(),
         _buildSocialSection(),
@@ -74,7 +72,9 @@ class _SignInViewState extends State<SignInView> {
     );
   }
 
-  Widget _buildHeadingSection(bool isDark) {
+  Widget _buildHeadingSection(BuildContext context) {
+    final colors = AppColors.of(context);
+
     return Padding(
       padding: EdgeInsets.fromLTRB(16.w, 32.h, 16.w, 16.h),
       child: Column(
@@ -85,7 +85,7 @@ class _SignInViewState extends State<SignInView> {
             style: TextStyle(
               fontSize: 24.sp,
               fontWeight: FontWeight.w600,
-              color: isDark ? neutral50 : neutral900,
+              color: colors.neutral900,
             ),
           ),
           SizedBox(height: 8.h),
@@ -94,7 +94,7 @@ class _SignInViewState extends State<SignInView> {
             style: TextStyle(
               fontSize: 16.sp,
               fontWeight: FontWeight.w400,
-              color: isDark ? neutral200 : neutral700,
+              color: colors.neutral700,
             ),
           ),
         ],
@@ -103,6 +103,8 @@ class _SignInViewState extends State<SignInView> {
   }
 
   Widget _buildFormSection(BuildContext context) {
+    final colors = AppColors.of(context);
+
     return BlocBuilder<SignInCubit, SignInState>(
       buildWhen: (previous, current) => current is SignInFormState,
       builder: (context, state) {
@@ -145,7 +147,7 @@ class _SignInViewState extends State<SignInView> {
                         ? Icons.visibility_outlined
                         : Icons.visibility_off_outlined,
                     size: 20.w,
-                    color: neutral500,
+                    color: colors.neutral500,
                   ),
                 ),
               ),
@@ -157,9 +159,7 @@ class _SignInViewState extends State<SignInView> {
                   style: TextStyle(
                     fontSize: 14.sp,
                     fontWeight: FontWeight.w500,
-                    color: Theme.of(context).brightness == Brightness.dark
-                        ? neutral50
-                        : neutral900,
+                    color: colors.neutral900,
                   ),
                 ),
               ),

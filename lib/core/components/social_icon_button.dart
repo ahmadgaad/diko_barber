@@ -17,7 +17,7 @@ class SocialIconButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final colors = AppColors.of(context);
 
     return GestureDetector(
       onTap: onTap,
@@ -26,9 +26,7 @@ class SocialIconButton extends StatelessWidget {
         height: 48.h,
         decoration: BoxDecoration(
           shape: BoxShape.circle,
-          border: Border.all(
-            color: isDark ? neutral600 : neutral300,
-          ),
+          border: Border.all(color: colors.neutral300),
         ),
         alignment: Alignment.center,
         child: SvgPicture.asset(

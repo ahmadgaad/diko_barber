@@ -15,6 +15,7 @@ abstract final class AppTheme {
       ),
       textTheme: AppTextTheme.forLocale(locale, base.textTheme),
       useMaterial3: true,
+      extensions: const [AppColors.light],
     );
   }
 
@@ -29,6 +30,7 @@ abstract final class AppTheme {
       ),
       textTheme: AppTextTheme.forLocale(locale, base.textTheme),
       useMaterial3: true,
+      extensions: const [AppColors.dark],
     );
   }
 }

@@ -10,7 +10,8 @@ class SignInFooter extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final colors = AppColors.of(context);
+
     return Padding(
       padding: EdgeInsets.only(
         top: 16.h,
@@ -26,7 +27,7 @@ class SignInFooter extends StatelessWidget {
             style: TextStyle(
               fontSize: 14.sp,
               fontWeight: FontWeight.w400,
-              color: isDark ? neutral300 : neutral600,
+              color: colors.neutral600,
             ),
           ),
           SizedBox(width: 4.w),

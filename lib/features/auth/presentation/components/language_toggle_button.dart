@@ -21,8 +21,7 @@ class LanguageToggleButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-    final color = isDark ? neutral50 : neutral900;
+    final color = AppColors.of(context).neutral900;
 
     return TextButton.icon(
       onPressed: () => _toggleLocale(context),

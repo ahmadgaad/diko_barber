@@ -30,25 +30,25 @@ class AppTextFormField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final colors = AppColors.of(context);
     final hasError = errorText != null;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisSize: MainAxisSize.min,
       children: [
-        _buildLabel(isDark),
+        _buildLabel(colors),
         SizedBox(height: 8.h),
-        _buildTextField(isDark, hasError),
+        _buildTextField(colors, hasError),
         if (hasError) ...[
           SizedBox(height: 8.h),
-          _buildErrorText(),
+          _buildErrorText(colors),
         ],
       ],
     );
   }
 
-  Widget _buildLabel(bool isDark) {
+  Widget _buildLabel(AppColors colors) {
     return Row(
       children: [
         Text(
@@ -56,7 +56,7 @@ class AppTextFormField extends StatelessWidget {
           style: TextStyle(
             fontSize: 16.sp,
             fontWeight: FontWeight.w500,
-            color: isDark ? neutral50 : neutral900,
+            color: colors.neutral900,
           ),
         ),
         if (isRequired) ...[
@@ -66,7 +66,7 @@ class AppTextFormField extends StatelessWidget {
             style: TextStyle(
               fontSize: 16.sp,
               fontWeight: FontWeight.w400,
-              color: error500,
+              color: colors.error500,
             ),
           ),
         ],
@@ -74,12 +74,8 @@ class AppTextFormField extends StatelessWidget {
     );
   }
 
-  Widget _buildTextField(bool isDark, bool hasError) {
-    final borderColor = hasError
-        ? error500
-        : isDark
-            ? neutral600
-            : neutral300;
+  Widget _buildTextField(AppColors colors, bool hasError) {
+    final borderColor = hasError ? colors.error500 : colors.neutral300;
 
     return TextField(
       controller: controller,
@@ -90,18 +86,18 @@ class AppTextFormField extends StatelessWidget {
       style: TextStyle(
         fontSize: 16.sp,
         fontWeight: FontWeight.w400,
-        color: isDark ? neutral50 : neutral900,
+        color: colors.neutral900,
       ),
       decoration: InputDecoration(
         hintText: hint,
         hintStyle: TextStyle(
           fontSize: 16.sp,
           fontWeight: FontWeight.w400,
-          color: neutral500,
+          color: colors.neutral500,
         ),
         suffixIcon: suffixIcon,
         filled: true,
-        fillColor: isDark ? Colors.transparent : neutral50,
+        fillColor: colors.neutral50,
         contentPadding: EdgeInsets.symmetric(
           horizontal: 20.w,
           vertical: 14.h,
@@ -116,19 +112,20 @@ class AppTextFormField extends StatelessWidget {
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(999.r),
-          borderSide: BorderSide(color: hasError ? error500 : splashOrange),
+          borderSide:
+              BorderSide(color: hasError ? colors.error500 : splashOrange),
         ),
       ),
     );
   }
 
-  Widget _buildErrorText() {
+  Widget _buildErrorText(AppColors colors) {
     return Text(
       errorText!,
       style: TextStyle(
         fontSize: 14.sp,
         fontWeight: FontWeight.w400,
-        color: error500,
+        color: colors.error500,
       ),
     );
   }

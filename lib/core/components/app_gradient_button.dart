@@ -16,6 +16,8 @@ class AppGradientButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colors = AppColors.of(context);
+
     return Directionality(
       textDirection: TextDirection.ltr,
       child: GestureDetector(
@@ -27,12 +29,12 @@ class AppGradientButton extends StatelessWidget {
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(999.r),
             gradient: enabled ? buttonGradient : null,
-            color: enabled ? null : neutral200,
+            color: enabled ? null : colors.neutral200,
           ),
           child: Text(
             label,
             style: TextStyle(
-              color: enabled ? Colors.white : neutral600,
+              color: enabled ? Colors.white : colors.neutral600,
               fontSize: 16.sp,
               fontWeight: FontWeight.w500,
             ),

@@ -9,12 +9,11 @@ class AppDividerWithText extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-    final dividerColor = isDark ? neutral600 : neutral300;
+    final colors = AppColors.of(context);
 
     return Row(
       children: [
-        Expanded(child: Divider(color: dividerColor, height: 1)),
+        Expanded(child: Divider(color: colors.neutral300, height: 1)),
         Padding(
           padding: EdgeInsets.symmetric(horizontal: 12.w),
           child: Text(
@@ -22,11 +21,11 @@ class AppDividerWithText extends StatelessWidget {
             style: TextStyle(
               fontSize: 14.sp,
               fontWeight: FontWeight.w400,
-              color: isDark ? neutral300 : neutral600,
+              color: colors.neutral600,
             ),
           ),
         ),
-        Expanded(child: Divider(color: dividerColor, height: 1)),
+        Expanded(child: Divider(color: colors.neutral300, height: 1)),
       ],
     );
   }
