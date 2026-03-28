@@ -18,5 +18,22 @@
     "skip": "تخطي",
     "sign_in": "تسجيل الدخول",
     "sign_up": "إنشاء حساب"
+  },
+  "auth": {
+    "language_toggle": "English",
+    "welcome_back": "مرحبًا بعودتك",
+    "sign_in_subtitle": "سجّل دخولك لحجز إطلالتك القادمة",
+    "email_label": "البريد الإلكتروني",
+    "email_hint": "أدخل بريدك الإلكتروني",
+    "password_label": "كلمة المرور",
+    "password_hint": "أدخل كلمة المرور",
+    "forgot_password": "هل نسيت كلمة المرور؟",
+    "sign_in": "تسجيل الدخول",
+    "or_continue_with": "أو تابع باستخدام",
+    "no_account": "ليس لديك حساب؟",
+    "sign_up": "إنشاء حساب",
+    "email_required": "البريد الإلكتروني مطلوب",
+    "email_invalid": "أدخل بريدًا إلكترونيًا صالحًا",
+    "password_required": "كلمة المرور مطلوبة"
   }
 }

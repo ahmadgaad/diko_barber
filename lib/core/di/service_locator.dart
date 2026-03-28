@@ -13,6 +13,10 @@ import 'package:diko_barber/features/onboarding/domain/repositories/onboarding_r
 import 'package:diko_barber/features/onboarding/domain/use_cases/check_onboarding_use_case.dart';
 import 'package:diko_barber/features/onboarding/domain/use_cases/complete_onboarding_use_case.dart';
 import 'package:diko_barber/features/onboarding/presentation/cubit/onboarding_cubit.dart';
+import 'package:diko_barber/features/auth/data/repositories/auth_repository_impl.dart';
+import 'package:diko_barber/features/auth/domain/repositories/auth_repository.dart';
+import 'package:diko_barber/features/auth/domain/use_cases/sign_in_use_case.dart';
+import 'package:diko_barber/features/auth/presentation/cubit/sign_in_cubit.dart';
 import 'package:diko_barber/features/splash/domain/use_cases/complete_splash_use_case.dart';
 import 'package:diko_barber/features/splash/presentation/cubit/splash_cubit.dart';
 
@@ -41,6 +45,9 @@ Future<void> setupServiceLocator() async {
   sl.registerLazySingleton<OnboardingRepository>(
     () => OnboardingRepositoryImpl(sl<SharedPrefCacheClient>()),
   );
+  sl.registerLazySingleton<AuthRepository>(
+    () => AuthRepositoryImpl(),
+  );
 
   // ─── Use Cases ────────────────────────────────────────────────────────────
   sl.registerLazySingleton<GetLocaleUseCase>(
@@ -58,6 +65,9 @@ Future<void> setupServiceLocator() async {
   sl.registerLazySingleton<CompleteSplashUseCase>(
     () => CompleteSplashUseCase(sl<OnboardingRepository>()),
   );
+  sl.registerLazySingleton<SignInUseCase>(
+    () => SignInUseCase(sl<AuthRepository>()),
+  );
 
   // ─── Cubits ───────────────────────────────────────────────────────────────
   sl.registerFactory<OnboardingCubit>(
@@ -67,5 +77,8 @@ Future<void> setupServiceLocator() async {
   );
   sl.registerFactory<SplashCubit>(
     () => SplashCubit(completeSplashUseCase: sl<CompleteSplashUseCase>()),
+  );
+  sl.registerFactory<SignInCubit>(
+    () => SignInCubit(signInUseCase: sl<SignInUseCase>()),
   );
 }
