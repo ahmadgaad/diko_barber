@@ -6,6 +6,6 @@ class AppLocales {
   static const translationsPath = 'assets/translations';
   static const en = Locale('en');
   static const ar = Locale('ar');
-  static const fallback = en;
+  static const fallback = ar;
   static const supported = [en, ar];
 }

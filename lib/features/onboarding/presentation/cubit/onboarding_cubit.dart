@@ -18,7 +18,7 @@ class OnboardingCubit extends Cubit<OnboardingState> {
   void onNext(int totalPages) {
     if (currentPage < totalPages - 1) {
       currentPage++;
-      emit(const OnboardingInitial());
+      emit(OnboardingPageChanged(page: currentPage));
     }
   }
 

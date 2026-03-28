@@ -47,9 +47,10 @@ class _OnboardingViewState extends State<OnboardingView> {
   void _onStateChanged(BuildContext context, OnboardingState state) {
     switch (state) {
       case OnboardingInitial():
-        final cubit = context.read<OnboardingCubit>();
+        break;
+      case OnboardingPageChanged(:final page):
         _pageController.animateToPage(
-          cubit.currentPage,
+          page,
           duration: const Duration(milliseconds: 300),
           curve: Curves.easeInOut,
         );
