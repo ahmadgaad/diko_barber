@@ -1,6 +1,6 @@
 import 'package:diko_barber/core/resources/svg_resources.dart';
 import 'package:diko_barber/core/theme/app_colors.dart';
-import 'package:easy_localization/easy_localization.dart';
+import 'package:easy_localization/easy_localization.dart' hide TextDirection;
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
@@ -10,6 +10,7 @@ class PromoBanner extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isRtl = Directionality.of(context) == TextDirection.rtl;
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
       child: Container(
@@ -26,18 +27,24 @@ class PromoBanner extends StatelessWidget {
               end: 0,
               top: 0,
               bottom: 0,
-              child: SvgPicture.asset(
-                SvgResources.promoTexture,
-                fit: BoxFit.cover,
+              child: Transform.scale(
+                scale: isRtl ? -1 : 1,
+                child: SvgPicture.asset(
+                  SvgResources.promoTexture,
+                  fit: BoxFit.cover,
+                ),
               ),
             ),
             PositionedDirectional(
               start: 0,
               top: 0,
               bottom: 0,
-              child: SvgPicture.asset(
-                SvgResources.promoTexture2,
-                fit: BoxFit.cover,
+              child: Transform.scale(
+                scale: isRtl ? -1 : 1,
+                child: SvgPicture.asset(
+                  SvgResources.promoTexture2,
+                  fit: BoxFit.cover,
+                ),
               ),
             ),
             Padding(

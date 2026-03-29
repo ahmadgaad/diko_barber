@@ -18,7 +18,7 @@ class DikoBarberApp extends StatelessWidget {
         debugShowCheckedModeBanner: false,
         theme: AppTheme.light(locale),
         darkTheme: AppTheme.dark(locale),
-        themeMode: ThemeMode.dark,
+        themeMode: ThemeMode.light,
         routerConfig: appRouter,
         localizationsDelegates: context.localizationDelegates,
         supportedLocales: context.supportedLocales,

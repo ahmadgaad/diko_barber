@@ -13,4 +13,12 @@ abstract class ImageResources {
       'assets/images/service_face_cleanse.png';
   static const String serviceHairStyling =
       'assets/images/service_hair_styling.png';
+
+  // Packages
+  static const String packageBasicGroom =
+      'assets/images/package_basic_groom.jpg';
+  static const String packageFullGroom =
+      'assets/images/package_full_groom.jpg';
+  static const String packageVip = 'assets/images/package_vip.jpg';
+  static const String packageWedding = 'assets/images/package_wedding.jpg';
 }

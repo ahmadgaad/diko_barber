@@ -69,6 +69,15 @@
     "service_beard_trim": "Beard Trim",
     "service_haircut_beard": "Haircut + Beard",
     "service_face_cleanse": "Face Cleanse",
-    "service_hair_styling": "Hair Styling"
+    "service_hair_styling": "Hair Styling",
+    "package_basic_groom": "Basic Groom",
+    "package_basic_groom_desc": "Clean haircut and beard trim.",
+    "package_full_groom": "Full Groom",
+    "package_full_groom_desc": "Complete grooming with wash and styling.",
+    "package_vip": "VIP Experience",
+    "package_vip_desc": "Premium care for hair and skin.",
+    "package_wedding": "Groom Package (Wedding)",
+    "package_wedding_desc": "Full grooming for your special day.",
+    "currency": "EGP"
   }
 }

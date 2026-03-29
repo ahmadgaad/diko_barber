@@ -69,6 +69,15 @@
     "service_beard_trim": "تشذيب اللحية",
     "service_haircut_beard": "قصة + لحية",
     "service_face_cleanse": "تنظيف الوجه",
-    "service_hair_styling": "تصفيف الشعر"
+    "service_hair_styling": "تصفيف الشعر",
+    "package_basic_groom": "الباقة الأساسية",
+    "package_basic_groom_desc": "قصة شعر وتشذيب لحية.",
+    "package_full_groom": "الباقة الكاملة",
+    "package_full_groom_desc": "عناية كاملة مع غسل وتصفيف.",
+    "package_vip": "تجربة VIP",
+    "package_vip_desc": "عناية فاخرة للشعر والبشرة.",
+    "package_wedding": "باقة العريس (زفاف)",
+    "package_wedding_desc": "عناية كاملة ليومك المميز.",
+    "currency": "ج.م"
   }
 }

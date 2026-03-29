@@ -2,6 +2,7 @@ import 'package:diko_barber/core/theme/app_colors.dart';
 import 'package:diko_barber/core/widgets/app_bottom_nav_bar.dart';
 import 'package:diko_barber/features/booking/presentation/screens/booking_view.dart';
 import 'package:diko_barber/features/home/presentation/components/home_header.dart';
+import 'package:diko_barber/features/home/presentation/components/packages_section.dart';
 import 'package:diko_barber/features/home/presentation/components/promo_banner.dart';
 import 'package:diko_barber/features/home/presentation/components/services_section.dart';
 import 'package:diko_barber/features/home/presentation/cubit/home_cubit.dart';
