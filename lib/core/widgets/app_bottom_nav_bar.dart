@@ -58,7 +58,9 @@ class _ActiveTab extends StatelessWidget {
       onTap: onTap,
       child: Padding(
         padding: EdgeInsets.symmetric(horizontal: 14.w),
-        child: Container(
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 300),
+          curve: Curves.easeInOut,
           height: 36.h,
           padding: EdgeInsets.symmetric(horizontal: 12.w),
           decoration: BoxDecoration(
@@ -69,7 +71,7 @@ class _ActiveTab extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             children: [
               SvgPicture.asset(
-                tab.svgPath,
+                tab.filledSvgPath,
                 width: 24.w,
                 height: 24.w,
                 colorFilter: const ColorFilter.mode(
@@ -112,11 +114,16 @@ class _InactiveTab extends StatelessWidget {
         onTap: onTap,
         behavior: HitTestBehavior.opaque,
         child: Center(
-          child: SvgPicture.asset(
-            tab.svgPath,
-            width: 24.w,
-            height: 24.w,
-            colorFilter: ColorFilter.mode(colors.neutral900, BlendMode.srcIn),
+          child: AnimatedSwitcher(
+            duration: const Duration(milliseconds: 250),
+            child: SvgPicture.asset(
+              tab.svgPath,
+              key: ValueKey('inactive_${tab.name}'),
+              width: 24.w,
+              height: 24.w,
+              colorFilter:
+                  ColorFilter.mode(colors.neutral900, BlendMode.srcIn),
+            ),
           ),
         ),
       ),
@@ -131,6 +138,14 @@ extension on HomeTab {
     HomeTab.booking => SvgResources.navCalendar,
     HomeTab.packages => SvgResources.navDashboard,
     HomeTab.profile => SvgResources.navProfile,
+  };
+
+  String get filledSvgPath => switch (this) {
+    HomeTab.home => SvgResources.navHomeFilled,
+    HomeTab.services => SvgResources.navServicesFilled,
+    HomeTab.booking => SvgResources.navCalendarFilled,
+    HomeTab.packages => SvgResources.navDashboardFilled,
+    HomeTab.profile => SvgResources.navProfileFilled,
   };
 
   String get labelKey => switch (this) {

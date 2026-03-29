@@ -1,10 +1,14 @@
 import 'package:diko_barber/core/theme/app_colors.dart';
 import 'package:diko_barber/core/widgets/app_bottom_nav_bar.dart';
+import 'package:diko_barber/features/booking/presentation/screens/booking_view.dart';
 import 'package:diko_barber/features/home/presentation/components/home_header.dart';
 import 'package:diko_barber/features/home/presentation/components/promo_banner.dart';
 import 'package:diko_barber/features/home/presentation/components/services_section.dart';
 import 'package:diko_barber/features/home/presentation/cubit/home_cubit.dart';
 import 'package:diko_barber/features/home/presentation/cubit/home_state.dart';
+import 'package:diko_barber/features/packages/presentation/screens/packages_view.dart';
+import 'package:diko_barber/features/profile/presentation/screens/profile_view.dart';
+import 'package:diko_barber/features/services/presentation/screens/services_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -31,7 +35,21 @@ class _HomeViewState extends State<HomeView> {
           SafeArea(
             child: Column(
               children: [
-                Expanded(child: SingleChildScrollView(child: _buildContent())),
+                Expanded(
+                  child: AnimatedSwitcher(
+                    duration: const Duration(milliseconds: 300),
+                    layoutBuilder: (currentChild, previousChildren) {
+                      return Stack(
+                        alignment: AlignmentDirectional.topStart,
+                        children: [...previousChildren, ?currentChild],
+                      );
+                    },
+                    child: SizedBox.expand(
+                      key: ValueKey(_currentTab),
+                      child: _buildTabContent(),
+                    ),
+                  ),
+                ),
                 AppBottomNavBar(
                   currentTab: _currentTab,
                   onTabSelected: (tab) => setState(() => _currentTab = tab),
@@ -65,19 +83,31 @@ class _HomeViewState extends State<HomeView> {
     );
   }
 
-  Widget _buildContent() {
+  Widget _buildTabContent() {
+    return switch (_currentTab) {
+      HomeTab.home => _buildHomeContent(),
+      HomeTab.services => const ServicesView(),
+      HomeTab.booking => const BookingView(),
+      HomeTab.packages => const PackagesView(),
+      HomeTab.profile => const ProfileView(),
+    };
+  }
+
+  Widget _buildHomeContent() {
     return BlocBuilder<HomeCubit, HomeState>(
       builder: (context, state) {
         final loaded = state as HomeLoaded;
-        return Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            HomeHeader(userName: loaded.userName),
-            const PromoBanner(),
-            const ServicesSection(),
-            const PackagesSection(),
-            SizedBox(height: 16.h),
-          ],
+        return SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              HomeHeader(userName: loaded.userName),
+              const PromoBanner(),
+              const ServicesSection(),
+              const PackagesSection(),
+              SizedBox(height: 16.h),
+            ],
+          ),
         );
       },
     );

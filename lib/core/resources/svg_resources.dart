@@ -5,12 +5,19 @@ abstract class SvgResources {
   static const String facebook = 'assets/svgs/facebook.svg';
   static const String arrowBack = 'assets/svgs/arrow_back.svg';
 
-  // Navigation
+  // Navigation (outline)
   static const String navHome = 'assets/svgs/nav_home.svg';
   static const String navDashboard = 'assets/svgs/nav_dashboard.svg';
   static const String navCalendar = 'assets/svgs/nav_calendar.svg';
   static const String navServices = 'assets/svgs/nav_services.svg';
   static const String navProfile = 'assets/svgs/nav_profile.svg';
+
+  // Navigation (filled)
+  static const String navHomeFilled = 'assets/svgs/nav_home_filled.svg';
+  static const String navDashboardFilled = 'assets/svgs/nav_dashboard_filled.svg';
+  static const String navCalendarFilled = 'assets/svgs/nav_calendar_filled.svg';
+  static const String navServicesFilled = 'assets/svgs/nav_services_filled.svg';
+  static const String navProfileFilled = 'assets/svgs/nav_profile_filled.svg';
 
   // Home
   static const String search = 'assets/svgs/search.svg';
