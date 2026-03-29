@@ -51,7 +51,11 @@
     "otp_invalid": "Enter the valid code, please."
   },
   "nav": {
-    "home": "Home"
+    "home": "Home",
+    "services": "Services",
+    "booking": "Booking",
+    "packages": "Packages",
+    "profile": "Profile"
   },
   "home": {
     "greeting": "Hi, {name} 👋",

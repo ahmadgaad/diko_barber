@@ -51,7 +51,11 @@
     "otp_invalid": "أدخل الرمز الصحيح، من فضلك."
   },
   "nav": {
-    "home": "الرئيسية"
+    "home": "الرئيسية",
+    "services": "الخدمات",
+    "booking": "الحجوزات",
+    "packages": "الباقات",
+    "profile": "حسابي"
   },
   "home": {
     "greeting": "مرحبًا، {name} 👋",

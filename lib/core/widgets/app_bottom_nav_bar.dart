@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
-enum HomeTab { home, services, calendar, dashboard, profile }
+enum HomeTab { home, services, booking, packages, profile }
 
 class AppBottomNavBar extends StatelessWidget {
   const AppBottomNavBar({
@@ -127,17 +127,17 @@ class _InactiveTab extends StatelessWidget {
 extension on HomeTab {
   String get svgPath => switch (this) {
     HomeTab.home => SvgResources.navHome,
-    HomeTab.dashboard => SvgResources.navDashboard,
-    HomeTab.calendar => SvgResources.navCalendar,
     HomeTab.services => SvgResources.navServices,
+    HomeTab.booking => SvgResources.navCalendar,
+    HomeTab.packages => SvgResources.navDashboard,
     HomeTab.profile => SvgResources.navProfile,
   };
 
   String get labelKey => switch (this) {
     HomeTab.home => 'nav.home',
-    HomeTab.dashboard => 'nav.home',
-    HomeTab.calendar => 'nav.home',
-    HomeTab.services => 'nav.home',
-    HomeTab.profile => 'nav.home',
+    HomeTab.services => 'nav.services',
+    HomeTab.booking => 'nav.booking',
+    HomeTab.packages => 'nav.packages',
+    HomeTab.profile => 'nav.profile',
   };
 }

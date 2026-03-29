@@ -1,3 +1,4 @@
+import 'package:diko_barber/core/resources/image_resources.dart';
 import 'package:diko_barber/core/resources/svg_resources.dart';
 import 'package:diko_barber/core/theme/app_colors.dart';
 import 'package:easy_localization/easy_localization.dart' hide TextDirection;
@@ -9,11 +10,20 @@ class ServicesSection extends StatelessWidget {
   const ServicesSection({super.key});
 
   static const _services = [
-    'home.service_haircut',
-    'home.service_beard_trim',
-    'home.service_haircut_beard',
-    'home.service_face_cleanse',
-    'home.service_hair_styling',
+    (label: 'home.service_haircut', image: ImageResources.serviceHaircut),
+    (label: 'home.service_beard_trim', image: ImageResources.serviceBeardTrim),
+    (
+      label: 'home.service_haircut_beard',
+      image: ImageResources.serviceHaircutBeard,
+    ),
+    (
+      label: 'home.service_face_cleanse',
+      image: ImageResources.serviceFaceCleanse,
+    ),
+    (
+      label: 'home.service_hair_styling',
+      image: ImageResources.serviceHairStyling,
+    ),
   ];
 
   @override
@@ -32,10 +42,14 @@ class ServicesSection extends StatelessWidget {
             clipBehavior: Clip.none,
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
-              children: _services.map((key) {
+              children: _services.map((service) {
                 return Padding(
-                  padding: EdgeInsets.only(right: 12.w),
-                  child: _ServiceItem(labelKey: key, colors: colors),
+                  padding: EdgeInsetsDirectional.only(end: 12.w),
+                  child: _ServiceItem(
+                    labelKey: service.label,
+                    imagePath: service.image,
+                    colors: colors,
+                  ),
                 );
               }).toList(),
             ),
@@ -47,9 +61,14 @@ class ServicesSection extends StatelessWidget {
 }
 
 class _ServiceItem extends StatelessWidget {
-  const _ServiceItem({required this.labelKey, required this.colors});
+  const _ServiceItem({
+    required this.labelKey,
+    required this.imagePath,
+    required this.colors,
+  });
 
   final String labelKey;
+  final String imagePath;
   final AppColors colors;
 
   @override
@@ -58,12 +77,12 @@ class _ServiceItem extends StatelessWidget {
       width: 74.w,
       child: Column(
         children: [
-          Container(
-            width: 74.w,
-            height: 74.w,
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              color: colors.neutral200,
+          ClipOval(
+            child: Image.asset(
+              imagePath,
+              width: 74.w,
+              height: 74.w,
+              fit: BoxFit.cover,
             ),
           ),
           SizedBox(height: 8.h),
