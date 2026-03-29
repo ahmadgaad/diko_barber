@@ -49,5 +49,22 @@
     "resend_code": "Resend Code",
     "resend_code_action": "Resend code",
     "otp_invalid": "Enter the valid code, please."
+  },
+  "nav": {
+    "home": "Home"
+  },
+  "home": {
+    "greeting": "Hi, {name} 👋",
+    "greeting_subtitle": "Your next look starts here",
+    "book_appointment": "Book your next appointment",
+    "book_now": "Book Now",
+    "services": "Services",
+    "packages": "Packages",
+    "see_more": "See more",
+    "service_haircut": "Haircut",
+    "service_beard_trim": "Beard Trim",
+    "service_haircut_beard": "Haircut + Beard",
+    "service_face_cleanse": "Face Cleanse",
+    "service_hair_styling": "Hair Styling"
   }
 }

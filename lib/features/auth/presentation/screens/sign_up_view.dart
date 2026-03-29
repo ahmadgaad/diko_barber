@@ -1,6 +1,6 @@
-import 'package:diko_barber/core/components/app_divider_with_text.dart';
-import 'package:diko_barber/core/components/app_gradient_button.dart';
-import 'package:diko_barber/core/components/app_text_form_field.dart';
+import 'package:diko_barber/core/widgets/app_divider_with_text.dart';
+import 'package:diko_barber/core/widgets/app_gradient_button.dart';
+import 'package:diko_barber/core/widgets/app_text_form_field.dart';
 import 'package:diko_barber/core/router/app_routes.dart';
 import 'package:diko_barber/core/theme/app_colors.dart';
 import 'package:diko_barber/features/auth/presentation/components/sign_in_header.dart';

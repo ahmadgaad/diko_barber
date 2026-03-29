@@ -1,0 +1,85 @@
+import 'package:diko_barber/core/theme/app_colors.dart';
+import 'package:diko_barber/core/widgets/app_bottom_nav_bar.dart';
+import 'package:diko_barber/features/home/presentation/components/home_header.dart';
+import 'package:diko_barber/features/home/presentation/components/promo_banner.dart';
+import 'package:diko_barber/features/home/presentation/components/services_section.dart';
+import 'package:diko_barber/features/home/presentation/cubit/home_cubit.dart';
+import 'package:diko_barber/features/home/presentation/cubit/home_state.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+
+class HomeView extends StatefulWidget {
+  const HomeView({super.key});
+
+  @override
+  State<HomeView> createState() => _HomeViewState();
+}
+
+class _HomeViewState extends State<HomeView> {
+  HomeTab _currentTab = HomeTab.home;
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = AppColors.of(context);
+
+    return Scaffold(
+      backgroundColor: colors.neutral50,
+      body: Stack(
+        children: [
+          _buildBackground(colors),
+          SafeArea(
+            child: Column(
+              children: [
+                Expanded(child: SingleChildScrollView(child: _buildContent())),
+                AppBottomNavBar(
+                  currentTab: _currentTab,
+                  onTabSelected: (tab) => setState(() => _currentTab = tab),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildBackground(AppColors colors) {
+    return Positioned(
+      top: 0,
+      left: 0,
+      right: 0,
+      height: 406.h,
+      child: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomCenter,
+            colors: [
+              splashOrange.withValues(alpha: 0.66),
+              colors.neutral50.withValues(alpha: 0.0),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildContent() {
+    return BlocBuilder<HomeCubit, HomeState>(
+      builder: (context, state) {
+        final loaded = state as HomeLoaded;
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            HomeHeader(userName: loaded.userName),
+            const PromoBanner(),
+            const ServicesSection(),
+            const PackagesSection(),
+            SizedBox(height: 16.h),
+          ],
+        );
+      },
+    );
+  }
+}

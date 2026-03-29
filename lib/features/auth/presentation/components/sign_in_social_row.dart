@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-import 'package:diko_barber/core/components/social_icon_button.dart';
+import 'package:diko_barber/core/widgets/social_icon_button.dart';
 import 'package:diko_barber/core/resources/svg_resources.dart';
 
 class SignInSocialRow extends StatelessWidget {

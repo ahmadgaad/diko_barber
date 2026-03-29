@@ -49,5 +49,22 @@
     "resend_code": "إعادة إرسال الرمز",
     "resend_code_action": "إعادة الإرسال",
     "otp_invalid": "أدخل الرمز الصحيح، من فضلك."
+  },
+  "nav": {
+    "home": "الرئيسية"
+  },
+  "home": {
+    "greeting": "مرحبًا، {name} 👋",
+    "greeting_subtitle": "إطلالتك القادمة تبدأ من هنا",
+    "book_appointment": "احجز موعدك القادم",
+    "book_now": "احجز الآن",
+    "services": "الخدمات",
+    "packages": "الباقات",
+    "see_more": "عرض المزيد",
+    "service_haircut": "قصة شعر",
+    "service_beard_trim": "تشذيب اللحية",
+    "service_haircut_beard": "قصة + لحية",
+    "service_face_cleanse": "تنظيف الوجه",
+    "service_hair_styling": "تصفيف الشعر"
   }
 }
