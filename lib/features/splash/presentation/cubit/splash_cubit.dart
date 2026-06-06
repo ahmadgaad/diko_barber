@@ -1,6 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'package:diko_barber/features/splash/domain/use_cases/complete_splash_use_case.dart';
+import 'package:ronaq_barber/features/splash/domain/use_cases/complete_splash_use_case.dart';
 import 'splash_state.dart';
 
 class SplashCubit extends Cubit<SplashState> {

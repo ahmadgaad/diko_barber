@@ -1,5 +1,5 @@
-import 'package:diko_barber/core/resources/svg_resources.dart';
-import 'package:diko_barber/core/theme/app_colors.dart';
+import 'package:ronaq_barber/core/resources/svg_resources.dart';
+import 'package:ronaq_barber/core/theme/app_colors.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';

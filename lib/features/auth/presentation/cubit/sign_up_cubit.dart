@@ -1,7 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'package:diko_barber/core/router/app_routes.dart';
-import 'package:diko_barber/features/auth/domain/use_cases/sign_up_use_case.dart';
+import 'package:ronaq_barber/core/router/app_routes.dart';
+import 'package:ronaq_barber/features/auth/domain/use_cases/sign_up_use_case.dart';
 
 import 'sign_up_state.dart';
 

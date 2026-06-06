@@ -1,11 +1,11 @@
-import 'package:diko_barber/core/router/app_router.dart';
-import 'package:diko_barber/core/theme/app_theme.dart';
+import 'package:ronaq_barber/core/router/app_router.dart';
+import 'package:ronaq_barber/core/theme/app_theme.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-class DikoBarberApp extends StatelessWidget {
-  const DikoBarberApp({super.key});
+class RonaqBarberApp extends StatelessWidget {
+  const RonaqBarberApp({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -18,7 +18,7 @@ class DikoBarberApp extends StatelessWidget {
         debugShowCheckedModeBanner: false,
         theme: AppTheme.light(locale),
         darkTheme: AppTheme.dark(locale),
-        themeMode: ThemeMode.light,
+        themeMode: ThemeMode.dark,
         routerConfig: appRouter,
         localizationsDelegates: context.localizationDelegates,
         supportedLocales: context.supportedLocales,

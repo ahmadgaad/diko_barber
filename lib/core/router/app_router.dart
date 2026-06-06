@@ -1,9 +1,9 @@
-import 'package:diko_barber/features/auth/presentation/screens/sign_in_screen.dart';
-import 'package:diko_barber/features/auth/presentation/screens/sign_up_screen.dart';
-import 'package:diko_barber/features/auth/presentation/screens/verify_otp_screen.dart';
-import 'package:diko_barber/features/home/presentation/screens/home_screen.dart';
-import 'package:diko_barber/features/onboarding/presentation/screens/onboarding_screen.dart';
-import 'package:diko_barber/features/splash/presentation/screens/splash_screen.dart';
+import 'package:ronaq_barber/features/auth/presentation/screens/sign_in_screen.dart';
+import 'package:ronaq_barber/features/auth/presentation/screens/sign_up_screen.dart';
+import 'package:ronaq_barber/features/auth/presentation/screens/verify_otp_screen.dart';
+import 'package:ronaq_barber/features/home/presentation/screens/home_screen.dart';
+import 'package:ronaq_barber/features/onboarding/presentation/screens/onboarding_screen.dart';
+import 'package:ronaq_barber/features/splash/presentation/screens/splash_screen.dart';
 import 'package:go_router/go_router.dart';
 
 import 'app_routes.dart';

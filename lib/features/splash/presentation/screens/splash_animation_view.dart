@@ -1,6 +1,6 @@
-import 'package:diko_barber/core/resources/image_resources.dart';
-import 'package:diko_barber/core/theme/app_colors.dart';
-import 'package:diko_barber/features/splash/presentation/components/color_expansion_painter.dart';
+import 'package:ronaq_barber/core/resources/image_resources.dart';
+import 'package:ronaq_barber/core/theme/app_colors.dart';
+import 'package:ronaq_barber/features/splash/presentation/components/color_expansion_painter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 

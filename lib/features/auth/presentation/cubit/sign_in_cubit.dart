@@ -1,16 +1,22 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-
-import 'package:diko_barber/core/router/app_routes.dart';
-import 'package:diko_barber/features/auth/domain/use_cases/sign_in_use_case.dart';
+import 'package:ronaq_barber/core/cache/cache_keys.dart';
+import 'package:ronaq_barber/core/cache/secure_storage_cache_client.dart';
+import 'package:ronaq_barber/core/networking/result.dart';
+import 'package:ronaq_barber/core/router/app_routes.dart';
+import 'package:ronaq_barber/features/auth/domain/use_cases/sign_in_use_case.dart';
 
 import 'sign_in_state.dart';
 
 class SignInCubit extends Cubit<SignInState> {
-  SignInCubit({required SignInUseCase signInUseCase})
-      : _signInUseCase = signInUseCase,
+  SignInCubit({
+    required SignInUseCase signInUseCase,
+    required SecureStorageCacheClient secureStorage,
+  })  : _signInUseCase = signInUseCase,
+        _secureStorage = secureStorage,
         super(const SignInFormState());
 
   final SignInUseCase _signInUseCase;
+  final SecureStorageCacheClient _secureStorage;
 
   static final _emailRegex = RegExp(
     r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$',
@@ -20,25 +26,17 @@ class SignInCubit extends Cubit<SignInState> {
 
   void onEmailChanged(String value) {
     if (state is! SignInFormState) return;
-    emit(_formState.copyWith(
-      email: value,
-      emailError: () => null,
-    ));
+    emit(_formState.copyWith(email: value, emailError: () => null, apiError: () => null));
   }
 
   void onPasswordChanged(String value) {
     if (state is! SignInFormState) return;
-    emit(_formState.copyWith(
-      password: value,
-      passwordError: () => null,
-    ));
+    emit(_formState.copyWith(password: value, passwordError: () => null, apiError: () => null));
   }
 
   void togglePasswordVisibility() {
     if (state is! SignInFormState) return;
-    emit(_formState.copyWith(
-      obscurePassword: !_formState.obscurePassword,
-    ));
+    emit(_formState.copyWith(obscurePassword: !_formState.obscurePassword));
   }
 
   Future<void> signIn() async {
@@ -55,16 +53,22 @@ class SignInCubit extends Cubit<SignInState> {
       return;
     }
 
-    emit(_formState.copyWith(isSubmitting: true));
+    emit(_formState.copyWith(isSubmitting: true, apiError: () => null));
 
-    try {
-      await _signInUseCase(
-        email: _formState.email,
-        password: _formState.password,
-      );
-      emit(SignInSuccess(email: _formState.email));
-    } on Exception {
-      emit(_formState.copyWith(isSubmitting: false));
+    final result = await _signInUseCase(
+      email: _formState.email,
+      password: _formState.password,
+    );
+
+    switch (result) {
+      case Success(:final data):
+        await _secureStorage.set(CacheKeys.userAccessToken, data.token);
+        emit(const SignInSuccess());
+      case Failure(:final error):
+        emit(_formState.copyWith(
+          isSubmitting: false,
+          apiError: () => error.message,
+        ));
     }
   }
 

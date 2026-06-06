@@ -1,5 +1,5 @@
-import 'package:diko_barber/core/router/app_routes.dart';
-import 'package:diko_barber/features/onboarding/domain/repositories/onboarding_repository.dart';
+import 'package:ronaq_barber/core/router/app_routes.dart';
+import 'package:ronaq_barber/features/onboarding/domain/repositories/onboarding_repository.dart';
 
 class CompleteSplashUseCase {
   const CompleteSplashUseCase(this._onboardingRepository);

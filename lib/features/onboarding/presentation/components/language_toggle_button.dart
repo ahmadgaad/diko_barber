@@ -2,10 +2,10 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
-import 'package:diko_barber/core/di/service_locator.dart';
-import 'package:diko_barber/core/l10n/app_locales.dart';
-import 'package:diko_barber/core/locale/domain/use_cases/save_locale_use_case.dart';
-import 'package:diko_barber/core/resources/svg_resources.dart';
+import 'package:ronaq_barber/core/di/service_locator.dart';
+import 'package:ronaq_barber/core/l10n/app_locales.dart';
+import 'package:ronaq_barber/core/locale/domain/use_cases/save_locale_use_case.dart';
+import 'package:ronaq_barber/core/resources/svg_resources.dart';
 
 class LanguageToggleButton extends StatelessWidget {
   const LanguageToggleButton({super.key});

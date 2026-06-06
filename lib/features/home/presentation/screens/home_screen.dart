@@ -1,5 +1,5 @@
-import 'package:diko_barber/features/home/presentation/cubit/home_cubit.dart';
-import 'package:diko_barber/features/home/presentation/screens/home_view.dart';
+import 'package:ronaq_barber/features/home/presentation/cubit/home_cubit.dart';
+import 'package:ronaq_barber/features/home/presentation/screens/home_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 

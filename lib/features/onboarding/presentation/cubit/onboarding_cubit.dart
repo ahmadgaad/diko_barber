@@ -1,7 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'package:diko_barber/core/router/app_routes.dart';
-import 'package:diko_barber/features/onboarding/domain/use_cases/complete_onboarding_use_case.dart';
+import 'package:ronaq_barber/core/router/app_routes.dart';
+import 'package:ronaq_barber/features/onboarding/domain/use_cases/complete_onboarding_use_case.dart';
 import 'onboarding_state.dart';
 
 class OnboardingCubit extends Cubit<OnboardingState> {

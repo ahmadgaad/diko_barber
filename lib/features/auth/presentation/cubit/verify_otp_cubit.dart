@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'package:diko_barber/features/auth/domain/use_cases/verify_otp_use_case.dart';
+import 'package:ronaq_barber/features/auth/domain/use_cases/verify_otp_use_case.dart';
 
 import 'verify_otp_state.dart';
 

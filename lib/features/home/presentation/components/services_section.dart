@@ -1,6 +1,6 @@
-import 'package:diko_barber/core/resources/image_resources.dart';
-import 'package:diko_barber/core/theme/app_colors.dart';
-import 'package:diko_barber/features/home/presentation/components/section_header.dart';
+import 'package:ronaq_barber/core/resources/image_resources.dart';
+import 'package:ronaq_barber/core/theme/app_colors.dart';
+import 'package:ronaq_barber/features/home/presentation/components/section_header.dart';
 import 'package:easy_localization/easy_localization.dart' hide TextDirection;
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';

@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
-import 'package:diko_barber/core/resources/image_resources.dart';
+import 'package:ronaq_barber/core/resources/image_resources.dart';
 import '../components/onboarding_page_content.dart';
 import '../cubit/onboarding_cubit.dart';
 import '../cubit/onboarding_state.dart';
