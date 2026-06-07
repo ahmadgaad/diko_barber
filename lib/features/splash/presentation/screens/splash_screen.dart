@@ -1,7 +1,7 @@
-import 'package:ronaq_barber/core/di/service_locator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:ronaq_barber/core/di/service_locator.dart';
 
 import '../cubit/splash_cubit.dart';
 import '../cubit/splash_state.dart';
@@ -16,9 +16,10 @@ class SplashScreen extends StatelessWidget {
       create: (_) => sl<SplashCubit>(),
       child: BlocListener<SplashCubit, SplashState>(
         listenWhen: (_, current) => current is SplashComplete,
-        listener: (context, state) {
+        listener: (context, state) async {
           if (state is SplashComplete) {
-            context.go(state.navigationTarget);
+            await _precacheImages(context, state.imagesToPrecache);
+            if (context.mounted) context.go(state.navigationTarget);
           }
         },
         child: const Scaffold(
@@ -27,5 +28,15 @@ class SplashScreen extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  Future<void> _precacheImages(
+    BuildContext context,
+    List<String> urls,
+  ) async {
+    await Future.wait([
+      for (final url in urls)
+        precacheImage(NetworkImage(url), context).catchError((_) {}),
+    ]);
   }
 }

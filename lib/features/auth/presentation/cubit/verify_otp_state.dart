@@ -9,6 +9,7 @@ final class VerifyOtpFormState extends VerifyOtpState {
     this.otp = '',
     this.otpError,
     this.isSubmitting = false,
+    this.isResending = false,
     this.countdown = 60,
     this.canResend = false,
   });
@@ -16,6 +17,7 @@ final class VerifyOtpFormState extends VerifyOtpState {
   final String otp;
   final String? otpError;
   final bool isSubmitting;
+  final bool isResending;
   final int countdown;
   final bool canResend;
 
@@ -25,6 +27,7 @@ final class VerifyOtpFormState extends VerifyOtpState {
     String? otp,
     String? Function()? otpError,
     bool? isSubmitting,
+    bool? isResending,
     int? countdown,
     bool? canResend,
   }) {
@@ -32,6 +35,7 @@ final class VerifyOtpFormState extends VerifyOtpState {
       otp: otp ?? this.otp,
       otpError: otpError != null ? otpError() : this.otpError,
       isSubmitting: isSubmitting ?? this.isSubmitting,
+      isResending: isResending ?? this.isResending,
       countdown: countdown ?? this.countdown,
       canResend: canResend ?? this.canResend,
     );
@@ -39,7 +43,7 @@ final class VerifyOtpFormState extends VerifyOtpState {
 
   @override
   List<Object?> get props =>
-      [otp, otpError, isSubmitting, countdown, canResend];
+      [otp, otpError, isSubmitting, isResending, countdown, canResend];
 }
 
 final class VerifyOtpSuccess extends VerifyOtpState {

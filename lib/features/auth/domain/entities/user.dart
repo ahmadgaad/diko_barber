@@ -1,19 +1,13 @@
+import 'package:ronaq_barber/core/shared/domain/entities/city.dart';
+import 'package:ronaq_barber/core/shared/domain/entities/neighborhood.dart';
+
+export 'package:ronaq_barber/core/shared/domain/entities/city.dart';
+export 'package:ronaq_barber/core/shared/domain/entities/neighborhood.dart';
+
 class Gender {
   final int id;
   final String name;
   const Gender({required this.id, required this.name});
-}
-
-class City {
-  final int id;
-  final String name;
-  const City({required this.id, required this.name});
-}
-
-class Neighborhood {
-  final int id;
-  final String name;
-  const Neighborhood({required this.id, required this.name});
 }
 
 class User {

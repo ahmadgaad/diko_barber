@@ -1,81 +1,200 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-
+import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
+import 'package:ronaq_barber/core/cache/cache_keys.dart';
+import 'package:ronaq_barber/core/cache/secure_storage_cache_client.dart';
+import 'package:ronaq_barber/core/networking/result.dart';
 import 'package:ronaq_barber/core/router/app_routes.dart';
+import 'package:ronaq_barber/core/shared/domain/entities/city.dart';
+import 'package:ronaq_barber/core/shared/domain/entities/neighborhood.dart';
+import 'package:ronaq_barber/core/shared/domain/use_cases/get_cities_use_case.dart';
+import 'package:ronaq_barber/core/shared/domain/use_cases/get_neighborhoods_use_case.dart';
+import 'package:ronaq_barber/features/auth/domain/entities/sign_up_params.dart';
 import 'package:ronaq_barber/features/auth/domain/use_cases/sign_up_use_case.dart';
+import 'package:ronaq_barber/features/auth/domain/use_cases/social_login_use_case.dart';
 
 import 'sign_up_state.dart';
 
 class SignUpCubit extends Cubit<SignUpState> {
-  SignUpCubit({required SignUpUseCase signUpUseCase})
-      : _signUpUseCase = signUpUseCase,
-        super(const SignUpFormState());
+  SignUpCubit({
+    required SignUpUseCase signUpUseCase,
+    required GetCitiesUseCase getCitiesUseCase,
+    required GetNeighborhoodsUseCase getNeighborhoodsUseCase,
+    required SecureStorageCacheClient secureStorage,
+    required SocialLoginUseCase socialLoginUseCase,
+  })  : _signUpUseCase = signUpUseCase,
+        _getCitiesUseCase = getCitiesUseCase,
+        _getNeighborhoodsUseCase = getNeighborhoodsUseCase,
+        _secureStorage = secureStorage,
+        _socialLoginUseCase = socialLoginUseCase,
+        super(const SignUpFormState()) {
+    _loadCities();
+  }
 
   final SignUpUseCase _signUpUseCase;
+  final GetCitiesUseCase _getCitiesUseCase;
+  final GetNeighborhoodsUseCase _getNeighborhoodsUseCase;
+  final SecureStorageCacheClient _secureStorage;
+  final SocialLoginUseCase _socialLoginUseCase;
 
   static final _emailRegex = RegExp(
     r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$',
   );
+  static final _phoneRegex = RegExp(r'^[+]?[0-9]{7,15}$');
 
   SignUpFormState get _formState => state as SignUpFormState;
 
-  void onFullNameChanged(String value) {
+  // ── Step 1 field changes ─────────────────────────────────────────────────
+
+  void onNameChanged(String value) {
     if (state is! SignUpFormState) return;
-    emit(_formState.copyWith(
-      fullName: value,
-      fullNameError: () => null,
-    ));
+    emit(_formState.copyWith(name: value, nameError: () => null));
+  }
+
+  void onPhoneChanged(String value) {
+    if (state is! SignUpFormState) return;
+    emit(_formState.copyWith(phone: value, contactError: () => null));
   }
 
   void onEmailChanged(String value) {
     if (state is! SignUpFormState) return;
-    emit(_formState.copyWith(
-      email: value,
-      emailError: () => null,
-    ));
+    emit(_formState.copyWith(email: value, contactError: () => null));
   }
 
   void onPasswordChanged(String value) {
     if (state is! SignUpFormState) return;
+    emit(_formState.copyWith(password: value, passwordError: () => null));
+  }
+
+  void onPasswordConfirmationChanged(String value) {
+    if (state is! SignUpFormState) return;
     emit(_formState.copyWith(
-      password: value,
-      passwordError: () => null,
+      passwordConfirmation: value,
+      passwordConfirmationError: () => null,
     ));
   }
 
   void togglePasswordVisibility() {
     if (state is! SignUpFormState) return;
+    emit(_formState.copyWith(obscurePassword: !_formState.obscurePassword));
+  }
+
+  void toggleConfirmPasswordVisibility() {
+    if (state is! SignUpFormState) return;
     emit(_formState.copyWith(
-      obscurePassword: !_formState.obscurePassword,
+      obscureConfirmPassword: !_formState.obscureConfirmPassword,
     ));
   }
 
-  Future<void> signUp() async {
+  // ── Step 2 field changes ─────────────────────────────────────────────────
+
+  void onGenderSelected(int gender) {
+    if (state is! SignUpFormState) return;
+    emit(_formState.copyWith(gender: () => gender));
+  }
+
+  void onCitySelected(City city) {
+    if (state is! SignUpFormState) return;
+    emit(_formState.copyWith(
+      selectedCity: () => city,
+      selectedNeighborhood: () => null,
+      neighborhoods: [],
+    ));
+    _loadNeighborhoods(city.id);
+  }
+
+  void onNeighborhoodSelected(Neighborhood neighborhood) {
+    if (state is! SignUpFormState) return;
+    emit(_formState.copyWith(selectedNeighborhood: () => neighborhood));
+  }
+
+  void onAgeChanged(String value) {
+    if (state is! SignUpFormState) return;
+    emit(_formState.copyWith(age: value));
+  }
+
+  void onImagePicked(String path) {
+    if (state is! SignUpFormState) return;
+    emit(_formState.copyWith(imagePath: () => path));
+  }
+
+  void removeImage() {
+    if (state is! SignUpFormState) return;
+    emit(_formState.copyWith(imagePath: () => null));
+  }
+
+  // ── Navigation ───────────────────────────────────────────────────────────
+
+  void goToStep2() {
     if (state is! SignUpFormState) return;
 
-    final fullNameError = _validateFullName(_formState.fullName);
-    final emailError = _validateEmail(_formState.email);
+    final nameError = _validateName(_formState.name);
+    final contactError = _validateContact(
+      phone: _formState.phone,
+      email: _formState.email,
+    );
     final passwordError = _validatePassword(_formState.password);
+    final confirmError = _validateConfirmPassword(
+      _formState.password,
+      _formState.passwordConfirmation,
+    );
 
-    if (fullNameError != null || emailError != null || passwordError != null) {
+    if (nameError != null ||
+        contactError != null ||
+        passwordError != null ||
+        confirmError != null) {
       emit(_formState.copyWith(
-        fullNameError: () => fullNameError,
-        emailError: () => emailError,
+        nameError: () => nameError,
+        contactError: () => contactError,
         passwordError: () => passwordError,
+        passwordConfirmationError: () => confirmError,
       ));
       return;
     }
 
-    emit(_formState.copyWith(isSubmitting: true));
+    emit(_formState.copyWith(
+      currentStep: 1,
+      nameError: () => null,
+      contactError: () => null,
+      passwordError: () => null,
+      passwordConfirmationError: () => null,
+    ));
+  }
 
-    try {
-      await _signUpUseCase(
-        fullName: _formState.fullName,
-        email: _formState.email,
-        password: _formState.password,
-      );
-      emit(SignUpSuccess(email: _formState.email));
-    } on Exception {
+  void goToStep1() {
+    if (state is! SignUpFormState) return;
+    emit(_formState.copyWith(currentStep: 0));
+  }
+
+  Future<void> loginWithFacebook() async {
+    if (state is! SignUpFormState) return;
+
+    emit(_formState.copyWith(isSubmitting: true, apiError: () => null));
+
+    final loginResult = await FacebookAuth.instance.login();
+
+    if (loginResult.status != LoginStatus.success) {
       emit(_formState.copyWith(isSubmitting: false));
+      return;
+    }
+
+    final accessToken = loginResult.accessToken!.tokenString;
+
+    final result = await _socialLoginUseCase(
+      provider: 'facebook',
+      accessToken: accessToken,
+    );
+
+    switch (result) {
+      case Success(:final data):
+        if (data.token != null) {
+          await _secureStorage.set(CacheKeys.userAccessToken, data.token!);
+        }
+        emit(const SignUpSocialSuccess());
+      case Failure(:final error):
+        emit(_formState.copyWith(
+          isSubmitting: false,
+          apiError: () => error.message,
+        ));
     }
   }
 
@@ -83,20 +202,94 @@ class SignUpCubit extends Cubit<SignUpState> {
     emit(const SignUpNavigate(target: AppRoutes.login));
   }
 
-  String? _validateFullName(String value) {
-    if (value.isEmpty) return 'auth.full_name_required';
+  // ── Submit ───────────────────────────────────────────────────────────────
+
+  Future<void> signUp() async {
+    if (state is! SignUpFormState) return;
+
+    emit(_formState.copyWith(isSubmitting: true, apiError: () => null));
+
+    final params = SignUpParams(
+      name: _formState.name,
+      phone: _formState.phone.isNotEmpty ? _formState.phone : null,
+      email: _formState.email.isNotEmpty ? _formState.email : null,
+      password: _formState.password,
+      passwordConfirmation: _formState.passwordConfirmation,
+      cityId: _formState.selectedCity?.id,
+      neighborhoodId: _formState.selectedNeighborhood?.id,
+      gender: _formState.gender,
+      age: _formState.age.isNotEmpty ? int.tryParse(_formState.age) : null,
+      imagePath: _formState.imagePath,
+    );
+
+    final result = await _signUpUseCase(params);
+
+    switch (result) {
+      case Success(:final data):
+        if (data.token != null) {
+          await _secureStorage.set(CacheKeys.userAccessToken, data.token!);
+        }
+        emit(SignUpSuccess(email: _formState.email, phone: _formState.phone));
+      case Failure(:final error):
+        emit(_formState.copyWith(
+          isSubmitting: false,
+          apiError: () => error.message,
+        ));
+    }
+  }
+
+  // ── Private helpers ──────────────────────────────────────────────────────
+
+  Future<void> _loadCities() async {
+    emit(_formState.copyWith(citiesLoading: true));
+    final result = await _getCitiesUseCase();
+    if (state is! SignUpFormState) return;
+    switch (result) {
+      case Success(:final data):
+        emit(_formState.copyWith(cities: data, citiesLoading: false));
+      case Failure():
+        emit(_formState.copyWith(citiesLoading: false));
+    }
+  }
+
+  Future<void> _loadNeighborhoods(int cityId) async {
+    emit(_formState.copyWith(neighborhoodsLoading: true));
+    final result = await _getNeighborhoodsUseCase(cityId: cityId);
+    if (state is! SignUpFormState) return;
+    switch (result) {
+      case Success(:final data):
+        emit(_formState.copyWith(
+          neighborhoods: data,
+          neighborhoodsLoading: false,
+        ));
+      case Failure():
+        emit(_formState.copyWith(neighborhoodsLoading: false));
+    }
+  }
+
+  String? _validateName(String value) {
+    if (value.trim().isEmpty) return 'auth.name_required';
     return null;
   }
 
-  String? _validateEmail(String email) {
+  String? _validateContact({required String phone, required String email}) {
     if (email.isEmpty) return 'auth.email_required';
     if (!_emailRegex.hasMatch(email)) return 'auth.email_invalid';
+    if (phone.isNotEmpty && !_phoneRegex.hasMatch(phone)) {
+      return 'auth.phone_invalid';
+    }
     return null;
   }
 
   String? _validatePassword(String password) {
     if (password.isEmpty) return 'auth.password_required';
     if (password.length < 8) return 'auth.password_min_length';
+    return null;
+  }
+
+  String? _validateConfirmPassword(String password, String confirmation) {
+    if (confirmation.isEmpty) return 'auth.password_confirmation_required';
+    if (password != confirmation) return 'auth.password_confirmation_mismatch';
     return null;
   }
 }

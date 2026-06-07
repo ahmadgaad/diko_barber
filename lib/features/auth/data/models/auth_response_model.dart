@@ -17,7 +17,7 @@ class AuthResponseModel extends AuthResponse {
       AuthResponseModel(
         user: UserModel.fromJson(json['user'] as Map<String, dynamic>),
         type: json['type'] as int? ?? 0,
-        token: json['token'] as String,
+        token: json['token'] as String?,
         emailVerified: json['email_verified'] as bool? ?? false,
         phoneVerified: json['phone_verified'] as bool? ?? false,
         isVerified: json['is_verified'] as bool? ?? false,

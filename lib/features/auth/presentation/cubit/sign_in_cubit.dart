@@ -1,26 +1,32 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:ronaq_barber/core/cache/cache_keys.dart';
 import 'package:ronaq_barber/core/cache/secure_storage_cache_client.dart';
 import 'package:ronaq_barber/core/networking/result.dart';
 import 'package:ronaq_barber/core/router/app_routes.dart';
 import 'package:ronaq_barber/features/auth/domain/use_cases/sign_in_use_case.dart';
+import 'package:ronaq_barber/features/auth/domain/use_cases/social_login_use_case.dart';
 
 import 'sign_in_state.dart';
 
 class SignInCubit extends Cubit<SignInState> {
   SignInCubit({
     required SignInUseCase signInUseCase,
+    required SocialLoginUseCase socialLoginUseCase,
     required SecureStorageCacheClient secureStorage,
   })  : _signInUseCase = signInUseCase,
+        _socialLoginUseCase = socialLoginUseCase,
         _secureStorage = secureStorage,
         super(const SignInFormState());
 
   final SignInUseCase _signInUseCase;
+  final SocialLoginUseCase _socialLoginUseCase;
   final SecureStorageCacheClient _secureStorage;
 
   static final _emailRegex = RegExp(
     r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$',
   );
+  static final _phoneRegex = RegExp(r'^[+]?[0-9]{7,15}$');
 
   SignInFormState get _formState => state as SignInFormState;
 
@@ -42,7 +48,7 @@ class SignInCubit extends Cubit<SignInState> {
   Future<void> signIn() async {
     if (state is! SignInFormState) return;
 
-    final emailError = _validateEmail(_formState.email);
+    final emailError = _validateLogin(_formState.email);
     final passwordError = _validatePassword(_formState.password);
 
     if (emailError != null || passwordError != null) {
@@ -62,7 +68,42 @@ class SignInCubit extends Cubit<SignInState> {
 
     switch (result) {
       case Success(:final data):
-        await _secureStorage.set(CacheKeys.userAccessToken, data.token);
+        if (data.token != null) {
+          await _secureStorage.set(CacheKeys.userAccessToken, data.token!);
+        }
+        emit(const SignInSuccess());
+      case Failure(:final error):
+        emit(_formState.copyWith(
+          isSubmitting: false,
+          apiError: () => error.message,
+        ));
+    }
+  }
+
+  Future<void> loginWithFacebook() async {
+    if (state is! SignInFormState) return;
+
+    emit(_formState.copyWith(isSubmitting: true, apiError: () => null));
+
+    final loginResult = await FacebookAuth.instance.login();
+
+    if (loginResult.status != LoginStatus.success) {
+      emit(_formState.copyWith(isSubmitting: false));
+      return;
+    }
+
+    final accessToken = loginResult.accessToken!.tokenString;
+
+    final result = await _socialLoginUseCase(
+      provider: 'facebook',
+      accessToken: accessToken,
+    );
+
+    switch (result) {
+      case Success(:final data):
+        if (data.token != null) {
+          await _secureStorage.set(CacheKeys.userAccessToken, data.token!);
+        }
         emit(const SignInSuccess());
       case Failure(:final error):
         emit(_formState.copyWith(
@@ -80,9 +121,11 @@ class SignInCubit extends Cubit<SignInState> {
     // TODO: Implement forgot password navigation
   }
 
-  String? _validateEmail(String email) {
-    if (email.isEmpty) return 'auth.email_required';
-    if (!_emailRegex.hasMatch(email)) return 'auth.email_invalid';
+  String? _validateLogin(String value) {
+    if (value.isEmpty) return 'auth.login_required';
+    final isEmail = _emailRegex.hasMatch(value);
+    final isPhone = _phoneRegex.hasMatch(value);
+    if (!isEmail && !isPhone) return 'auth.login_invalid';
     return null;
   }
 

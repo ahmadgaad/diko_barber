@@ -1,7 +1,3 @@
-import 'package:ronaq_barber/core/resources/svg_resources.dart';
-import 'package:ronaq_barber/core/theme/app_colors.dart';
-import 'package:ronaq_barber/features/auth/presentation/cubit/verify_otp_cubit.dart';
-import 'package:ronaq_barber/features/auth/presentation/cubit/verify_otp_state.dart';
 import 'package:easy_localization/easy_localization.dart' hide TextDirection;
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -9,6 +5,10 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:pinput/pinput.dart';
+import 'package:ronaq_barber/core/resources/svg_resources.dart';
+import 'package:ronaq_barber/core/theme/app_colors.dart';
+import 'package:ronaq_barber/features/auth/presentation/cubit/verify_otp_cubit.dart';
+import 'package:ronaq_barber/features/auth/presentation/cubit/verify_otp_state.dart';
 
 class VerifyOtpView extends StatelessWidget {
   const VerifyOtpView({super.key, required this.email});
@@ -25,8 +25,11 @@ class VerifyOtpView extends StatelessWidget {
       },
       child: SafeArea(
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [_buildAppBar(context), _buildContent(context)],
+          children: [
+            _buildAppBar(context),
+            Expanded(child: _buildBody(context)),
+            _buildResendFooter(context),
+          ],
         ),
       ),
     );
@@ -36,99 +39,118 @@ class VerifyOtpView extends StatelessWidget {
     final colors = AppColors.of(context);
     final isRtl = Directionality.of(context) == TextDirection.rtl;
 
-    return SizedBox(
-      height: 40.h,
-      child: Padding(
-        padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
-        child: Row(
-          children: [
-            GestureDetector(
-              onTap: () => context.pop(),
-              child: SizedBox(
-                width: 24.w,
-                height: 24.w,
-                child: Center(
-                  child: Transform.scale(
-                    scaleX: isRtl ? -1 : 1,
-                    child: SvgPicture.asset(
-                      SvgResources.arrowBack,
-                      fit: BoxFit.scaleDown,
-                      colorFilter: ColorFilter.mode(
-                        colors.neutral900,
-                        BlendMode.srcIn,
-                      ),
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
+      child: Row(
+        children: [
+          GestureDetector(
+            onTap: () => context.pop(),
+            child: SizedBox(
+              width: 24.w,
+              height: 24.w,
+              child: Center(
+                child: Transform.scale(
+                  scaleX: isRtl ? -1 : 1,
+                  child: SvgPicture.asset(
+                    SvgResources.arrowBack,
+                    fit: BoxFit.scaleDown,
+                    colorFilter: ColorFilter.mode(
+                      colors.neutral900,
+                      BlendMode.srcIn,
                     ),
                   ),
                 ),
               ),
             ),
-            Expanded(
-              child: Text(
-                tr('auth.verify_email_title'),
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontSize: 16.sp,
-                  fontWeight: FontWeight.w600,
-                  color: colors.neutral900,
-                ),
+          ),
+          Expanded(
+            child: Text(
+              tr('auth.verify_email_title'),
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontSize: 16.sp,
+                fontWeight: FontWeight.w600,
+                color: colors.neutral900,
               ),
             ),
-            SizedBox(width: 24.w),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildContent(BuildContext context) {
-    final colors = AppColors.of(context);
-
-    return Padding(
-      padding: EdgeInsets.only(top: 32.h),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          _buildHeading(colors),
-          _buildOtpSection(context, colors),
-          _buildResendRow(context, colors),
+          ),
+          SizedBox(width: 24.w),
         ],
       ),
     );
   }
 
-  Widget _buildHeading(AppColors colors) {
-    return Padding(
-      padding: EdgeInsets.fromLTRB(16.w, 0, 16.w, 16.h),
+  Widget _buildBody(BuildContext context) {
+    final colors = AppColors.of(context);
+
+    return SingleChildScrollView(
+      padding: EdgeInsets.symmetric(horizontal: 24.w),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          SizedBox(height: 40.h),
+          _buildEmailIcon(colors),
+          SizedBox(height: 32.h),
           Text(
             tr('auth.verify_email_title'),
             style: TextStyle(
               fontSize: 24.sp,
-              fontWeight: FontWeight.w600,
+              fontWeight: FontWeight.w700,
               color: colors.neutral900,
             ),
+            textAlign: TextAlign.center,
           ),
-          SizedBox(height: 8.h),
+          SizedBox(height: 12.h),
           RichText(
+            textAlign: TextAlign.center,
             text: TextSpan(
               style: TextStyle(
-                fontSize: 14.sp,
+                fontSize: 15.sp,
                 fontWeight: FontWeight.w400,
                 color: colors.neutral600,
-                height: 1.5,
+                height: 1.6,
               ),
               children: [
                 TextSpan(text: tr('auth.verify_email_subtitle', args: [''])),
                 TextSpan(
                   text: email,
-                  style: TextStyle(fontWeight: FontWeight.w600),
+                  style: TextStyle(
+                    fontWeight: FontWeight.w600,
+                    color: colors.neutral900,
+                  ),
                 ),
               ],
             ),
           ),
+          SizedBox(height: 48.h),
+          _buildOtpSection(context, colors),
+          SizedBox(height: 32.h),
         ],
+      ),
+    );
+  }
+
+  Widget _buildEmailIcon(AppColors colors) {
+    return Container(
+      width: 96.w,
+      height: 96.w,
+      decoration: BoxDecoration(
+        shape: BoxShape.circle,
+        color: splashOrange.withValues(alpha: 0.1),
+      ),
+      child: Center(
+        child: Container(
+          width: 64.w,
+          height: 64.w,
+          decoration: const BoxDecoration(
+            shape: BoxShape.circle,
+            color: splashOrange,
+          ),
+          child: Icon(
+            Icons.mark_email_unread_rounded,
+            color: Colors.white,
+            size: 32.w,
+          ),
+        ),
       ),
     );
   }
@@ -140,122 +162,145 @@ class VerifyOtpView extends StatelessWidget {
         final formState = state as VerifyOtpFormState;
         final hasError = formState.otpError != null;
 
-        final defaultTheme = PinTheme(
-          width: 48.w,
-          height: 48.h,
+        final baseTheme = PinTheme(
+          width: 56.w,
+          height: 56.w,
           decoration: BoxDecoration(
             shape: BoxShape.circle,
-            border: Border.all(color: colors.neutral300),
+            color: colors.neutral100,
+            border: Border.all(color: colors.neutral300, width: 1.5),
           ),
           textStyle: TextStyle(
-            fontSize: 16.sp,
-            fontWeight: FontWeight.w400,
+            fontSize: 20.sp,
+            fontWeight: FontWeight.w600,
             color: colors.neutral900,
           ),
         );
 
         return Column(
           children: [
-            Padding(
-              padding: EdgeInsets.symmetric(vertical: 16.h),
-              child: Center(
-                child: Pinput(
-                  length: 4,
-                  defaultPinTheme: defaultTheme,
-                  focusedPinTheme: defaultTheme.copyWith(
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      border: Border.all(color: splashOrange),
-                    ),
-                  ),
-                  submittedPinTheme: hasError
-                      ? defaultTheme.copyWith(
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            border: Border.all(color: colors.error500),
-                          ),
-                        )
-                      : defaultTheme.copyWith(
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            border: Border.all(color: colors.success500),
-                          ),
-                        ),
-                  errorPinTheme: defaultTheme.copyWith(
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      border: Border.all(color: colors.error500),
-                    ),
-                  ),
-                  keyboardType: TextInputType.number,
-                  onChanged: context.read<VerifyOtpCubit>().onOtpChanged,
-                  onCompleted: (_) => context.read<VerifyOtpCubit>().verify(),
-                  forceErrorState: hasError,
+            Pinput(
+              length: 4,
+              defaultPinTheme: baseTheme,
+              focusedPinTheme: baseTheme.copyWith(
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: splashOrange.withValues(alpha: 0.08),
+                  border: Border.all(color: splashOrange, width: 2),
                 ),
               ),
+              submittedPinTheme: hasError
+                  ? baseTheme.copyWith(
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: colors.error50,
+                        border: Border.all(color: colors.error500, width: 1.5),
+                      ),
+                    )
+                  : baseTheme.copyWith(
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: colors.success50,
+                        border:
+                            Border.all(color: colors.success500, width: 1.5),
+                      ),
+                    ),
+              errorPinTheme: baseTheme.copyWith(
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: colors.error50,
+                  border: Border.all(color: colors.error500, width: 1.5),
+                ),
+              ),
+              keyboardType: TextInputType.number,
+              onChanged: context.read<VerifyOtpCubit>().onOtpChanged,
+              onCompleted: (_) => context.read<VerifyOtpCubit>().verify(),
+              forceErrorState: hasError,
             ),
-            if (hasError)
-              Padding(
-                padding: EdgeInsets.only(bottom: 8.h),
-                child: Text(
-                  tr(formState.otpError!),
-                  style: TextStyle(
-                    fontSize: 14.sp,
-                    fontWeight: FontWeight.w400,
-                    color: colors.error500,
-                  ),
+            if (hasError) ...[
+              SizedBox(height: 16.h),
+              Text(
+                formState.otpError!,
+                style: TextStyle(
+                  fontSize: 14.sp,
+                  fontWeight: FontWeight.w400,
+                  color: colors.error500,
+                ),
+                textAlign: TextAlign.center,
+              ),
+            ],
+            if (formState.isSubmitting) ...[
+              SizedBox(height: 24.h),
+              SizedBox(
+                width: 24.w,
+                height: 24.w,
+                child: CircularProgressIndicator.adaptive(
+                  strokeWidth: 2.5,
+                  valueColor: AlwaysStoppedAnimation(splashOrange),
                 ),
               ),
+            ],
           ],
         );
       },
     );
   }
 
-  Widget _buildResendRow(BuildContext context, AppColors colors) {
+  Widget _buildResendFooter(BuildContext context) {
+    final colors = AppColors.of(context);
+
     return BlocBuilder<VerifyOtpCubit, VerifyOtpState>(
       buildWhen: (_, current) => current is VerifyOtpFormState,
       builder: (context, state) {
         final formState = state as VerifyOtpFormState;
         final cubit = context.read<VerifyOtpCubit>();
 
-        return SizedBox(
-          height: 56.h,
+        return Padding(
+          padding: EdgeInsets.only(bottom: 32.h, top: 8.h),
           child: Center(
-            child: formState.canResend
-                ? GestureDetector(
-                    onTap: cubit.resend,
-                    child: Text(
-                      tr('auth.resend_code_action'),
-                      style: TextStyle(
-                        fontSize: 14.sp,
-                        fontWeight: FontWeight.w500,
-                        color: splashOrange,
-                      ),
+            child: formState.isResending
+                ? SizedBox(
+                    width: 20.w,
+                    height: 20.w,
+                    child: CircularProgressIndicator.adaptive(
+                      strokeWidth: 2,
+                      valueColor: AlwaysStoppedAnimation(splashOrange),
                     ),
                   )
-                : Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Text(
-                        tr('auth.resend_code'),
-                        style: TextStyle(
-                          fontSize: 14.sp,
-                          fontWeight: FontWeight.w400,
-                          color: colors.neutral600,
+                : formState.canResend
+                    ? GestureDetector(
+                        onTap: cubit.resend,
+                        child: Text(
+                          tr('auth.resend_code_action'),
+                          style: TextStyle(
+                            fontSize: 14.sp,
+                            fontWeight: FontWeight.w600,
+                            color: splashOrange,
+                          ),
                         ),
+                      )
+                    : Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text(
+                            tr('auth.resend_code'),
+                            style: TextStyle(
+                              fontSize: 14.sp,
+                              fontWeight: FontWeight.w400,
+                              color: colors.neutral600,
+                            ),
+                          ),
+                          SizedBox(width: 6.w),
+                          Text(
+                            _formatCountdown(formState.countdown),
+                            style: TextStyle(
+                              fontSize: 14.sp,
+                              fontWeight: FontWeight.w700,
+                              color: splashOrange,
+                            ),
+                          ),
+                        ],
                       ),
-                      SizedBox(width: 4.w),
-                      Text(
-                        _formatCountdown(formState.countdown),
-                        style: TextStyle(
-                          fontSize: 14.sp,
-                          fontWeight: FontWeight.w600,
-                          color: colors.neutral900,
-                        ),
-                      ),
-                    ],
-                  ),
           ),
         );
       },

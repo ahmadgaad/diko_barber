@@ -1,3 +1,6 @@
+import 'package:ronaq_barber/core/networking/api_error_model.dart';
+import 'package:ronaq_barber/core/networking/result.dart';
+
 import '../repositories/auth_repository.dart';
 
 class VerifyOtpUseCase {
@@ -5,6 +8,9 @@ class VerifyOtpUseCase {
 
   final AuthRepository _repository;
 
-  Future<void> call({required String email, required String otp}) =>
-      _repository.verifyOtp(email: email, otp: otp);
+  Future<Result<ApiErrorModel, void>> call({
+    required String key,
+    required String otp,
+  }) =>
+      _repository.verifyOtp(key: key, otp: otp);
 }

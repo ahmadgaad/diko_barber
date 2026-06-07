@@ -1,0 +1,8 @@
+import 'package:ronaq_barber/core/shared/domain/entities/city.dart';
+
+class CityModel extends City {
+  const CityModel({required super.id, required super.name});
+
+  factory CityModel.fromJson(Map<String, dynamic> json) =>
+      CityModel(id: json['id'] as int, name: json['name'] as String);
+}

@@ -74,8 +74,8 @@ class _SignInViewState extends State<SignInView> {
         const SignInHeader(),
         _buildHeadingSection(context),
         _buildFormSection(context),
-        _buildDividerSection(),
-        _buildSocialSection(),
+        _buildDividerSection(context),
+        _buildSocialSection(context),
       ],
     );
   }
@@ -125,15 +125,15 @@ class _SignInViewState extends State<SignInView> {
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
               AppTextFormField(
-                label: tr('auth.email_label'),
-                hint: tr('auth.email_hint'),
+                label: tr('auth.login_label'),
+                hint: tr('auth.login_hint'),
                 controller: _emailController,
                 onChanged: cubit.onEmailChanged,
                 errorText: formState.emailError != null
                     ? tr(formState.emailError!)
                     : null,
                 isRequired: true,
-                keyboardType: TextInputType.emailAddress,
+                keyboardType: TextInputType.text,
                 textInputAction: TextInputAction.next,
               ),
               SizedBox(height: 16.h),
@@ -185,17 +185,19 @@ class _SignInViewState extends State<SignInView> {
     );
   }
 
-  Widget _buildDividerSection() {
+  Widget _buildDividerSection(BuildContext context) {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 16.w),
       child: AppDividerWithText(text: tr('auth.or_continue_with')),
     );
   }
 
-  Widget _buildSocialSection() {
+  Widget _buildSocialSection(BuildContext context) {
     return Padding(
       padding: EdgeInsets.all(16.w),
-      child: const SignInSocialRow(),
+      child: SignInSocialRow(
+        onFacebookTap: () => context.read<SignInCubit>().loginWithFacebook(),
+      ),
     );
   }
 }
