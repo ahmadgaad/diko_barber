@@ -78,7 +78,14 @@
     "step_profile": "الملف الشخصي",
     "next": "التالي",
     "complete_registration": "إتمام التسجيل",
-    "optional": "اختياري"
+    "optional": "اختياري",
+    "forgot_password_title": "نسيت كلمة المرور",
+    "forgot_password_subtitle": "أدخل بريدك الإلكتروني وسنرسل إليك رمز التحقق",
+    "send_code": "إرسال الرمز",
+    "verify_reset_title": "التحقق من الهوية",
+    "reset_password_title": "تعيين كلمة مرور جديدة",
+    "new_password": "كلمة المرور الجديدة",
+    "reset_password_success": "تم تغيير كلمة المرور بنجاح"
   },
   "nav": {
     "home": "الرئيسية",

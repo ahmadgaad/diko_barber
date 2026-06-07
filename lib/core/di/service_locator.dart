@@ -30,14 +30,20 @@ import 'package:ronaq_barber/features/onboarding/domain/use_cases/get_onboarding
 import 'package:ronaq_barber/features/onboarding/presentation/cubit/onboarding_cubit.dart';
 import 'package:ronaq_barber/features/auth/data/repositories/auth_repository_impl.dart';
 import 'package:ronaq_barber/features/auth/domain/repositories/auth_repository.dart';
+import 'package:ronaq_barber/features/auth/domain/use_cases/forgot_password_use_case.dart';
+import 'package:ronaq_barber/features/auth/domain/use_cases/reset_password_use_case.dart';
 import 'package:ronaq_barber/features/auth/domain/use_cases/sign_in_use_case.dart';
 import 'package:ronaq_barber/features/auth/domain/use_cases/sign_up_use_case.dart';
 import 'package:ronaq_barber/features/auth/domain/use_cases/resend_verification_use_case.dart';
 import 'package:ronaq_barber/features/auth/domain/use_cases/social_login_use_case.dart';
 import 'package:ronaq_barber/features/auth/domain/use_cases/verify_otp_use_case.dart';
+import 'package:ronaq_barber/features/auth/domain/use_cases/verify_reset_password_use_case.dart';
+import 'package:ronaq_barber/features/auth/presentation/cubit/forgot_password_cubit.dart';
+import 'package:ronaq_barber/features/auth/presentation/cubit/reset_password_cubit.dart';
 import 'package:ronaq_barber/features/auth/presentation/cubit/sign_in_cubit.dart';
 import 'package:ronaq_barber/features/auth/presentation/cubit/sign_up_cubit.dart';
 import 'package:ronaq_barber/features/auth/presentation/cubit/verify_otp_cubit.dart';
+import 'package:ronaq_barber/features/auth/presentation/cubit/verify_reset_password_cubit.dart';
 import 'package:ronaq_barber/features/splash/domain/use_cases/complete_splash_use_case.dart';
 import 'package:ronaq_barber/features/splash/presentation/cubit/splash_cubit.dart';
 
@@ -144,6 +150,15 @@ Future<void> setupServiceLocator() async {
   sl.registerLazySingleton<SocialLoginUseCase>(
     () => SocialLoginUseCase(sl<AuthRepository>()),
   );
+  sl.registerLazySingleton<ForgotPasswordUseCase>(
+    () => ForgotPasswordUseCase(sl<AuthRepository>()),
+  );
+  sl.registerLazySingleton<VerifyResetPasswordUseCase>(
+    () => VerifyResetPasswordUseCase(sl<AuthRepository>()),
+  );
+  sl.registerLazySingleton<ResetPasswordUseCase>(
+    () => ResetPasswordUseCase(sl<AuthRepository>()),
+  );
 
   // ─── Cubits ───────────────────────────────────────────────────────────────
   sl.registerFactory<OnboardingCubit>(
@@ -180,5 +195,18 @@ Future<void> setupServiceLocator() async {
       resendVerificationUseCase: sl<ResendVerificationUseCase>(),
       email: email,
     ),
+  );
+  sl.registerFactory<ForgotPasswordCubit>(
+    () => ForgotPasswordCubit(sl<ForgotPasswordUseCase>()),
+  );
+  sl.registerFactoryParam<VerifyResetPasswordCubit, String, void>(
+    (email, _) => VerifyResetPasswordCubit(
+      verifyResetPasswordUseCase: sl<VerifyResetPasswordUseCase>(),
+      secureStorage: sl<SecureStorageCacheClient>(),
+      email: email,
+    ),
+  );
+  sl.registerFactory<ResetPasswordCubit>(
+    () => ResetPasswordCubit(sl<ResetPasswordUseCase>()),
   );
 }

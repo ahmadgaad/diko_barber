@@ -25,29 +25,64 @@ class AppGradientButton extends StatelessWidget {
       textDirection: TextDirection.ltr,
       child: GestureDetector(
         onTap: isActive ? onTap : null,
-        child: AnimatedContainer(
-          duration: const Duration(milliseconds: 200),
+        child: SizedBox(
           height: 48.h,
-          alignment: Alignment.center,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(999.r),
-            gradient: isActive ? buttonGradient : null,
-            color: isActive ? null : colors.neutral200,
-          ),
-          child: isLoading
-              ? SizedBox(
-                  width: 22.w,
-                  height: 22.w,
-                  child: CircularProgressIndicator.adaptive(strokeWidth: 2.5),
-                )
-              : Text(
-                  label,
-                  style: TextStyle(
-                    color: isActive ? Colors.white : colors.neutral600,
-                    fontSize: 16.sp,
-                    fontWeight: FontWeight.w500,
+          child: Stack(
+            children: [
+              // Disabled layer
+              Positioned.fill(
+                child: AnimatedOpacity(
+                  opacity: isActive ? 0.0 : 1.0,
+                  duration: const Duration(milliseconds: 250),
+                  curve: Curves.easeInOut,
+                  child: DecoratedBox(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(999.r),
+                      color: colors.neutral200,
+                    ),
                   ),
                 ),
+              ),
+              // Gradient layer
+              Positioned.fill(
+                child: AnimatedOpacity(
+                  opacity: isActive ? 1.0 : 0.0,
+                  duration: const Duration(milliseconds: 250),
+                  curve: Curves.easeInOut,
+                  child: DecoratedBox(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(999.r),
+                      gradient: buttonGradient,
+                    ),
+                  ),
+                ),
+              ),
+              // Content
+              Center(
+                child: AnimatedSwitcher(
+                  duration: const Duration(milliseconds: 200),
+                  child: isLoading
+                      ? SizedBox(
+                          key: const ValueKey('loading'),
+                          width: 22.w,
+                          height: 22.w,
+                          child: CircularProgressIndicator.adaptive(
+                            strokeWidth: 2.5,
+                          ),
+                        )
+                      : Text(
+                          label,
+                          key: const ValueKey('label'),
+                          style: TextStyle(
+                            color: isActive ? Colors.white : colors.neutral600,
+                            fontSize: 16.sp,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

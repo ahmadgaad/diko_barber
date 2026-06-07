@@ -1,6 +1,9 @@
+import 'package:ronaq_barber/features/auth/presentation/screens/forgot_password_screen.dart';
+import 'package:ronaq_barber/features/auth/presentation/screens/reset_password_screen.dart';
 import 'package:ronaq_barber/features/auth/presentation/screens/sign_in_screen.dart';
 import 'package:ronaq_barber/features/auth/presentation/screens/sign_up_screen.dart';
 import 'package:ronaq_barber/features/auth/presentation/screens/verify_otp_screen.dart';
+import 'package:ronaq_barber/features/auth/presentation/screens/verify_reset_password_screen.dart';
 import 'package:ronaq_barber/features/home/presentation/screens/home_screen.dart';
 import 'package:ronaq_barber/features/onboarding/presentation/screens/onboarding_screen.dart';
 import 'package:ronaq_barber/features/splash/presentation/screens/splash_screen.dart';
@@ -35,6 +38,19 @@ final appRouter = GoRouter(
       path: AppRoutes.verifyOtp,
       builder: (context, state) =>
           VerifyOtpScreen(email: state.extra as String),
+    ),
+    GoRoute(
+      path: AppRoutes.forgotPassword,
+      builder: (context, state) => const ForgotPasswordScreen(),
+    ),
+    GoRoute(
+      path: AppRoutes.verifyResetPassword,
+      builder: (context, state) =>
+          VerifyResetPasswordScreen(email: state.extra as String),
+    ),
+    GoRoute(
+      path: AppRoutes.resetPassword,
+      builder: (context, state) => const ResetPasswordScreen(),
     ),
   ],
 );

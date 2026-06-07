@@ -25,4 +25,16 @@ abstract class AuthRepository {
     String? idToken,
     String? fcmToken,
   });
+
+  Future<Result<ApiErrorModel, void>> forgotPassword({required String key});
+
+  Future<Result<ApiErrorModel, AuthResponse>> verifyResetPassword({
+    required String key,
+    required String otp,
+  });
+
+  Future<Result<ApiErrorModel, void>> resetPassword({
+    required String password,
+    required String passwordConfirmation,
+  });
 }

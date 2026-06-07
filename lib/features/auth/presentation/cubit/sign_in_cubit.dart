@@ -114,11 +114,15 @@ class SignInCubit extends Cubit<SignInState> {
   }
 
   void navigateToSignUp() {
+    final current = _formState.copyWith(apiError: () => null);
     emit(const SignInNavigate(target: AppRoutes.signup));
+    emit(current);
   }
 
   void navigateToForgotPassword() {
-    // TODO: Implement forgot password navigation
+    final current = _formState.copyWith(apiError: () => null);
+    emit(const SignInNavigate(target: AppRoutes.forgotPassword));
+    emit(current);
   }
 
   String? _validateLogin(String value) {

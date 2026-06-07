@@ -6,6 +6,9 @@ abstract final class EndPoints {
   static const String resendOtp = 'auth/resend-otp';
   static const String resendVerification = 'auth/resend-verification';
   static const String logout = 'auth/logout';
+  static const String forgotPassword = 'auth/forgot-password';
+  static const String verifyResetPassword = 'auth/verify-reset-password';
+  static const String resetPassword = 'auth/reset-password';
 
   // Onboarding
   static const String onboarding = 'shared/onboarding';

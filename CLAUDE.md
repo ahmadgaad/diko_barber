@@ -165,7 +165,60 @@ Then provide a brief summary of:
 - Why it was changed
 - Why the solution is safe and correct
 
-## 25) Git and Pull Request output (mandatory after task completion)
+## 25) BlocListener snackbar pattern (mandatory)
+- Never check only `current.apiError != null` in `listenWhen` — this re-fires the snackbar on every unrelated state change (e.g. toggling password visibility) if a prior error is still in state.
+- Always compare previous vs current:
+  ```dart
+  listenWhen: (previous, current) {
+    if (current is SomeFormState) {
+      if (previous is SomeFormState) {
+        return current.apiError != null && current.apiError != previous.apiError;
+      }
+      return current.apiError != null;
+    }
+    return true;
+  },
+  ```
+- Always clear `apiError` when setting `isSubmitting: true` so the same error is detectable again on retry:
+  ```dart
+  emit(_formState.copyWith(isSubmitting: true, apiError: () => null));
+  ```
+
+## 26) API error vs validation error separation (mandatory)
+- **Server/API errors** → store in `apiError` field → show as `AppSnackBar`
+- **Client-side validation errors** → store in field-specific error (e.g. `emailError`) → show under the field
+- Never put API failure messages into field-level error fields.
+- Use `SnackBarType.success` for success messages — the default is `SnackBarType.error`.
+
+## 27) Navigation: push vs go (mandatory)
+- Use `context.push()` for forward navigation within a user flow so the back button works.
+- Use `context.go()` only to clear the entire navigation stack (e.g. after successful login → home, after password reset → login).
+- Never use `context.go()` for screens the user should be able to pop back from.
+
+## 28) Navigation state reset in Cubit (mandatory)
+- After emitting a navigation state, immediately re-emit the current form state with `apiError` cleared. This prevents two bugs:
+  1. Tapping the same navigation trigger a second time does nothing (BLoC deduplication).
+  2. Stale `apiError` re-fires the snackbar when the restored state transitions from a non-form state.
+  ```dart
+  void navigateToX() {
+    final current = _formState.copyWith(apiError: () => null);
+    emit(const SomeNavigateState());
+    emit(current); // restores field values, clears error
+  }
+  ```
+
+## 29) Gradient button animation (mandatory)
+- Do NOT use `AnimatedContainer` or `TweenAnimationBuilder<Decoration>` to transition between a `gradient` decoration and a `color` decoration — Flutter cannot lerp between them cleanly and the result flickers.
+- Use `Stack` + `AnimatedOpacity` to cross-fade the two layers independently:
+  ```dart
+  Stack(children: [
+    Positioned.fill(child: AnimatedOpacity(opacity: isActive ? 0.0 : 1.0, child: /* solid color */)),
+    Positioned.fill(child: AnimatedOpacity(opacity: isActive ? 1.0 : 0.0, child: /* gradient */)),
+    Center(child: /* content */),
+  ])
+  ```
+
+## 30) Git and Pull Request output (mandatory after task completion)
 
 After I confirm that the task is complete and approved, you must provide:
 

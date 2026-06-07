@@ -121,4 +121,66 @@ class AuthRepositoryImpl implements AuthRepository {
       return Failure(ApiErrorModel(message: 'حدث خطأ غير معروف'));
     }
   }
+
+  @override
+  Future<Result<ApiErrorModel, void>> forgotPassword({
+    required String key,
+  }) async {
+    try {
+      final response = await _remoteDataSource.forgotPassword(key: key);
+      if (response.isError) {
+        return Failure(
+          ApiErrorModel(message: response.message ?? 'حدث خطأ غير معروف'),
+        );
+      }
+      return const Success(null);
+    } catch (_) {
+      return Failure(ApiErrorModel(message: 'حدث خطأ غير معروف'));
+    }
+  }
+
+  @override
+  Future<Result<ApiErrorModel, AuthResponse>> verifyResetPassword({
+    required String key,
+    required String otp,
+  }) async {
+    try {
+      final response = await _remoteDataSource.verifyResetPassword(
+        key: key,
+        otp: otp,
+      );
+      if (response.isError || response.data == null) {
+        return Failure(
+          ApiErrorModel(message: response.message ?? 'حدث خطأ غير معروف'),
+        );
+      }
+      final authResponse = AuthResponseModel.fromJson(
+        response.data as Map<String, dynamic>,
+      );
+      return Success(authResponse);
+    } catch (_) {
+      return Failure(ApiErrorModel(message: 'حدث خطأ غير معروف'));
+    }
+  }
+
+  @override
+  Future<Result<ApiErrorModel, void>> resetPassword({
+    required String password,
+    required String passwordConfirmation,
+  }) async {
+    try {
+      final response = await _remoteDataSource.resetPassword(
+        password: password,
+        passwordConfirmation: passwordConfirmation,
+      );
+      if (response.isError) {
+        return Failure(
+          ApiErrorModel(message: response.message ?? 'حدث خطأ غير معروف'),
+        );
+      }
+      return const Success(null);
+    } catch (_) {
+      return Failure(ApiErrorModel(message: 'حدث خطأ غير معروف'));
+    }
+  }
 }

@@ -78,7 +78,14 @@
     "step_profile": "Profile",
     "next": "Next",
     "complete_registration": "Complete Registration",
-    "optional": "Optional"
+    "optional": "Optional",
+    "forgot_password_title": "Forgot Password",
+    "forgot_password_subtitle": "Enter your email and we'll send you a verification code",
+    "send_code": "Send Code",
+    "verify_reset_title": "Verify Identity",
+    "reset_password_title": "Set New Password",
+    "new_password": "New Password",
+    "reset_password_success": "Password reset successfully"
   },
   "nav": {
     "home": "Home",

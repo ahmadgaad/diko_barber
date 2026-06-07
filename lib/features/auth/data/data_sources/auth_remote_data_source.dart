@@ -26,6 +26,18 @@ abstract class AuthRemoteDataSource {
     String? idToken,
     String? fcmToken,
   });
+
+  Future<ApiResponse<dynamic>> forgotPassword({required String key});
+
+  Future<ApiResponse<dynamic>> verifyResetPassword({
+    required String key,
+    required String otp,
+  });
+
+  Future<ApiResponse<dynamic>> resetPassword({
+    required String password,
+    required String passwordConfirmation,
+  });
 }
 
 class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
@@ -104,6 +116,39 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
         'access_token': accessToken,
         'id_token': ?idToken,
         'fcm_token': ?fcmToken,
+      },
+    );
+  }
+
+  @override
+  Future<ApiResponse<dynamic>> forgotPassword({required String key}) {
+    return _networkService.postData(
+      endPoint: EndPoints.forgotPassword,
+      body: {'verify_with': 2, 'key': key},
+    );
+  }
+
+  @override
+  Future<ApiResponse<dynamic>> verifyResetPassword({
+    required String key,
+    required String otp,
+  }) {
+    return _networkService.postData(
+      endPoint: EndPoints.verifyResetPassword,
+      body: {'verify_with': 2, 'key': key, 'otp': otp},
+    );
+  }
+
+  @override
+  Future<ApiResponse<dynamic>> resetPassword({
+    required String password,
+    required String passwordConfirmation,
+  }) {
+    return _networkService.postData(
+      endPoint: EndPoints.resetPassword,
+      body: {
+        'password': password,
+        'password_confirmation': passwordConfirmation,
       },
     );
   }

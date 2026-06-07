@@ -1,19 +1,19 @@
-import 'package:ronaq_barber/core/widgets/app_divider_with_text.dart';
-import 'package:ronaq_barber/core/widgets/app_gradient_button.dart';
-import 'package:ronaq_barber/core/widgets/app_snack_bar.dart';
-import 'package:ronaq_barber/core/widgets/app_text_form_field.dart';
-import 'package:ronaq_barber/core/router/app_routes.dart';
-import 'package:ronaq_barber/core/theme/app_colors.dart';
-import 'package:ronaq_barber/features/auth/presentation/components/sign_in_footer.dart';
-import 'package:ronaq_barber/features/auth/presentation/components/sign_in_header.dart';
-import 'package:ronaq_barber/features/auth/presentation/components/sign_in_social_row.dart';
-import 'package:ronaq_barber/features/auth/presentation/cubit/sign_in_cubit.dart';
-import 'package:ronaq_barber/features/auth/presentation/cubit/sign_in_state.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
+import 'package:ronaq_barber/core/router/app_routes.dart';
+import 'package:ronaq_barber/core/theme/app_colors.dart';
+import 'package:ronaq_barber/core/widgets/app_divider_with_text.dart';
+import 'package:ronaq_barber/core/widgets/app_gradient_button.dart';
+import 'package:ronaq_barber/core/widgets/app_snack_bar.dart';
+import 'package:ronaq_barber/core/widgets/app_text_form_field.dart';
+import 'package:ronaq_barber/features/auth/presentation/components/sign_in_footer.dart';
+import 'package:ronaq_barber/features/auth/presentation/components/sign_in_header.dart';
+import 'package:ronaq_barber/features/auth/presentation/components/sign_in_social_row.dart';
+import 'package:ronaq_barber/features/auth/presentation/cubit/sign_in_cubit.dart';
+import 'package:ronaq_barber/features/auth/presentation/cubit/sign_in_state.dart';
 
 class SignInView extends StatefulWidget {
   const SignInView({super.key});
@@ -36,14 +36,20 @@ class _SignInViewState extends State<SignInView> {
   @override
   Widget build(BuildContext context) {
     return BlocListener<SignInCubit, SignInState>(
-      listenWhen: (_, current) {
-        if (current is SignInFormState) return current.apiError != null;
+      listenWhen: (previous, current) {
+        if (current is SignInFormState) {
+          if (previous is SignInFormState) {
+            return current.apiError != null &&
+                current.apiError != previous.apiError;
+          }
+          return current.apiError != null;
+        }
         return true;
       },
       listener: (context, state) {
         switch (state) {
           case SignInNavigate(:final target):
-            context.go(target);
+            context.push(target);
           case SignInSuccess():
             context.go(AppRoutes.home);
           case SignInFormState(:final apiError) when apiError != null:
