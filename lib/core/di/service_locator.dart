@@ -5,9 +5,18 @@ import 'package:ronaq_barber/core/networking/network_info.dart';
 import 'package:ronaq_barber/core/shared/data/data_sources/shared_remote_data_source.dart';
 import 'package:ronaq_barber/core/shared/data/repositories/shared_repository_impl.dart';
 import 'package:ronaq_barber/core/shared/domain/repositories/shared_repository.dart';
+import 'package:ronaq_barber/core/shared/domain/use_cases/get_categories_use_case.dart';
 import 'package:ronaq_barber/core/shared/domain/use_cases/get_cities_use_case.dart';
 import 'package:ronaq_barber/core/shared/domain/use_cases/get_neighborhoods_use_case.dart';
 import 'package:ronaq_barber/features/auth/data/data_sources/auth_remote_data_source.dart';
+import 'package:ronaq_barber/features/salon_auth/data/data_sources/salon_auth_remote_data_source.dart';
+import 'package:ronaq_barber/features/salon_auth/data/repositories/salon_auth_repository_impl.dart';
+import 'package:ronaq_barber/features/salon_auth/domain/repositories/salon_auth_repository.dart';
+import 'package:ronaq_barber/features/salon_auth/domain/use_cases/salon_register_use_case.dart';
+import 'package:ronaq_barber/features/salon_auth/domain/use_cases/salon_resend_otp_use_case.dart';
+import 'package:ronaq_barber/features/salon_auth/domain/use_cases/salon_verify_otp_use_case.dart';
+import 'package:ronaq_barber/features/salon_auth/presentation/cubit/salon_register_cubit.dart';
+import 'package:ronaq_barber/features/salon_auth/presentation/cubit/salon_verify_otp_cubit.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get_it/get_it.dart';
@@ -109,6 +118,12 @@ Future<void> setupServiceLocator() async {
   sl.registerLazySingleton<AuthRepository>(
     () => AuthRepositoryImpl(sl<AuthRemoteDataSource>()),
   );
+  sl.registerLazySingleton<SalonAuthRemoteDataSource>(
+    () => SalonAuthRemoteDataSourceImpl(sl<INetworkService>()),
+  );
+  sl.registerLazySingleton<SalonAuthRepository>(
+    () => SalonAuthRepositoryImpl(sl<SalonAuthRemoteDataSource>()),
+  );
 
   // ─── Use Cases ────────────────────────────────────────────────────────────
   sl.registerLazySingleton<GetCitiesUseCase>(
@@ -116,6 +131,9 @@ Future<void> setupServiceLocator() async {
   );
   sl.registerLazySingleton<GetNeighborhoodsUseCase>(
     () => GetNeighborhoodsUseCase(sl<SharedRepository>()),
+  );
+  sl.registerLazySingleton<GetCategoriesUseCase>(
+    () => GetCategoriesUseCase(sl<SharedRepository>()),
   );
   sl.registerLazySingleton<GetLocaleUseCase>(
     () => GetLocaleUseCase(sl<LocaleRepository>()),
@@ -133,7 +151,7 @@ Future<void> setupServiceLocator() async {
     () => GetOnboardingUseCase(sl<OnboardingRepository>()),
   );
   sl.registerLazySingleton<CompleteSplashUseCase>(
-    () => CompleteSplashUseCase(sl<OnboardingRepository>()),
+    () => CompleteSplashUseCase(sl<OnboardingRepository>(), sl<SecureStorageCacheClient>()),
   );
   sl.registerLazySingleton<SignInUseCase>(
     () => SignInUseCase(sl<AuthRepository>()),
@@ -158,6 +176,15 @@ Future<void> setupServiceLocator() async {
   );
   sl.registerLazySingleton<ResetPasswordUseCase>(
     () => ResetPasswordUseCase(sl<AuthRepository>()),
+  );
+  sl.registerLazySingleton<SalonRegisterUseCase>(
+    () => SalonRegisterUseCase(sl<SalonAuthRepository>()),
+  );
+  sl.registerLazySingleton<SalonVerifyOtpUseCase>(
+    () => SalonVerifyOtpUseCase(sl<SalonAuthRepository>()),
+  );
+  sl.registerLazySingleton<SalonResendOtpUseCase>(
+    () => SalonResendOtpUseCase(sl<SalonAuthRepository>()),
   );
 
   // ─── Cubits ───────────────────────────────────────────────────────────────
@@ -193,6 +220,7 @@ Future<void> setupServiceLocator() async {
     (email, _) => VerifyOtpCubit(
       verifyOtpUseCase: sl<VerifyOtpUseCase>(),
       resendVerificationUseCase: sl<ResendVerificationUseCase>(),
+      secureStorage: sl<SecureStorageCacheClient>(),
       email: email,
     ),
   );
@@ -208,5 +236,20 @@ Future<void> setupServiceLocator() async {
   );
   sl.registerFactory<ResetPasswordCubit>(
     () => ResetPasswordCubit(sl<ResetPasswordUseCase>()),
+  );
+  sl.registerFactory<SalonRegisterCubit>(
+    () => SalonRegisterCubit(
+      salonRegisterUseCase: sl<SalonRegisterUseCase>(),
+      getCitiesUseCase: sl<GetCitiesUseCase>(),
+      getNeighborhoodsUseCase: sl<GetNeighborhoodsUseCase>(),
+      getCategoriesUseCase: sl<GetCategoriesUseCase>(),
+    ),
+  );
+  sl.registerFactoryParam<SalonVerifyOtpCubit, String, void>(
+    (email, _) => SalonVerifyOtpCubit(
+      verifyOtpUseCase: sl<SalonVerifyOtpUseCase>(),
+      resendOtpUseCase: sl<SalonResendOtpUseCase>(),
+      email: email,
+    ),
   );
 }

@@ -69,6 +69,15 @@ final class SignInSuccess extends SignInState {
   List<Object?> get props => [];
 }
 
+final class SignInNeedsVerification extends SignInState {
+  const SignInNeedsVerification({required this.contact});
+
+  final String contact;
+
+  @override
+  List<Object?> get props => [contact];
+}
+
 final class SignInNavigate extends SignInState {
   const SignInNavigate({required this.target});
 

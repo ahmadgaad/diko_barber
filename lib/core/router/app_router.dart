@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:ronaq_barber/features/auth/presentation/screens/forgot_password_screen.dart';
 import 'package:ronaq_barber/features/auth/presentation/screens/reset_password_screen.dart';
 import 'package:ronaq_barber/features/auth/presentation/screens/sign_in_screen.dart';
@@ -6,6 +7,9 @@ import 'package:ronaq_barber/features/auth/presentation/screens/verify_otp_scree
 import 'package:ronaq_barber/features/auth/presentation/screens/verify_reset_password_screen.dart';
 import 'package:ronaq_barber/features/home/presentation/screens/home_screen.dart';
 import 'package:ronaq_barber/features/onboarding/presentation/screens/onboarding_screen.dart';
+import 'package:ronaq_barber/features/salon_auth/presentation/screens/salon_register_screen.dart';
+import 'package:ronaq_barber/features/salon_auth/presentation/screens/salon_register_success_screen.dart';
+import 'package:ronaq_barber/features/salon_auth/presentation/screens/salon_verify_otp_screen.dart';
 import 'package:ronaq_barber/features/splash/presentation/screens/splash_screen.dart';
 import 'package:go_router/go_router.dart';
 
@@ -32,7 +36,9 @@ final appRouter = GoRouter(
     ),
     GoRoute(
       path: AppRoutes.signup,
-      builder: (context, state) => const SignUpScreen(),
+      pageBuilder: (context, state) => state.extra == 'toggle'
+          ? const NoTransitionPage(child: SignUpScreen())
+          : const MaterialPage(child: SignUpScreen()),
     ),
     GoRoute(
       path: AppRoutes.verifyOtp,
@@ -51,6 +57,22 @@ final appRouter = GoRouter(
     GoRoute(
       path: AppRoutes.resetPassword,
       builder: (context, state) => const ResetPasswordScreen(),
+    ),
+    // Salon Auth
+    GoRoute(
+      path: AppRoutes.salonSignup,
+      pageBuilder: (context, state) => state.extra == 'toggle'
+          ? const NoTransitionPage(child: SalonRegisterScreen())
+          : const MaterialPage(child: SalonRegisterScreen()),
+    ),
+    GoRoute(
+      path: AppRoutes.salonVerifyOtp,
+      builder: (context, state) =>
+          SalonVerifyOtpScreen(email: state.extra as String),
+    ),
+    GoRoute(
+      path: AppRoutes.salonRegisterSuccess,
+      builder: (context, state) => const SalonRegisterSuccessScreen(),
     ),
   ],
 );

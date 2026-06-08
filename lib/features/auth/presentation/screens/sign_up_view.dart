@@ -12,6 +12,7 @@ import 'package:ronaq_barber/core/widgets/app_dropdown_field.dart';
 import 'package:ronaq_barber/core/widgets/app_gradient_button.dart';
 import 'package:ronaq_barber/core/widgets/app_snack_bar.dart';
 import 'package:ronaq_barber/core/widgets/app_text_form_field.dart';
+import 'package:ronaq_barber/core/widgets/user_type_toggle.dart';
 import 'package:ronaq_barber/features/auth/presentation/components/sign_in_header.dart';
 import 'package:ronaq_barber/features/auth/presentation/cubit/sign_up_cubit.dart';
 import 'package:ronaq_barber/features/auth/presentation/cubit/sign_up_state.dart';
@@ -78,6 +79,12 @@ class _SignUpViewState extends State<SignUpView> {
                       children: [
                         const SignInHeader(),
                         _buildHeadingSection(context),
+                        UserTypeToggle(
+                          isCustomer: true,
+                          onCustomerTap: () {},
+                          onSalonOwnerTap: () =>
+                              context.go(AppRoutes.salonSignup, extra: 'toggle'),
+                        ),
                         _buildStepIndicator(context, formState),
                         SizedBox(height: 8.h),
                         if (formState.currentStep == 0)

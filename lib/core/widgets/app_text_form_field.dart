@@ -15,6 +15,8 @@ class AppTextFormField extends StatelessWidget {
     this.suffixIcon,
     this.keyboardType,
     this.textInputAction,
+    this.maxLines = 1,
+    this.minLines,
   });
 
   final String label;
@@ -27,6 +29,8 @@ class AppTextFormField extends StatelessWidget {
   final Widget? suffixIcon;
   final TextInputType? keyboardType;
   final TextInputAction? textInputAction;
+  final int maxLines;
+  final int? minLines;
 
   @override
   Widget build(BuildContext context) {
@@ -76,6 +80,8 @@ class AppTextFormField extends StatelessWidget {
 
   Widget _buildTextField(AppColors colors, bool hasError) {
     final borderColor = hasError ? colors.error500 : colors.neutral300;
+    final isMultiline = maxLines > 1;
+    final radius = isMultiline ? BorderRadius.circular(16.r) : BorderRadius.circular(999.r);
 
     return TextField(
       controller: controller,
@@ -83,6 +89,8 @@ class AppTextFormField extends StatelessWidget {
       obscureText: obscureText,
       keyboardType: keyboardType,
       textInputAction: textInputAction,
+      maxLines: maxLines,
+      minLines: minLines,
       style: TextStyle(
         fontSize: 16.sp,
         fontWeight: FontWeight.w400,
@@ -103,15 +111,15 @@ class AppTextFormField extends StatelessWidget {
           vertical: 14.h,
         ),
         border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(999.r),
+          borderRadius: radius,
           borderSide: BorderSide(color: borderColor),
         ),
         enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(999.r),
+          borderRadius: radius,
           borderSide: BorderSide(color: borderColor),
         ),
         focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(999.r),
+          borderRadius: radius,
           borderSide:
               BorderSide(color: hasError ? colors.error500 : splashOrange),
         ),

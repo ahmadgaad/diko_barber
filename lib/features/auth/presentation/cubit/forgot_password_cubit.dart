@@ -36,7 +36,9 @@ class ForgotPasswordCubit extends Cubit<ForgotPasswordState> {
 
     switch (result) {
       case Success():
+        final current = _formState.copyWith(isSubmitting: false);
         emit(const ForgotPasswordSuccess());
+        emit(current);
       case Failure(:final error):
         emit(_formState.copyWith(
           isSubmitting: false,

@@ -52,6 +52,8 @@ class _SignInViewState extends State<SignInView> {
             context.push(target);
           case SignInSuccess():
             context.go(AppRoutes.home);
+          case SignInNeedsVerification(:final contact):
+            context.push(AppRoutes.verifyOtp, extra: contact);
           case SignInFormState(:final apiError) when apiError != null:
             AppSnackBar.show(context, message: apiError);
           case SignInFormState():
@@ -206,4 +208,5 @@ class _SignInViewState extends State<SignInView> {
       ),
     );
   }
+
 }

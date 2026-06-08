@@ -43,7 +43,9 @@ class VerifyResetPasswordCubit extends Cubit<VerifyResetPasswordState> {
         if (data.token != null) {
           await _secureStorage.set(CacheKeys.userAccessToken, data.token!);
         }
+        final current = _formState.copyWith(isSubmitting: false);
         emit(const VerifyResetPasswordSuccess());
+        emit(current);
       case Failure(:final error):
         emit(_formState.copyWith(
           isSubmitting: false,

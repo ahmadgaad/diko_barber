@@ -189,6 +189,7 @@ class SignUpCubit extends Cubit<SignUpState> {
         if (data.token != null) {
           await _secureStorage.set(CacheKeys.userAccessToken, data.token!);
         }
+        await _secureStorage.set(CacheKeys.userIsVerified, data.isVerified.toString());
         emit(const SignUpSocialSuccess());
       case Failure(:final error):
         emit(_formState.copyWith(
@@ -229,6 +230,7 @@ class SignUpCubit extends Cubit<SignUpState> {
         if (data.token != null) {
           await _secureStorage.set(CacheKeys.userAccessToken, data.token!);
         }
+        await _secureStorage.set(CacheKeys.userIsVerified, data.isVerified.toString());
         emit(SignUpSuccess(email: _formState.email, phone: _formState.phone));
       case Failure(:final error):
         emit(_formState.copyWith(

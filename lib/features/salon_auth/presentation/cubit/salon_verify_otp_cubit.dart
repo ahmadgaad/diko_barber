@@ -1,40 +1,35 @@
 import 'dart:async';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:ronaq_barber/core/cache/cache_keys.dart';
-import 'package:ronaq_barber/core/cache/secure_storage_cache_client.dart';
 import 'package:ronaq_barber/core/networking/result.dart';
-import 'package:ronaq_barber/features/auth/domain/use_cases/resend_verification_use_case.dart';
-import 'package:ronaq_barber/features/auth/domain/use_cases/verify_otp_use_case.dart';
+import 'package:ronaq_barber/features/salon_auth/domain/use_cases/salon_resend_otp_use_case.dart';
+import 'package:ronaq_barber/features/salon_auth/domain/use_cases/salon_verify_otp_use_case.dart';
 
-import 'verify_otp_state.dart';
+import 'salon_verify_otp_state.dart';
 
-class VerifyOtpCubit extends Cubit<VerifyOtpState> {
-  VerifyOtpCubit({
-    required VerifyOtpUseCase verifyOtpUseCase,
-    required ResendVerificationUseCase resendVerificationUseCase,
-    required SecureStorageCacheClient secureStorage,
+class SalonVerifyOtpCubit extends Cubit<SalonVerifyOtpState> {
+  SalonVerifyOtpCubit({
+    required SalonVerifyOtpUseCase verifyOtpUseCase,
+    required SalonResendOtpUseCase resendOtpUseCase,
     required this.email,
   })  : _verifyOtpUseCase = verifyOtpUseCase,
-        _resendVerificationUseCase = resendVerificationUseCase,
-        _secureStorage = secureStorage,
-        super(const VerifyOtpFormState()) {
+        _resendOtpUseCase = resendOtpUseCase,
+        super(const SalonVerifyOtpFormState()) {
     _startCountdown();
   }
 
-  final VerifyOtpUseCase _verifyOtpUseCase;
-  final ResendVerificationUseCase _resendVerificationUseCase;
-  final SecureStorageCacheClient _secureStorage;
+  final SalonVerifyOtpUseCase _verifyOtpUseCase;
+  final SalonResendOtpUseCase _resendOtpUseCase;
   final String email;
   Timer? _timer;
 
-  VerifyOtpFormState get _formState => state as VerifyOtpFormState;
+  SalonVerifyOtpFormState get _formState => state as SalonVerifyOtpFormState;
 
   void _startCountdown() {
     _timer?.cancel();
     emit(_formState.copyWith(countdown: 60, canResend: false));
     _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
-      if (state is! VerifyOtpFormState) {
+      if (state is! SalonVerifyOtpFormState) {
         timer.cancel();
         return;
       }
@@ -49,22 +44,22 @@ class VerifyOtpCubit extends Cubit<VerifyOtpState> {
   }
 
   void onOtpChanged(String value) {
-    if (state is! VerifyOtpFormState) return;
+    if (state is! SalonVerifyOtpFormState) return;
     emit(_formState.copyWith(otp: value, otpError: () => null));
   }
 
   Future<void> verify() async {
-    if (state is! VerifyOtpFormState) return;
+    if (state is! SalonVerifyOtpFormState) return;
     if (!_formState.isComplete) return;
 
     emit(_formState.copyWith(isSubmitting: true));
 
-    final result = await _verifyOtpUseCase(key: email, otp: _formState.otp);
+    final result =
+        await _verifyOtpUseCase(key: email, otp: _formState.otp);
 
     switch (result) {
       case Success():
-        await _secureStorage.set(CacheKeys.userIsVerified, 'true');
-        emit(const VerifyOtpSuccess());
+        emit(const SalonVerifyOtpSuccess());
       case Failure(:final error):
         emit(_formState.copyWith(
           isSubmitting: false,
@@ -74,14 +69,14 @@ class VerifyOtpCubit extends Cubit<VerifyOtpState> {
   }
 
   Future<void> resend() async {
-    if (state is! VerifyOtpFormState) return;
+    if (state is! SalonVerifyOtpFormState) return;
     if (!_formState.canResend) return;
 
     emit(_formState.copyWith(isResending: true, otpError: () => null));
 
-    final result = await _resendVerificationUseCase(key: email);
+    final result = await _resendOtpUseCase(key: email);
 
-    if (state is! VerifyOtpFormState) return;
+    if (state is! SalonVerifyOtpFormState) return;
 
     switch (result) {
       case Success():
