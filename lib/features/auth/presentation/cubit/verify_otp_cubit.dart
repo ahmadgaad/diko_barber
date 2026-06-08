@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:developer';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ronaq_barber/core/cache/cache_keys.dart';
@@ -15,10 +16,10 @@ class VerifyOtpCubit extends Cubit<VerifyOtpState> {
     required ResendVerificationUseCase resendVerificationUseCase,
     required SecureStorageCacheClient secureStorage,
     required this.email,
-  })  : _verifyOtpUseCase = verifyOtpUseCase,
-        _resendVerificationUseCase = resendVerificationUseCase,
-        _secureStorage = secureStorage,
-        super(const VerifyOtpFormState()) {
+  }) : _verifyOtpUseCase = verifyOtpUseCase,
+       _resendVerificationUseCase = resendVerificationUseCase,
+       _secureStorage = secureStorage,
+       super(const VerifyOtpFormState()) {
     _startCountdown();
   }
 
@@ -32,7 +33,7 @@ class VerifyOtpCubit extends Cubit<VerifyOtpState> {
 
   void _startCountdown() {
     _timer?.cancel();
-    emit(_formState.copyWith(countdown: 60, canResend: false));
+    emit(_formState.copyWith(countdown: 120, canResend: false));
     _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
       if (state is! VerifyOtpFormState) {
         timer.cancel();
@@ -62,14 +63,20 @@ class VerifyOtpCubit extends Cubit<VerifyOtpState> {
     final result = await _verifyOtpUseCase(key: email, otp: _formState.otp);
 
     switch (result) {
-      case Success():
+      case Success(:final data):
+        if (data.token != null) {
+          log('Received access token: ${data.token}');
+          await _secureStorage.set(CacheKeys.userAccessToken, data.token!);
+        }
         await _secureStorage.set(CacheKeys.userIsVerified, 'true');
         emit(const VerifyOtpSuccess());
       case Failure(:final error):
-        emit(_formState.copyWith(
-          isSubmitting: false,
-          otpError: () => error.message,
-        ));
+        emit(
+          _formState.copyWith(
+            isSubmitting: false,
+            otpError: () => error.message,
+          ),
+        );
     }
   }
 
@@ -88,10 +95,12 @@ class VerifyOtpCubit extends Cubit<VerifyOtpState> {
         emit(_formState.copyWith(otp: '', isResending: false));
         _startCountdown();
       case Failure(:final error):
-        emit(_formState.copyWith(
-          isResending: false,
-          otpError: () => error.message,
-        ));
+        emit(
+          _formState.copyWith(
+            isResending: false,
+            otpError: () => error.message,
+          ),
+        );
     }
   }
 

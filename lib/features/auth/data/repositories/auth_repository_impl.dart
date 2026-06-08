@@ -60,18 +60,21 @@ class AuthRepositoryImpl implements AuthRepository {
   }
 
   @override
-  Future<Result<ApiErrorModel, void>> verifyOtp({
+  Future<Result<ApiErrorModel, AuthResponse>> verifyOtp({
     required String key,
     required String otp,
   }) async {
     try {
       final response = await _remoteDataSource.verifyOtp(key: key, otp: otp);
-      if (response.isError) {
+      if (response.isError || response.data == null) {
         return Failure(
           ApiErrorModel(message: response.message ?? 'حدث خطأ غير معروف'),
         );
       }
-      return const Success(null);
+      final authResponse = AuthResponseModel.fromJson(
+        response.data as Map<String, dynamic>,
+      );
+      return Success(authResponse);
     } catch (_) {
       return Failure(ApiErrorModel(message: 'حدث خطأ غير معروف'));
     }

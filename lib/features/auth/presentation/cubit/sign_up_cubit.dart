@@ -21,12 +21,12 @@ class SignUpCubit extends Cubit<SignUpState> {
     required GetNeighborhoodsUseCase getNeighborhoodsUseCase,
     required SecureStorageCacheClient secureStorage,
     required SocialLoginUseCase socialLoginUseCase,
-  })  : _signUpUseCase = signUpUseCase,
-        _getCitiesUseCase = getCitiesUseCase,
-        _getNeighborhoodsUseCase = getNeighborhoodsUseCase,
-        _secureStorage = secureStorage,
-        _socialLoginUseCase = socialLoginUseCase,
-        super(const SignUpFormState()) {
+  }) : _signUpUseCase = signUpUseCase,
+       _getCitiesUseCase = getCitiesUseCase,
+       _getNeighborhoodsUseCase = getNeighborhoodsUseCase,
+       _secureStorage = secureStorage,
+       _socialLoginUseCase = socialLoginUseCase,
+       super(const SignUpFormState()) {
     _loadCities();
   }
 
@@ -67,10 +67,12 @@ class SignUpCubit extends Cubit<SignUpState> {
 
   void onPasswordConfirmationChanged(String value) {
     if (state is! SignUpFormState) return;
-    emit(_formState.copyWith(
-      passwordConfirmation: value,
-      passwordConfirmationError: () => null,
-    ));
+    emit(
+      _formState.copyWith(
+        passwordConfirmation: value,
+        passwordConfirmationError: () => null,
+      ),
+    );
   }
 
   void togglePasswordVisibility() {
@@ -80,9 +82,11 @@ class SignUpCubit extends Cubit<SignUpState> {
 
   void toggleConfirmPasswordVisibility() {
     if (state is! SignUpFormState) return;
-    emit(_formState.copyWith(
-      obscureConfirmPassword: !_formState.obscureConfirmPassword,
-    ));
+    emit(
+      _formState.copyWith(
+        obscureConfirmPassword: !_formState.obscureConfirmPassword,
+      ),
+    );
   }
 
   // ── Step 2 field changes ─────────────────────────────────────────────────
@@ -94,11 +98,13 @@ class SignUpCubit extends Cubit<SignUpState> {
 
   void onCitySelected(City city) {
     if (state is! SignUpFormState) return;
-    emit(_formState.copyWith(
-      selectedCity: () => city,
-      selectedNeighborhood: () => null,
-      neighborhoods: [],
-    ));
+    emit(
+      _formState.copyWith(
+        selectedCity: () => city,
+        selectedNeighborhood: () => null,
+        neighborhoods: [],
+      ),
+    );
     _loadNeighborhoods(city.id);
   }
 
@@ -142,22 +148,26 @@ class SignUpCubit extends Cubit<SignUpState> {
         contactError != null ||
         passwordError != null ||
         confirmError != null) {
-      emit(_formState.copyWith(
-        nameError: () => nameError,
-        contactError: () => contactError,
-        passwordError: () => passwordError,
-        passwordConfirmationError: () => confirmError,
-      ));
+      emit(
+        _formState.copyWith(
+          nameError: () => nameError,
+          contactError: () => contactError,
+          passwordError: () => passwordError,
+          passwordConfirmationError: () => confirmError,
+        ),
+      );
       return;
     }
 
-    emit(_formState.copyWith(
-      currentStep: 1,
-      nameError: () => null,
-      contactError: () => null,
-      passwordError: () => null,
-      passwordConfirmationError: () => null,
-    ));
+    emit(
+      _formState.copyWith(
+        currentStep: 1,
+        nameError: () => null,
+        contactError: () => null,
+        passwordError: () => null,
+        passwordConfirmationError: () => null,
+      ),
+    );
   }
 
   void goToStep1() {
@@ -189,13 +199,18 @@ class SignUpCubit extends Cubit<SignUpState> {
         if (data.token != null) {
           await _secureStorage.set(CacheKeys.userAccessToken, data.token!);
         }
-        await _secureStorage.set(CacheKeys.userIsVerified, data.isVerified.toString());
+        await _secureStorage.set(
+          CacheKeys.userIsVerified,
+          data.isVerified.toString(),
+        );
         emit(const SignUpSocialSuccess());
       case Failure(:final error):
-        emit(_formState.copyWith(
-          isSubmitting: false,
-          apiError: () => error.message,
-        ));
+        emit(
+          _formState.copyWith(
+            isSubmitting: false,
+            apiError: () => error.message,
+          ),
+        );
     }
   }
 
@@ -226,17 +241,15 @@ class SignUpCubit extends Cubit<SignUpState> {
     final result = await _signUpUseCase(params);
 
     switch (result) {
-      case Success(:final data):
-        if (data.token != null) {
-          await _secureStorage.set(CacheKeys.userAccessToken, data.token!);
-        }
-        await _secureStorage.set(CacheKeys.userIsVerified, data.isVerified.toString());
+      case Success():
         emit(SignUpSuccess(email: _formState.email, phone: _formState.phone));
       case Failure(:final error):
-        emit(_formState.copyWith(
-          isSubmitting: false,
-          apiError: () => error.message,
-        ));
+        emit(
+          _formState.copyWith(
+            isSubmitting: false,
+            apiError: () => error.message,
+          ),
+        );
     }
   }
 
@@ -260,10 +273,9 @@ class SignUpCubit extends Cubit<SignUpState> {
     if (state is! SignUpFormState) return;
     switch (result) {
       case Success(:final data):
-        emit(_formState.copyWith(
-          neighborhoods: data,
-          neighborhoodsLoading: false,
-        ));
+        emit(
+          _formState.copyWith(neighborhoods: data, neighborhoodsLoading: false),
+        );
       case Failure():
         emit(_formState.copyWith(neighborhoodsLoading: false));
     }

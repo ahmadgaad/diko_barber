@@ -12,7 +12,7 @@ abstract class AuthRepository {
 
   Future<Result<ApiErrorModel, AuthResponse>> signUp(SignUpParams params);
 
-  Future<Result<ApiErrorModel, void>> verifyOtp({
+  Future<Result<ApiErrorModel, AuthResponse>> verifyOtp({
     required String key,
     required String otp,
   });

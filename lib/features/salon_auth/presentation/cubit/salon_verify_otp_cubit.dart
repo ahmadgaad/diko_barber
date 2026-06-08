@@ -27,7 +27,7 @@ class SalonVerifyOtpCubit extends Cubit<SalonVerifyOtpState> {
 
   void _startCountdown() {
     _timer?.cancel();
-    emit(_formState.copyWith(countdown: 60, canResend: false));
+    emit(_formState.copyWith(countdown: 120, canResend: false));
     _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
       if (state is! SalonVerifyOtpFormState) {
         timer.cancel();

@@ -47,8 +47,13 @@ class _SignUpViewState extends State<SignUpView> {
   @override
   Widget build(BuildContext context) {
     return BlocListener<SignUpCubit, SignUpState>(
-      listenWhen: (_, current) {
-        if (current is SignUpFormState) return current.apiError != null;
+      listenWhen: (previous, current) {
+        if (current is SignUpFormState) {
+          if (previous is SignUpFormState) {
+            return current.apiError != null && current.apiError != previous.apiError;
+          }
+          return current.apiError != null;
+        }
         return true;
       },
       listener: (context, state) {
