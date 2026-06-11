@@ -1,11 +1,13 @@
-import 'package:ronaq_barber/core/resources/svg_resources.dart';
-import 'package:ronaq_barber/core/theme/app_colors.dart';
+import 'dart:ui';
+
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:ronaq_barber/core/resources/svg_resources.dart';
+import 'package:ronaq_barber/core/theme/app_colors.dart';
 
-enum HomeTab { home, services, booking, packages, profile }
+enum HomeTab { home, explore, bookings, favorites, profile }
 
 class AppBottomNavBar extends StatelessWidget {
   const AppBottomNavBar({
@@ -20,26 +22,51 @@ class AppBottomNavBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colors = AppColors.of(context);
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final borderRadius = BorderRadius.circular(999.r);
+
+    final glassColor = isDark
+        ? const Color(0xFF1A1A1A).withValues(alpha: 0.70)
+        : Colors.white.withValues(alpha: 0.72);
+    final borderColor = isDark
+        ? Colors.white.withValues(alpha: 0.10)
+        : Colors.white.withValues(alpha: 0.60);
 
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
-      child: Container(
-        height: 64.h,
-        decoration: BoxDecoration(
-          color: colors.neutral100,
-          borderRadius: BorderRadius.circular(999.r),
-        ),
-        child: Row(
-          children: HomeTab.values.map((tab) {
-            final isActive = tab == currentTab;
-            return isActive
-                ? _ActiveTab(tab: tab, onTap: () => onTabSelected(tab))
-                : _InactiveTab(
-                    tab: tab,
-                    colors: colors,
-                    onTap: () => onTabSelected(tab),
-                  );
-          }).toList(),
+      child: RepaintBoundary(
+        child: ClipRRect(
+          borderRadius: borderRadius,
+          child: BackdropFilter(
+            filter: ImageFilter.blur(sigmaX: 12, sigmaY: 12),
+            child: Container(
+              height: 64.h,
+              decoration: BoxDecoration(
+                color: glassColor,
+                borderRadius: borderRadius,
+                border: Border.all(color: borderColor, width: 1),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withValues(alpha: 0.14),
+                    blurRadius: 20,
+                    offset: const Offset(0, 6),
+                  ),
+                ],
+              ),
+              child: Row(
+                children: HomeTab.values.map((tab) {
+                  final isActive = tab == currentTab;
+                  return isActive
+                      ? _ActiveTab(tab: tab, onTap: () => onTabSelected(tab))
+                      : _InactiveTab(
+                          tab: tab,
+                          colors: colors,
+                          onTap: () => onTabSelected(tab),
+                        );
+                }).toList(),
+              ),
+            ),
+          ),
         ),
       ),
     );
@@ -121,8 +148,7 @@ class _InactiveTab extends StatelessWidget {
               key: ValueKey('inactive_${tab.name}'),
               width: 24.w,
               height: 24.w,
-              colorFilter:
-                  ColorFilter.mode(colors.neutral900, BlendMode.srcIn),
+              colorFilter: ColorFilter.mode(colors.neutral900, BlendMode.srcIn),
             ),
           ),
         ),
@@ -134,25 +160,25 @@ class _InactiveTab extends StatelessWidget {
 extension on HomeTab {
   String get svgPath => switch (this) {
     HomeTab.home => SvgResources.navHome,
-    HomeTab.services => SvgResources.navServices,
-    HomeTab.booking => SvgResources.navCalendar,
-    HomeTab.packages => SvgResources.navDashboard,
+    HomeTab.explore => SvgResources.navExplore,
+    HomeTab.bookings => SvgResources.navCalendar,
+    HomeTab.favorites => SvgResources.navHeart,
     HomeTab.profile => SvgResources.navProfile,
   };
 
   String get filledSvgPath => switch (this) {
     HomeTab.home => SvgResources.navHomeFilled,
-    HomeTab.services => SvgResources.navServicesFilled,
-    HomeTab.booking => SvgResources.navCalendarFilled,
-    HomeTab.packages => SvgResources.navDashboardFilled,
+    HomeTab.explore => SvgResources.navExploreFilled,
+    HomeTab.bookings => SvgResources.navCalendarFilled,
+    HomeTab.favorites => SvgResources.navHeartFilled,
     HomeTab.profile => SvgResources.navProfileFilled,
   };
 
   String get labelKey => switch (this) {
     HomeTab.home => 'nav.home',
-    HomeTab.services => 'nav.services',
-    HomeTab.booking => 'nav.booking',
-    HomeTab.packages => 'nav.packages',
+    HomeTab.explore => 'nav.explore',
+    HomeTab.bookings => 'nav.bookings',
+    HomeTab.favorites => 'nav.favorites',
     HomeTab.profile => 'nav.profile',
   };
 }
