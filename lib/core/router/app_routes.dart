@@ -9,6 +9,10 @@ abstract final class AppRoutes {
   static const verifyResetPassword = '/verify-reset-password';
   static const resetPassword = '/reset-password';
 
+  static const search = '/search';
+  static const salonDetails = '/salon/:id';
+  static const exploreMap = '/explore-map';
+
   // Salon Auth
   static const salonSignup = '/salon-signup';
   static const salonVerifyOtp = '/salon-verify-otp';

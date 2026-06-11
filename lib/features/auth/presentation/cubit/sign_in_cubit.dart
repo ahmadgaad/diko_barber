@@ -72,6 +72,7 @@ class SignInCubit extends Cubit<SignInState> {
           await _secureStorage.set(CacheKeys.userAccessToken, data.token!);
         }
         await _secureStorage.set(CacheKeys.userIsVerified, data.isVerified.toString());
+        await _secureStorage.set(CacheKeys.userName, data.user.name);
         if (data.isVerified) {
           emit(const SignInSuccess());
         } else {
@@ -112,6 +113,7 @@ class SignInCubit extends Cubit<SignInState> {
           await _secureStorage.set(CacheKeys.userAccessToken, data.token!);
         }
         await _secureStorage.set(CacheKeys.userIsVerified, data.isVerified.toString());
+        await _secureStorage.set(CacheKeys.userName, data.user.name);
         emit(const SignInSuccess());
       case Failure(:final error):
         emit(_formState.copyWith(

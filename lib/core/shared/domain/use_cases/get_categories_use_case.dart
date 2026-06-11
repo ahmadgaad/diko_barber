@@ -9,7 +9,7 @@ class GetCategoriesUseCase {
   final SharedRepository _repository;
 
   Future<Result<ApiErrorModel, List<Category>>> call({
-    required int specialization,
+    int? specialization,
   }) =>
       _repository.getCategories(specialization: specialization);
 }

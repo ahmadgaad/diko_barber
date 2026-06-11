@@ -23,5 +23,9 @@
       "Bash(git push:*)",
       "Bash(git commit -m \"feat\\(design-system\\): migrate colors to AppColors ThemeExtension:*)"
     ]
-  }
+  },
+  "enabledMcpjsonServers": [
+    "code-review-graph"
+  ],
+  "enableAllProjectMcpServers": true
 }

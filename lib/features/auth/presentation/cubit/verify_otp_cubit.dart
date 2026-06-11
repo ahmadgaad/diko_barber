@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:developer';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ronaq_barber/core/cache/cache_keys.dart';
@@ -65,10 +64,10 @@ class VerifyOtpCubit extends Cubit<VerifyOtpState> {
     switch (result) {
       case Success(:final data):
         if (data.token != null) {
-          log('Received access token: ${data.token}');
           await _secureStorage.set(CacheKeys.userAccessToken, data.token!);
         }
         await _secureStorage.set(CacheKeys.userIsVerified, 'true');
+        await _secureStorage.set(CacheKeys.userName, data.user.name);
         emit(const VerifyOtpSuccess());
       case Failure(:final error):
         emit(

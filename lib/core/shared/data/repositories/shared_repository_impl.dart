@@ -1,9 +1,11 @@
 import 'package:ronaq_barber/core/networking/api_error_model.dart';
 import 'package:ronaq_barber/core/networking/result.dart';
 import 'package:ronaq_barber/core/shared/data/data_sources/shared_remote_data_source.dart';
+import 'package:ronaq_barber/core/shared/data/models/banner_model.dart';
 import 'package:ronaq_barber/core/shared/data/models/category_model.dart';
 import 'package:ronaq_barber/core/shared/data/models/city_model.dart';
 import 'package:ronaq_barber/core/shared/data/models/neighborhood_model.dart';
+import 'package:ronaq_barber/core/shared/domain/entities/banner.dart';
 import 'package:ronaq_barber/core/shared/domain/entities/category.dart';
 import 'package:ronaq_barber/core/shared/domain/entities/city.dart';
 import 'package:ronaq_barber/core/shared/domain/entities/neighborhood.dart';
@@ -38,7 +40,7 @@ class SharedRepositoryImpl implements SharedRepository {
 
   @override
   Future<Result<ApiErrorModel, List<Category>>> getCategories({
-    required int specialization,
+    int? specialization,
   }) async {
     try {
       final response = await _remoteDataSource.getCategories(
@@ -83,6 +85,28 @@ class SharedRepositoryImpl implements SharedRepository {
           .toList();
 
       return Success(neighborhoods);
+    } catch (_) {
+      return Failure(ApiErrorModel(message: 'حدث خطأ غير معروف'));
+    }
+  }
+
+  @override
+  Future<Result<ApiErrorModel, List<Banner>>> getBanners() async {
+    try {
+      final response = await _remoteDataSource.getBanners();
+
+      if (response.isError || response.data == null) {
+        return Failure(
+          ApiErrorModel(message: response.message ?? 'حدث خطأ غير معروف'),
+        );
+      }
+
+      final banners = (response.data as List)
+          .whereType<Map<String, dynamic>>()
+          .map(BannerModel.fromJson)
+          .toList();
+
+      return Success(banners);
     } catch (_) {
       return Failure(ApiErrorModel(message: 'حدث خطأ غير معروف'));
     }

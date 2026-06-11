@@ -6,51 +6,70 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class SectionHeader extends StatelessWidget {
-  const SectionHeader({super.key, required this.titleKey, required this.colors});
+  const SectionHeader({
+    super.key,
+    required this.titleKey,
+    required this.colors,
+    this.onSeeMore,
+  });
 
   final String titleKey;
   final AppColors colors;
+  final VoidCallback? onSeeMore;
 
   @override
   Widget build(BuildContext context) {
     final isRtl = Directionality.of(context) == TextDirection.rtl;
 
     return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        Text(
-          tr(titleKey),
-          style: TextStyle(
-            fontSize: 20.sp,
-            fontWeight: FontWeight.w600,
-            color: colors.neutral900,
+        Container(
+          width: 3.w,
+          height: 18.h,
+          decoration: BoxDecoration(
+            color: splashOrange,
+            borderRadius: BorderRadius.circular(999.r),
           ),
         ),
-        Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Text(
-              tr('home.see_more'),
-              style: TextStyle(
-                fontSize: 16.sp,
-                fontWeight: FontWeight.w500,
-                color: colors.neutral900,
-              ),
+        SizedBox(width: 8.w),
+        Expanded(
+          child: Text(
+            tr(titleKey),
+            style: TextStyle(
+              fontSize: 17.sp,
+              fontWeight: FontWeight.w700,
+              color: colors.neutral900,
             ),
-            SizedBox(width: 6.w),
-            Transform.scale(
-              scaleX: isRtl ? -1 : 1,
-              child: SvgPicture.asset(
-                SvgResources.chevronRight,
-                width: 20.w,
-                height: 20.w,
-                colorFilter: ColorFilter.mode(
-                  colors.neutral900,
-                  BlendMode.srcIn,
+          ),
+        ),
+        GestureDetector(
+          onTap: onSeeMore,
+          behavior: HitTestBehavior.opaque,
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                tr('home.see_more'),
+                style: TextStyle(
+                  fontSize: 13.sp,
+                  fontWeight: FontWeight.w500,
+                  color: splashOrange,
                 ),
               ),
-            ),
-          ],
+              SizedBox(width: 2.w),
+              Transform.scale(
+                scaleX: isRtl ? -1 : 1,
+                child: SvgPicture.asset(
+                  SvgResources.chevronRight,
+                  width: 14.r,
+                  height: 14.r,
+                  colorFilter:
+                      ColorFilter.mode(splashOrange, BlendMode.srcIn),
+                ),
+              ),
+            ],
+          ),
         ),
       ],
     );

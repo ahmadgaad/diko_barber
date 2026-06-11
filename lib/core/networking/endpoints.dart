@@ -19,6 +19,7 @@ abstract final class EndPoints {
   static const String cities = 'shared/cities';
   static const String neighborhoods = 'shared/neighborhoods';
   static const String categories = 'shared/categories';
+  static const String banners = 'shared/banners';
 
   // Salon Auth
   static const String salonRegister = 'salon-auth/register';

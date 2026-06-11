@@ -5,9 +5,24 @@ import 'package:ronaq_barber/core/networking/network_info.dart';
 import 'package:ronaq_barber/core/shared/data/data_sources/shared_remote_data_source.dart';
 import 'package:ronaq_barber/core/shared/data/repositories/shared_repository_impl.dart';
 import 'package:ronaq_barber/core/shared/domain/repositories/shared_repository.dart';
+import 'package:ronaq_barber/core/shared/domain/use_cases/get_banners_use_case.dart';
 import 'package:ronaq_barber/core/shared/domain/use_cases/get_categories_use_case.dart';
+import 'package:ronaq_barber/features/home/presentation/cubit/categories_cubit.dart';
 import 'package:ronaq_barber/core/shared/domain/use_cases/get_cities_use_case.dart';
 import 'package:ronaq_barber/core/shared/domain/use_cases/get_neighborhoods_use_case.dart';
+import 'package:ronaq_barber/features/home/presentation/cubit/banners_cubit.dart';
+import 'package:ronaq_barber/features/home/presentation/cubit/coupons_cubit.dart';
+import 'package:ronaq_barber/features/home/presentation/cubit/featured_packages_cubit.dart';
+import 'package:ronaq_barber/features/home/presentation/cubit/featured_services_cubit.dart';
+import 'package:ronaq_barber/features/home/presentation/cubit/home_cubit.dart';
+import 'package:ronaq_barber/features/home/presentation/cubit/salons_cubit.dart';
+import 'package:ronaq_barber/features/explore/presentation/cubit/explore_cubit.dart';
+import 'package:ronaq_barber/features/search/presentation/cubit/search_cubit.dart';
+import 'package:ronaq_barber/features/booking/presentation/cubit/bookings_cubit.dart';
+import 'package:ronaq_barber/features/favorites/presentation/cubit/favorites_cubit.dart';
+import 'package:ronaq_barber/core/theme/cubit/theme_cubit.dart';
+import 'package:ronaq_barber/features/profile/presentation/cubit/profile_cubit.dart';
+import 'package:ronaq_barber/features/salon_details/presentation/cubit/salon_details_cubit.dart';
 import 'package:ronaq_barber/features/auth/data/data_sources/auth_remote_data_source.dart';
 import 'package:ronaq_barber/features/salon_auth/data/data_sources/salon_auth_remote_data_source.dart';
 import 'package:ronaq_barber/features/salon_auth/data/repositories/salon_auth_repository_impl.dart';
@@ -135,6 +150,9 @@ Future<void> setupServiceLocator() async {
   sl.registerLazySingleton<GetCategoriesUseCase>(
     () => GetCategoriesUseCase(sl<SharedRepository>()),
   );
+  sl.registerLazySingleton<GetBannersUseCase>(
+    () => GetBannersUseCase(sl<SharedRepository>()),
+  );
   sl.registerLazySingleton<GetLocaleUseCase>(
     () => GetLocaleUseCase(sl<LocaleRepository>()),
   );
@@ -252,4 +270,28 @@ Future<void> setupServiceLocator() async {
       email: email,
     ),
   );
+  sl.registerFactory<HomeCubit>(
+    () => HomeCubit(sl<SecureStorageCacheClient>()),
+  );
+  sl.registerFactory<BannersCubit>(
+    () => BannersCubit(sl<GetBannersUseCase>()),
+  );
+  sl.registerFactory<CategoriesCubit>(
+    () => CategoriesCubit(sl<GetCategoriesUseCase>()),
+  );
+  sl.registerFactory<SalonsCubit>(SalonsCubit.new);
+  sl.registerFactory<CouponsCubit>(CouponsCubit.new);
+  sl.registerFactory<FeaturedServicesCubit>(FeaturedServicesCubit.new);
+  sl.registerFactory<FeaturedPackagesCubit>(FeaturedPackagesCubit.new);
+  sl.registerFactory<ExploreCubit>(ExploreCubit.new);
+  sl.registerFactory<SearchCubit>(() => SearchCubit(sl<SharedPrefCacheClient>()));
+  sl.registerFactory<SalonDetailsCubit>(SalonDetailsCubit.new);
+  sl.registerFactory<BookingsCubit>(BookingsCubit.new);
+  sl.registerFactory<FavoritesCubit>(FavoritesCubit.new);
+  sl.registerFactory<ProfileCubit>(ProfileCubit.new);
+
+  // Theme — singleton so RonaqBarberApp and ProfileView share the same instance
+  final themeCubit = ThemeCubit(sl<SharedPrefCacheClient>());
+  await themeCubit.load();
+  sl.registerSingleton<ThemeCubit>(themeCubit);
 }

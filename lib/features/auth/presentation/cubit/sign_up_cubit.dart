@@ -203,6 +203,7 @@ class SignUpCubit extends Cubit<SignUpState> {
           CacheKeys.userIsVerified,
           data.isVerified.toString(),
         );
+        await _secureStorage.set(CacheKeys.userName, data.user.name);
         emit(const SignUpSocialSuccess());
       case Failure(:final error):
         emit(

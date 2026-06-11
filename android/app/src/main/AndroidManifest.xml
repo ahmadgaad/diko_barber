@@ -1,4 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
+    <uses-permission android:name="android.permission.INTERNET" />
     <application
         android:label="ronaq_barber"
         android:name="${applicationName}"
@@ -30,6 +31,11 @@
         <meta-data
             android:name="flutterEmbedding"
             android:value="2" />
+
+        <!-- Replace YOUR_GOOGLE_MAPS_API_KEY with your actual key from Google Cloud Console -->
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyA9qAuIoE8Si1fcagTUWFzfTv52HFIvfD8" />
 
         <!-- Facebook SDK -->
         <meta-data

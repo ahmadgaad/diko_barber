@@ -5,7 +5,8 @@ import 'package:ronaq_barber/core/networking/endpoints.dart';
 abstract class SharedRemoteDataSource {
   Future<ApiResponse<dynamic>> getCities();
   Future<ApiResponse<dynamic>> getNeighborhoods({required int cityId});
-  Future<ApiResponse<dynamic>> getCategories({required int specialization});
+  Future<ApiResponse<dynamic>> getCategories({int? specialization});
+  Future<ApiResponse<dynamic>> getBanners();
 }
 
 class SharedRemoteDataSourceImpl implements SharedRemoteDataSource {
@@ -25,9 +26,15 @@ class SharedRemoteDataSourceImpl implements SharedRemoteDataSource {
       );
 
   @override
-  Future<ApiResponse<dynamic>> getCategories({required int specialization}) =>
+  Future<ApiResponse<dynamic>> getCategories({int? specialization}) =>
       _networkService.getData(
         endPoint: EndPoints.categories,
-        queryParameters: {'specialization': specialization},
+        queryParameters: specialization != null
+            ? {'specialization': specialization}
+            : null,
       );
+
+  @override
+  Future<ApiResponse<dynamic>> getBanners() =>
+      _networkService.getData(endPoint: EndPoints.banners);
 }
