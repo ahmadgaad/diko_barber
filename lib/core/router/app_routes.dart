@@ -13,6 +13,8 @@ abstract final class AppRoutes {
   static const salonDetails = '/salon/:id';
   static const exploreMap = '/explore-map';
 
+  static const bookAppointment = '/book-appointment';
+
   // Salon Auth
   static const salonSignup = '/salon-signup';
   static const salonVerifyOtp = '/salon-verify-otp';

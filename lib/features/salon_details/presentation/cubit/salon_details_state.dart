@@ -9,15 +9,25 @@ class SalonDetailsLoading extends SalonDetailsState {
 }
 
 class SalonDetailsLoaded extends SalonDetailsState {
-  const SalonDetailsLoaded({required this.salon, this.isFavorite = false});
+  const SalonDetailsLoaded({
+    required this.salon,
+    this.isFavorite = false,
+    this.couponCode,
+  });
 
   final SalonDetails salon;
   final bool isFavorite;
+  final String? couponCode;
 
-  SalonDetailsLoaded copyWith({SalonDetails? salon, bool? isFavorite}) {
+  SalonDetailsLoaded copyWith({
+    SalonDetails? salon,
+    bool? isFavorite,
+    String? couponCode,
+  }) {
     return SalonDetailsLoaded(
       salon: salon ?? this.salon,
       isFavorite: isFavorite ?? this.isFavorite,
+      couponCode: couponCode ?? this.couponCode,
     );
   }
 }

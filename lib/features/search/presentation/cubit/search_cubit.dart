@@ -100,8 +100,38 @@ class SearchCubit extends Cubit<SearchState> {
       trendingSalons: trending ?? _mockSalons.take(4).toList(),
       hotOffers: offers ??
           [
-            Coupon(id: 1, code: 'SAVE20', discountPercent: 20, serviceLabel: 'خدمة قص الشعر', salonName: 'صالون القص الملكي', salonLogo: '', expiresAt: now.add(const Duration(days: 2))),
-            Coupon(id: 2, code: 'VIP30', discountPercent: 30, serviceLabel: 'باقة كبار الشخصيات', salonName: 'ركن الرجل الأنيق', salonLogo: '', expiresAt: now.add(const Duration(hours: 5))),
+            Coupon(
+              id: 1,
+              code: 'SAVE20',
+              name: 'خصم على قص الشعر',
+              type: 1,
+              typeLabel: 'نسبة مئوية',
+              appliesTo: const CouponAppliesTo(id: 1, name: 'قص الشعر'),
+              amount: 20,
+              endDate: now.add(const Duration(days: 2)),
+              salon: CouponSalon(
+                id: 1,
+                name: 'صالون القص الملكي',
+                image: '',
+                distance: const Distance(value: 1200, unit: 'متر'),
+              ),
+            ),
+            Coupon(
+              id: 2,
+              code: 'VIP30',
+              name: 'عرض كبار الشخصيات',
+              type: 1,
+              typeLabel: 'نسبة مئوية',
+              appliesTo: const CouponAppliesTo(id: 2, name: 'باقة VIP'),
+              amount: 30,
+              endDate: now.add(const Duration(hours: 5)),
+              salon: CouponSalon(
+                id: 3,
+                name: 'ركن الرجل الأنيق',
+                image: '',
+                distance: const Distance(value: 800, unit: 'متر'),
+              ),
+            ),
           ],
     );
   }

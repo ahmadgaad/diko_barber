@@ -205,7 +205,18 @@
     "campaign_service": "خدمة",
     "campaign_package": "باقة",
     "campaign_salon": "صالون",
-    "featured": "مميز"
+    "featured": "مميز",
+    "coupon_code": "كود الكوبون",
+    "copy": "نسخ",
+    "code_copied": "تم نسخ الكود",
+    "salon": "الصالون",
+    "details": "التفاصيل",
+    "applies_to": "يُطبَّق على",
+    "valid_from": "صالح من",
+    "valid_until_label": "صالح حتى",
+    "remaining_uses": "الاستخدامات المتبقية",
+    "uses_left": "{count} استخدام متبقي",
+    "max_discount": "الحد الأقصى للخصم"
   },
   "explore": {
     "search_hint": "ابحث عن صالونات…",
@@ -283,6 +294,33 @@
     "tab_reviews": "التقييمات",
     "reviews": "تقييم",
     "min": "دقيقة",
-    "book_now": "احجز الآن"
+    "book_now": "احجز الآن",
+    "coupon_applied": "تم تطبيق الكوبون"
+  },
+  "book_appointment": {
+    "title": "حجز موعد",
+    "select_service": "اختر خدمة",
+    "select_staff": "من تريد أن يخدمك؟",
+    "any_staff": "أي حلاق متاح",
+    "select_datetime": "اختر التاريخ والوقت",
+    "review": "مراجعة حجزك",
+    "step": "الخطوة {current} من {total}",
+    "available_times": "الأوقات المتاحة",
+    "no_slots": "لا توجد مواعيد متاحة لهذا التاريخ",
+    "next": "التالي",
+    "back": "رجوع",
+    "confirm": "تأكيد الحجز",
+    "booking_confirmed": "تم تأكيد الحجز!",
+    "booking_id": "حجز #{id}",
+    "view_bookings": "عرض حجوزاتي",
+    "done": "تم",
+    "price_breakdown": "تفاصيل السعر",
+    "original_price": "السعر الأصلي",
+    "discount": "خصم ({code})",
+    "total": "الإجمالي",
+    "coupon_validating": "جاري التحقق من الكوبون…",
+    "coupon_valid": "تم تطبيق الكوبون",
+    "coupon_invalid": "كوبون غير صالح",
+    "any_staff_label": "أي حلاق"
   }
 }

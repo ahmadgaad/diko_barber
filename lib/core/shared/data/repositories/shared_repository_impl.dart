@@ -11,7 +11,16 @@ import 'package:ronaq_barber/core/shared/data/models/salon_model.dart';
 import 'package:ronaq_barber/core/shared/domain/entities/banner.dart';
 import 'package:ronaq_barber/core/shared/domain/entities/category.dart';
 import 'package:ronaq_barber/core/shared/domain/entities/city.dart';
+import 'package:ronaq_barber/core/shared/data/models/coupon_model.dart';
+import 'package:ronaq_barber/core/shared/data/models/nearest_package_model.dart';
+import 'package:ronaq_barber/core/shared/data/models/nearest_service_model.dart';
+import 'package:ronaq_barber/core/shared/domain/entities/coupon.dart';
+import 'package:ronaq_barber/core/shared/domain/entities/nearest_coupons_params.dart';
+import 'package:ronaq_barber/core/shared/domain/entities/nearest_package.dart';
+import 'package:ronaq_barber/core/shared/domain/entities/nearest_packages_params.dart';
 import 'package:ronaq_barber/core/shared/domain/entities/nearest_salons_params.dart';
+import 'package:ronaq_barber/core/shared/domain/entities/nearest_service.dart';
+import 'package:ronaq_barber/core/shared/domain/entities/nearest_services_params.dart';
 import 'package:ronaq_barber/core/shared/domain/entities/neighborhood.dart';
 import 'package:ronaq_barber/core/shared/domain/entities/salons_page.dart';
 import 'package:ronaq_barber/core/shared/domain/repositories/shared_repository.dart';
@@ -158,6 +167,102 @@ class SharedRepositoryImpl implements SharedRepository {
       ));
     } catch (e, st) {
       log('getNearestSalons failed', error: e, stackTrace: st, name: 'SharedRepository');
+      return Failure(ApiErrorModel(message: 'حدث خطأ غير معروف'));
+    }
+  }
+
+  @override
+  Future<Result<ApiErrorModel, List<Coupon>>> getNearestCoupons(
+    NearestCouponsParams params,
+  ) async {
+    try {
+      final query = <String, dynamic>{
+        'page': params.page.toString(),
+        'per_page': params.perPage.toString(),
+      };
+      if (params.lat != null) query['lat'] = params.lat.toString();
+      if (params.long != null) query['long'] = params.long.toString();
+
+      final response = await _remoteDataSource.getNearestCoupons(query);
+
+      if (response.isError || response.data == null) {
+        return Failure(
+          ApiErrorModel(message: response.message ?? 'حدث خطأ غير معروف'),
+        );
+      }
+
+      final coupons = (response.data as List)
+          .whereType<Map<String, dynamic>>()
+          .map(CouponModel.fromJson)
+          .toList();
+
+      return Success(coupons);
+    } catch (e, st) {
+      log('getNearestCoupons failed', error: e, stackTrace: st, name: 'SharedRepository');
+      return Failure(ApiErrorModel(message: 'حدث خطأ غير معروف'));
+    }
+  }
+
+  @override
+  Future<Result<ApiErrorModel, List<NearestPackage>>> getNearestPackages(
+    NearestPackagesParams params,
+  ) async {
+    try {
+      final query = <String, dynamic>{
+        'page': params.page.toString(),
+        'per_page': params.perPage.toString(),
+      };
+      if (params.lat != null) query['lat'] = params.lat.toString();
+      if (params.long != null) query['long'] = params.long.toString();
+
+      final response = await _remoteDataSource.getNearestPackages(query);
+
+      if (response.isError || response.data == null) {
+        return Failure(
+          ApiErrorModel(message: response.message ?? 'حدث خطأ غير معروف'),
+        );
+      }
+
+      final packages = (response.data as List)
+          .whereType<Map<String, dynamic>>()
+          .map(NearestPackageModel.fromJson)
+          .toList();
+
+      return Success(packages);
+    } catch (e, st) {
+      log('getNearestPackages failed', error: e, stackTrace: st, name: 'SharedRepository');
+      return Failure(ApiErrorModel(message: 'حدث خطأ غير معروف'));
+    }
+  }
+
+  @override
+  Future<Result<ApiErrorModel, List<NearestService>>> getNearestServices(
+    NearestServicesParams params,
+  ) async {
+    try {
+      final query = <String, dynamic>{
+        'page': params.page.toString(),
+        'per_page': params.perPage.toString(),
+      };
+      if (params.lat != null) query['lat'] = params.lat.toString();
+      if (params.long != null) query['long'] = params.long.toString();
+
+      final response = await _remoteDataSource.getNearestServices(query);
+
+      if (response.isError || response.data == null) {
+        return Failure(
+          ApiErrorModel(message: response.message ?? 'حدث خطأ غير معروف'),
+        );
+      }
+
+      final services = (response.data as List)
+          .whereType<Map<String, dynamic>>()
+          .map(NearestServiceModel.fromJson)
+          .toList();
+
+      return Success(services);
+    } catch (e, st) {
+      log('getNearestServices failed', error: e, stackTrace: st, name: 'SharedRepository');
       return Failure(ApiErrorModel(message: 'حدث خطأ غير معروف'));
     }
   }

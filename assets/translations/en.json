@@ -205,7 +205,18 @@
     "campaign_service": "Service",
     "campaign_package": "Package",
     "campaign_salon": "Salon",
-    "featured": "Featured"
+    "featured": "Featured",
+    "coupon_code": "Coupon Code",
+    "copy": "Copy",
+    "code_copied": "Code copied to clipboard",
+    "salon": "Salon",
+    "details": "Details",
+    "applies_to": "Applies to",
+    "valid_from": "Valid from",
+    "valid_until_label": "Valid until",
+    "remaining_uses": "Remaining uses",
+    "uses_left": "{count} uses left",
+    "max_discount": "Max discount"
   },
   "explore": {
     "search_hint": "Search salons…",
@@ -283,6 +294,33 @@
     "tab_reviews": "Reviews",
     "reviews": "reviews",
     "min": "min",
-    "book_now": "Book Now"
+    "book_now": "Book Now",
+    "coupon_applied": "Coupon applied"
+  },
+  "book_appointment": {
+    "title": "Book Appointment",
+    "select_service": "Select a service",
+    "select_staff": "Who should serve you?",
+    "any_staff": "Any available staff",
+    "select_datetime": "Pick a date & time",
+    "review": "Review your booking",
+    "step": "Step {current} of {total}",
+    "available_times": "Available times",
+    "no_slots": "No available slots for this date",
+    "next": "Next",
+    "back": "Back",
+    "confirm": "Confirm Booking",
+    "booking_confirmed": "Booking Confirmed!",
+    "booking_id": "Booking #{id}",
+    "view_bookings": "View My Bookings",
+    "done": "Done",
+    "price_breakdown": "Price breakdown",
+    "original_price": "Original price",
+    "discount": "Discount ({code})",
+    "total": "Total",
+    "coupon_validating": "Validating coupon…",
+    "coupon_valid": "Coupon applied",
+    "coupon_invalid": "Invalid coupon",
+    "any_staff_label": "Any available"
   }
 }

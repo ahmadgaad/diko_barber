@@ -77,13 +77,15 @@ class _SalonsList extends StatelessWidget {
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                ...salons.map((salon) => Padding(
-                      padding: EdgeInsetsDirectional.only(end: 12.w),
-                      child: GestureDetector(
-                        onTap: () => context.push('/salon/${salon.id}'),
-                        child: _SalonCard(salon: salon, colors: colors),
-                      ),
-                    )),
+                ...salons.map(
+                  (salon) => Padding(
+                    padding: EdgeInsetsDirectional.only(end: 12.w),
+                    child: GestureDetector(
+                      onTap: () => context.push('/salon/${salon.id}'),
+                      child: _SalonCard(salon: salon, colors: colors),
+                    ),
+                  ),
+                ),
                 if (isLoadingMore) _ShimmerCards(colors: colors),
               ],
             ),
@@ -448,6 +450,7 @@ class _SalonsShimmer extends StatelessWidget {
             ),
           ),
         ),
+        SizedBox(height: 14.h),
       ],
     );
   }

@@ -1,47 +1,52 @@
+import 'dart:developer';
+
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:ronaq_barber/core/shared/domain/entities/featured_service.dart';
+import 'package:ronaq_barber/core/networking/result.dart';
+import 'package:ronaq_barber/core/services/location_service.dart';
+import 'package:ronaq_barber/core/shared/domain/entities/nearest_services_params.dart';
+import 'package:ronaq_barber/core/shared/domain/use_cases/get_nearest_services_use_case.dart';
 
 import 'featured_services_state.dart';
 
 class FeaturedServicesCubit extends Cubit<FeaturedServicesState> {
-  FeaturedServicesCubit() : super(const FeaturedServicesLoading()) {
-    _loadMock();
+  FeaturedServicesCubit(
+    this._getNearestServicesUseCase,
+    this._locationService,
+  ) : super(const FeaturedServicesLoading()) {
+    _load();
   }
 
-  Future<void> _loadMock() async {
-    await Future.delayed(const Duration(milliseconds: 550));
-    if (isClosed) return;
-    emit(const FeaturedServicesLoaded(_mockServices));
+  final GetNearestServicesUseCase _getNearestServicesUseCase;
+  final LocationService _locationService;
+
+  Future<void> _load() async {
+    try {
+      final position = await _locationService.getCurrentPosition();
+      if (isClosed) return;
+
+      final result = await _getNearestServicesUseCase(
+        NearestServicesParams(
+          lat: position?.latitude,
+          long: position?.longitude,
+        ),
+      );
+
+      if (isClosed) return;
+
+      switch (result) {
+        case Success(:final data):
+          emit(FeaturedServicesLoaded(data));
+        case Failure():
+          emit(const FeaturedServicesError());
+      }
+    } catch (e, st) {
+      log('FeaturedServicesCubit._load failed', error: e, stackTrace: st, name: 'FeaturedServicesCubit');
+      if (!isClosed) emit(const FeaturedServicesError());
+    }
   }
 
-  static const _mockServices = [
-    FeaturedService(
-      id: 1,
-      name: 'قص الشعر',
-      image: '',
-      price: 150,
-      rating: 4.8,
-    ),
-    FeaturedService(
-      id: 2,
-      name: 'تشذيب اللحية',
-      image: '',
-      price: 80,
-      rating: 4.7,
-    ),
-    FeaturedService(
-      id: 3,
-      name: 'تنظيف البشرة',
-      image: '',
-      price: 120,
-      rating: 4.6,
-    ),
-    FeaturedService(
-      id: 4,
-      name: 'تصفيف الشعر',
-      image: '',
-      price: 100,
-      rating: 4.5,
-    ),
-  ];
+  Future<void> refresh() async {
+    emit(const FeaturedServicesLoading());
+    await _load();
+  }
 }

@@ -3,7 +3,10 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
+import 'package:ronaq_barber/core/router/app_routes.dart';
 import 'package:ronaq_barber/core/shared/domain/entities/package.dart';
+import 'package:ronaq_barber/features/book_appointment/presentation/book_appointment_args.dart';
 import 'package:ronaq_barber/core/shared/domain/entities/review.dart';
 import 'package:ronaq_barber/core/shared/domain/entities/salon_details.dart';
 import 'package:ronaq_barber/core/shared/domain/entities/salon_service.dart';
@@ -13,7 +16,9 @@ import 'package:ronaq_barber/features/salon_details/presentation/cubit/salon_det
 import 'package:shimmer/shimmer.dart';
 
 class SalonDetailsView extends StatefulWidget {
-  const SalonDetailsView({super.key});
+  const SalonDetailsView({super.key, this.initialTab = 0});
+
+  final int initialTab;
 
   @override
   State<SalonDetailsView> createState() => _SalonDetailsViewState();
@@ -33,7 +38,11 @@ class _SalonDetailsViewState extends State<SalonDetailsView>
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: _tabs.length, vsync: this);
+    _tabController = TabController(
+      length: _tabs.length,
+      vsync: this,
+      initialIndex: widget.initialTab.clamp(0, _tabs.length - 1),
+    );
   }
 
   @override
@@ -105,7 +114,11 @@ class _LoadedView extends StatelessWidget {
           ],
         ),
       ),
-      bottomNavigationBar: _BookNowBar(colors: colors),
+      bottomNavigationBar: _BookNowBar(
+        salonId: salon.id,
+        salonName: salon.name,
+        colors: colors,
+      ),
     );
   }
 }
@@ -938,36 +951,114 @@ class _ReviewCard extends StatelessWidget {
 // ── Book Now bottom bar ───────────────────────────────────────────────────────
 
 class _BookNowBar extends StatelessWidget {
-  const _BookNowBar({required this.colors});
+  const _BookNowBar({
+    required this.salonId,
+    required this.salonName,
+    required this.colors,
+  });
+
+  final int salonId;
+  final String salonName;
   final AppColors colors;
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.fromLTRB(16.w, 12.h, 16.w, 24.h),
-      decoration: BoxDecoration(
-        color: colors.neutral50,
-        border: Border(top: BorderSide(color: colors.neutral200)),
-      ),
-      child: GestureDetector(
-        onTap: () {},
-        child: Container(
-          height: 52.h,
-          decoration: const BoxDecoration(
-            gradient: buttonGradient,
-            borderRadius: BorderRadius.all(Radius.circular(999)),
+    return BlocBuilder<SalonDetailsCubit, SalonDetailsState>(
+      builder: (context, state) {
+        final couponCode =
+            state is SalonDetailsLoaded ? state.couponCode : null;
+
+        return Container(
+          padding: EdgeInsets.fromLTRB(16.w, 12.h, 16.w, 24.h),
+          decoration: BoxDecoration(
+            color: colors.neutral50,
+            border: Border(top: BorderSide(color: colors.neutral200)),
           ),
-          alignment: Alignment.center,
-          child: Text(
-            tr('salon_details.book_now'),
-            style: TextStyle(
-              fontSize: 16.sp,
-              fontWeight: FontWeight.w700,
-              color: Colors.white,
-            ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              // Coupon applied banner
+              if (couponCode != null) ...[
+                Container(
+                  margin: EdgeInsets.only(bottom: 10.h),
+                  padding:
+                      EdgeInsets.symmetric(horizontal: 14.w, vertical: 10.h),
+                  decoration: BoxDecoration(
+                    color: splashOrange.withValues(alpha: 0.08),
+                    borderRadius: BorderRadius.circular(12.r),
+                    border: Border.all(
+                      color: splashOrange.withValues(alpha: 0.30),
+                    ),
+                  ),
+                  child: Row(
+                    children: [
+                      Icon(
+                        Icons.local_offer_outlined,
+                        size: 16.r,
+                        color: splashOrange,
+                      ),
+                      SizedBox(width: 8.w),
+                      Expanded(
+                        child: Text(
+                          tr('salon_details.coupon_applied'),
+                          style: TextStyle(
+                            fontSize: 13.sp,
+                            color: splashOrange,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      ),
+                      Container(
+                        padding: EdgeInsets.symmetric(
+                            horizontal: 10.w, vertical: 4.h),
+                        decoration: BoxDecoration(
+                          color: splashOrange,
+                          borderRadius: BorderRadius.circular(999.r),
+                        ),
+                        child: Text(
+                          couponCode,
+                          style: TextStyle(
+                            fontSize: 12.sp,
+                            fontWeight: FontWeight.w800,
+                            color: Colors.white,
+                            letterSpacing: 1,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+              GestureDetector(
+                onTap: () => context.push(
+                  AppRoutes.bookAppointment,
+                  extra: BookAppointmentArgs(
+                    salonId: salonId,
+                    salonName: salonName,
+                    couponCode: couponCode,
+                  ),
+                ),
+                child: Container(
+                  height: 52.h,
+                  decoration: const BoxDecoration(
+                    gradient: buttonGradient,
+                    borderRadius: BorderRadius.all(Radius.circular(999)),
+                  ),
+                  alignment: Alignment.center,
+                  child: Text(
+                    tr('salon_details.book_now'),
+                    style: TextStyle(
+                      fontSize: 16.sp,
+                      fontWeight: FontWeight.w700,
+                      color: Colors.white,
+                    ),
+                  ),
+                ),
+              ),
+            ],
           ),
-        ),
-      ),
+        );
+      },
     );
   }
 }

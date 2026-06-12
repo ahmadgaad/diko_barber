@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ronaq_barber/core/observers/app_router_observer.dart';
+import 'package:ronaq_barber/features/book_appointment/presentation/book_appointment_args.dart';
+import 'package:ronaq_barber/features/book_appointment/presentation/screens/book_appointment_screen.dart';
 import 'package:ronaq_barber/features/explore/presentation/cubit/explore_cubit.dart';
 import 'package:ronaq_barber/features/explore/presentation/screens/explore_map_screen.dart';
 import 'package:ronaq_barber/features/auth/presentation/screens/forgot_password_screen.dart';
@@ -10,6 +12,7 @@ import 'package:ronaq_barber/features/auth/presentation/screens/sign_up_screen.d
 import 'package:ronaq_barber/features/auth/presentation/screens/verify_otp_screen.dart';
 import 'package:ronaq_barber/features/auth/presentation/screens/verify_reset_password_screen.dart';
 import 'package:ronaq_barber/features/home/presentation/screens/home_screen.dart';
+import 'package:ronaq_barber/features/salon_details/presentation/screens/salon_details_args.dart';
 import 'package:ronaq_barber/features/salon_details/presentation/screens/salon_details_screen.dart';
 import 'package:ronaq_barber/features/search/presentation/screens/search_screen.dart';
 import 'package:ronaq_barber/features/onboarding/presentation/screens/onboarding_screen.dart';
@@ -50,8 +53,10 @@ final appRouter = GoRouter(
     ),
     GoRoute(
       path: AppRoutes.salonDetails,
-      builder: (context, state) =>
-          SalonDetailsScreen(salonId: int.parse(state.pathParameters['id']!)),
+      builder: (context, state) => SalonDetailsScreen(
+        salonId: int.parse(state.pathParameters['id']!),
+        args: state.extra as SalonDetailsArgs?,
+      ),
     ),
     GoRoute(
       path: AppRoutes.login,
@@ -96,6 +101,11 @@ final appRouter = GoRouter(
     GoRoute(
       path: AppRoutes.salonRegisterSuccess,
       builder: (context, state) => const SalonRegisterSuccessScreen(),
+    ),
+    GoRoute(
+      path: AppRoutes.bookAppointment,
+      builder: (context, state) =>
+          BookAppointmentScreen(args: state.extra as BookAppointmentArgs),
     ),
   ],
 );

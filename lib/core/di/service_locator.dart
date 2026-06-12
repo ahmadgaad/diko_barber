@@ -8,7 +8,10 @@ import 'package:ronaq_barber/core/shared/data/repositories/shared_repository_imp
 import 'package:ronaq_barber/core/shared/domain/repositories/shared_repository.dart';
 import 'package:ronaq_barber/core/shared/domain/use_cases/get_banners_use_case.dart';
 import 'package:ronaq_barber/core/shared/domain/use_cases/get_categories_use_case.dart';
+import 'package:ronaq_barber/core/shared/domain/use_cases/get_nearest_coupons_use_case.dart';
+import 'package:ronaq_barber/core/shared/domain/use_cases/get_nearest_packages_use_case.dart';
 import 'package:ronaq_barber/core/shared/domain/use_cases/get_nearest_salons_use_case.dart';
+import 'package:ronaq_barber/core/shared/domain/use_cases/get_nearest_services_use_case.dart';
 import 'package:ronaq_barber/features/home/presentation/cubit/categories_cubit.dart';
 import 'package:ronaq_barber/core/shared/domain/use_cases/get_cities_use_case.dart';
 import 'package:ronaq_barber/core/shared/domain/use_cases/get_neighborhoods_use_case.dart';
@@ -71,6 +74,15 @@ import 'package:ronaq_barber/features/auth/presentation/cubit/sign_in_cubit.dart
 import 'package:ronaq_barber/features/auth/presentation/cubit/sign_up_cubit.dart';
 import 'package:ronaq_barber/features/auth/presentation/cubit/verify_otp_cubit.dart';
 import 'package:ronaq_barber/features/auth/presentation/cubit/verify_reset_password_cubit.dart';
+import 'package:ronaq_barber/features/book_appointment/data/data_sources/book_appointment_remote_data_source.dart';
+import 'package:ronaq_barber/features/book_appointment/data/repositories/book_appointment_repository_impl.dart';
+import 'package:ronaq_barber/features/book_appointment/domain/repositories/book_appointment_repository.dart';
+import 'package:ronaq_barber/features/book_appointment/domain/use_cases/create_booking_use_case.dart';
+import 'package:ronaq_barber/features/book_appointment/domain/use_cases/get_salon_services_use_case.dart';
+import 'package:ronaq_barber/features/book_appointment/domain/use_cases/get_staff_use_case.dart';
+import 'package:ronaq_barber/features/book_appointment/domain/use_cases/get_time_slots_use_case.dart';
+import 'package:ronaq_barber/features/book_appointment/domain/use_cases/validate_coupon_use_case.dart';
+import 'package:ronaq_barber/features/book_appointment/presentation/cubit/book_appointment_cubit.dart';
 import 'package:ronaq_barber/features/splash/domain/use_cases/complete_splash_use_case.dart';
 import 'package:ronaq_barber/features/splash/presentation/cubit/splash_cubit.dart';
 
@@ -159,6 +171,15 @@ Future<void> setupServiceLocator() async {
   );
   sl.registerLazySingleton<GetNearestSalonsUseCase>(
     () => GetNearestSalonsUseCase(sl<SharedRepository>()),
+  );
+  sl.registerLazySingleton<GetNearestCouponsUseCase>(
+    () => GetNearestCouponsUseCase(sl<SharedRepository>()),
+  );
+  sl.registerLazySingleton<GetNearestPackagesUseCase>(
+    () => GetNearestPackagesUseCase(sl<SharedRepository>()),
+  );
+  sl.registerLazySingleton<GetNearestServicesUseCase>(
+    () => GetNearestServicesUseCase(sl<SharedRepository>()),
   );
   sl.registerLazySingleton<GetLocaleUseCase>(
     () => GetLocaleUseCase(sl<LocaleRepository>()),
@@ -296,9 +317,15 @@ Future<void> setupServiceLocator() async {
   sl.registerFactory<SalonsCubit>(
     () => SalonsCubit(sl<GetNearestSalonsUseCase>(), sl<LocationService>(), sl<SharedPrefCacheClient>()),
   );
-  sl.registerFactory<CouponsCubit>(CouponsCubit.new);
-  sl.registerFactory<FeaturedServicesCubit>(FeaturedServicesCubit.new);
-  sl.registerFactory<FeaturedPackagesCubit>(FeaturedPackagesCubit.new);
+  sl.registerFactory<CouponsCubit>(
+    () => CouponsCubit(sl<GetNearestCouponsUseCase>(), sl<LocationService>()),
+  );
+  sl.registerFactory<FeaturedServicesCubit>(
+    () => FeaturedServicesCubit(sl<GetNearestServicesUseCase>(), sl<LocationService>()),
+  );
+  sl.registerFactory<FeaturedPackagesCubit>(
+    () => FeaturedPackagesCubit(sl<GetNearestPackagesUseCase>(), sl<LocationService>()),
+  );
   sl.registerFactory<ExploreCubit>(
     () => ExploreCubit(
       sl<GetCategoriesUseCase>(),
@@ -314,6 +341,40 @@ Future<void> setupServiceLocator() async {
     () => ProfileCubit(
       logoutUseCase: sl<LogoutUseCase>(),
       secureStorage: sl<SecureStorageCacheClient>(),
+    ),
+  );
+
+  // ─── Book Appointment ────────────────────────────────────────────────────────
+  sl.registerLazySingleton<BookAppointmentRemoteDataSource>(
+    () => BookAppointmentRemoteDataSourceImpl(sl<INetworkService>()),
+  );
+  sl.registerLazySingleton<BookAppointmentRepository>(
+    () => BookAppointmentRepositoryImpl(
+      sl<BookAppointmentRemoteDataSource>(),
+    ),
+  );
+  sl.registerLazySingleton<GetSalonServicesUseCase>(
+    () => GetSalonServicesUseCase(sl<BookAppointmentRepository>()),
+  );
+  sl.registerLazySingleton<GetStaffUseCase>(
+    () => GetStaffUseCase(sl<BookAppointmentRepository>()),
+  );
+  sl.registerLazySingleton<GetTimeSlotsUseCase>(
+    () => GetTimeSlotsUseCase(sl<BookAppointmentRepository>()),
+  );
+  sl.registerLazySingleton<ValidateCouponUseCase>(
+    () => ValidateCouponUseCase(sl<BookAppointmentRepository>()),
+  );
+  sl.registerLazySingleton<CreateBookingUseCase>(
+    () => CreateBookingUseCase(sl<BookAppointmentRepository>()),
+  );
+  sl.registerFactory<BookAppointmentCubit>(
+    () => BookAppointmentCubit(
+      getSalonServicesUseCase: sl<GetSalonServicesUseCase>(),
+      getStaffUseCase: sl<GetStaffUseCase>(),
+      getTimeSlotsUseCase: sl<GetTimeSlotsUseCase>(),
+      validateCouponUseCase: sl<ValidateCouponUseCase>(),
+      createBookingUseCase: sl<CreateBookingUseCase>(),
     ),
   );
 

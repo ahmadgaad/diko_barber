@@ -1,4 +1,4 @@
-import 'package:ronaq_barber/core/shared/domain/entities/featured_service.dart';
+import 'package:ronaq_barber/core/shared/domain/entities/nearest_service.dart';
 
 sealed class FeaturedServicesState {
   const FeaturedServicesState();
@@ -10,7 +10,7 @@ class FeaturedServicesLoading extends FeaturedServicesState {
 
 class FeaturedServicesLoaded extends FeaturedServicesState {
   const FeaturedServicesLoaded(this.services);
-  final List<FeaturedService> services;
+  final List<NearestService> services;
 }
 
 class FeaturedServicesError extends FeaturedServicesState {

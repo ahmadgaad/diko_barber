@@ -22,6 +22,9 @@ import 'package:ronaq_barber/features/home/presentation/components/home_header.d
 import 'package:ronaq_barber/features/home/presentation/components/nearby_salons_section.dart';
 import 'package:ronaq_barber/features/home/presentation/cubit/banners_cubit.dart';
 import 'package:ronaq_barber/features/home/presentation/cubit/categories_cubit.dart';
+import 'package:ronaq_barber/features/home/presentation/cubit/coupons_cubit.dart';
+import 'package:ronaq_barber/features/home/presentation/cubit/featured_packages_cubit.dart';
+import 'package:ronaq_barber/features/home/presentation/cubit/featured_services_cubit.dart';
 import 'package:ronaq_barber/features/home/presentation/cubit/home_cubit.dart';
 import 'package:ronaq_barber/features/home/presentation/cubit/home_state.dart';
 import 'package:ronaq_barber/features/home/presentation/cubit/salons_cubit.dart';
@@ -205,46 +208,50 @@ class _HomeViewState extends State<HomeView>
 
   Widget _buildHomeContent() {
     return BlocListener<SalonsCubit, SalonsState>(
-      listenWhen: (_, current) => current is SalonsLoaded && current.location != null,
+      listenWhen: (_, current) =>
+          current is SalonsLoaded && current.location != null,
       listener: (context, state) {
         final location = (state as SalonsLoaded).location!;
         context.read<HomeCubit>().updateLocation(location);
       },
       child: BlocBuilder<HomeCubit, HomeState>(
-      builder: (context, state) {
-        final loaded = state as HomeLoaded;
-        return RefreshIndicator.adaptive(
-          color: splashOrange,
-          onRefresh: () => Future.wait([
-            context.read<BannersCubit>().refresh(),
-            context.read<CategoriesCubit>().refresh(),
-            context.read<SalonsCubit>().refresh(),
-          ]),
-          child: SingleChildScrollView(
-            physics: const AlwaysScrollableScrollPhysics(
-              parent: ClampingScrollPhysics(),
+        builder: (context, state) {
+          final loaded = state as HomeLoaded;
+          return RefreshIndicator.adaptive(
+            color: splashOrange,
+            onRefresh: () => Future.wait([
+              context.read<BannersCubit>().refresh(),
+              context.read<CategoriesCubit>().refresh(),
+              context.read<SalonsCubit>().refresh(),
+              context.read<CouponsCubit>().refresh(),
+              context.read<FeaturedPackagesCubit>().refresh(),
+              context.read<FeaturedServicesCubit>().refresh(),
+            ]),
+            child: SingleChildScrollView(
+              physics: const AlwaysScrollableScrollPhysics(
+                parent: ClampingScrollPhysics(),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  HomeHeader(
+                    userName: loaded.userName,
+                    location: loaded.location,
+                    onSearchTap: () => context.push(AppRoutes.search),
+                  ),
+                  const BannersSection(),
+                  const CategoriesSection(),
+                  const NearbySalonsSection(),
+                  const CouponsSection(),
+                  const FeaturedPackagesSection(),
+                  SizedBox(height: 14.h),
+                  const FeaturedServicesSection(),
+                  SizedBox(height: 24.h),
+                ],
+              ),
             ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                HomeHeader(
-                  userName: loaded.userName,
-                  location: loaded.location,
-                  onSearchTap: () => context.push(AppRoutes.search),
-                ),
-                const BannersSection(),
-                const CategoriesSection(),
-                const NearbySalonsSection(),
-                const CouponsSection(),
-                const FeaturedPackagesSection(),
-                SizedBox(height: 14.h),
-                const FeaturedServicesSection(),
-                SizedBox(height: 24.h),
-              ],
-            ),
-          ),
-        );
-      },
+          );
+        },
       ),
     );
   }

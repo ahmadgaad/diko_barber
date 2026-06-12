@@ -3,7 +3,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:ronaq_barber/core/shared/domain/entities/package.dart';
+import 'package:ronaq_barber/core/shared/domain/entities/nearest_package.dart';
 import 'package:ronaq_barber/core/theme/app_colors.dart';
 import 'package:ronaq_barber/features/home/presentation/components/section_header.dart';
 import 'package:ronaq_barber/features/home/presentation/cubit/featured_packages_cubit.dart';
@@ -33,7 +33,7 @@ class FeaturedPackagesSection extends StatelessWidget {
 
 class _PackagesList extends StatelessWidget {
   const _PackagesList({required this.packages, required this.colors});
-  final List<Package> packages;
+  final List<NearestPackage> packages;
   final AppColors colors;
 
   @override
@@ -66,11 +66,13 @@ class _PackagesList extends StatelessWidget {
 
 class _PackageCard extends StatelessWidget {
   const _PackageCard({required this.package});
-  final Package package;
+  final NearestPackage package;
 
   @override
   Widget build(BuildContext context) {
     final colors = AppColors.of(context);
+    final hasDiscount = package.hasDiscount;
+
     return SizedBox(
       width: 160.w,
       height: 200.h,
@@ -131,7 +133,7 @@ class _PackageCard extends StatelessWidget {
                           borderRadius: BorderRadius.circular(999.r),
                         ),
                         child: Text(
-                          '${package.price.toStringAsFixed(0)} ${tr('home.currency')}',
+                          '${package.effectivePrice.toStringAsFixed(0)} ${tr('home.currency')}',
                           style: TextStyle(
                             fontSize: 11.sp,
                             fontWeight: FontWeight.w700,
@@ -139,16 +141,19 @@ class _PackageCard extends StatelessWidget {
                           ),
                         ),
                       ),
-                      const Spacer(),
-                      Icon(
-                        package.isFavorite
-                            ? Icons.favorite_rounded
-                            : Icons.favorite_border_rounded,
-                        color: package.isFavorite
-                            ? splashOrange
-                            : Colors.white,
-                        size: 20.r,
-                      ),
+                      if (hasDiscount) ...[
+                        SizedBox(width: 4.w),
+                        Text(
+                          package.price.toStringAsFixed(0),
+                          style: TextStyle(
+                            fontSize: 10.sp,
+                            fontWeight: FontWeight.w400,
+                            color: Colors.white54,
+                            decoration: TextDecoration.lineThrough,
+                            decorationColor: Colors.white54,
+                          ),
+                        ),
+                      ],
                     ],
                   ),
                 ],

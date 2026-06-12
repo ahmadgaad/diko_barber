@@ -10,6 +10,15 @@ abstract class SharedRemoteDataSource {
   Future<ApiResponse<dynamic>> getNearestSalons(
     Map<String, dynamic> queryParams,
   );
+  Future<ApiResponse<dynamic>> getNearestCoupons(
+    Map<String, dynamic> queryParams,
+  );
+  Future<ApiResponse<dynamic>> getNearestPackages(
+    Map<String, dynamic> queryParams,
+  );
+  Future<ApiResponse<dynamic>> getNearestServices(
+    Map<String, dynamic> queryParams,
+  );
 }
 
 class SharedRemoteDataSourceImpl implements SharedRemoteDataSource {
@@ -47,6 +56,33 @@ class SharedRemoteDataSourceImpl implements SharedRemoteDataSource {
   ) =>
       _networkService.getData(
         endPoint: EndPoints.nearestSalons,
+        queryParameters: queryParams,
+      );
+
+  @override
+  Future<ApiResponse<dynamic>> getNearestCoupons(
+    Map<String, dynamic> queryParams,
+  ) =>
+      _networkService.getData(
+        endPoint: EndPoints.nearestCoupons,
+        queryParameters: queryParams,
+      );
+
+  @override
+  Future<ApiResponse<dynamic>> getNearestPackages(
+    Map<String, dynamic> queryParams,
+  ) =>
+      _networkService.getData(
+        endPoint: EndPoints.nearestPackages,
+        queryParameters: queryParams,
+      );
+
+  @override
+  Future<ApiResponse<dynamic>> getNearestServices(
+    Map<String, dynamic> queryParams,
+  ) =>
+      _networkService.getData(
+        endPoint: EndPoints.nearestServices,
         queryParameters: queryParams,
       );
 }

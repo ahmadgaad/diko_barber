@@ -3,7 +3,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:ronaq_barber/core/shared/domain/entities/featured_service.dart';
+import 'package:ronaq_barber/core/shared/domain/entities/nearest_service.dart';
 import 'package:ronaq_barber/core/theme/app_colors.dart';
 import 'package:ronaq_barber/features/home/presentation/components/section_header.dart';
 import 'package:ronaq_barber/features/home/presentation/cubit/featured_services_cubit.dart';
@@ -33,7 +33,7 @@ class FeaturedServicesSection extends StatelessWidget {
 
 class _ServicesList extends StatelessWidget {
   const _ServicesList({required this.services, required this.colors});
-  final List<FeaturedService> services;
+  final List<NearestService> services;
   final AppColors colors;
 
   @override
@@ -66,11 +66,13 @@ class _ServicesList extends StatelessWidget {
 
 class _ServiceCard extends StatelessWidget {
   const _ServiceCard({required this.service});
-  final FeaturedService service;
+  final NearestService service;
 
   @override
   Widget build(BuildContext context) {
     final colors = AppColors.of(context);
+    final hasDiscount = service.hasDiscount;
+
     return SizedBox(
       width: 140.w,
       height: 180.h,
@@ -110,22 +112,6 @@ class _ServiceCard extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Row(
-                    children: [
-                      Icon(Icons.star_rounded,
-                          color: const Color(0xFFFFC107), size: 12.r),
-                      SizedBox(width: 2.w),
-                      Text(
-                        service.rating.toStringAsFixed(1),
-                        style: TextStyle(
-                          fontSize: 11.sp,
-                          fontWeight: FontWeight.w500,
-                          color: Colors.white70,
-                        ),
-                      ),
-                    ],
-                  ),
-                  SizedBox(height: 4.h),
                   Text(
                     service.name,
                     maxLines: 1,
@@ -147,7 +133,7 @@ class _ServiceCard extends StatelessWidget {
                           borderRadius: BorderRadius.circular(999.r),
                         ),
                         child: Text(
-                          '${service.price.toStringAsFixed(0)} ${tr('home.currency')}',
+                          '${service.effectivePrice.toStringAsFixed(0)} ${tr('home.currency')}',
                           style: TextStyle(
                             fontSize: 10.sp,
                             fontWeight: FontWeight.w700,
@@ -155,14 +141,19 @@ class _ServiceCard extends StatelessWidget {
                           ),
                         ),
                       ),
-                      const Spacer(),
-                      Icon(
-                        service.isFavorite
-                            ? Icons.favorite_rounded
-                            : Icons.favorite_border_rounded,
-                        color: service.isFavorite ? splashOrange : Colors.white,
-                        size: 18.r,
-                      ),
+                      if (hasDiscount) ...[
+                        SizedBox(width: 4.w),
+                        Text(
+                          service.price.toStringAsFixed(0),
+                          style: TextStyle(
+                            fontSize: 10.sp,
+                            fontWeight: FontWeight.w400,
+                            color: Colors.white54,
+                            decoration: TextDecoration.lineThrough,
+                            decorationColor: Colors.white54,
+                          ),
+                        ),
+                      ],
                     ],
                   ),
                 ],

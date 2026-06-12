@@ -23,6 +23,14 @@ abstract final class EndPoints {
 
   // User
   static const String nearestSalons = 'user/nearest-salons';
+  static const String nearestCoupons = 'user/nearest-coupons';
+  static const String nearestPackages = 'user/nearest-packages';
+  static const String nearestServices = 'user/nearest-services';
+  static String salonServices(int id) => 'user/salons/$id/services';
+  static String salonStaff(int id) => 'user/salons/$id/staff';
+  static String salonSlots(int id) => 'user/salons/$id/slots';
+  static const String validateCoupon = 'user/coupons/validate';
+  static const String createBooking = 'user/bookings';
 
   // Salon Auth
   static const String salonRegister = 'salon-auth/register';

@@ -8,12 +8,11 @@ import 'package:ronaq_barber/features/salon_details/presentation/cubit/salon_det
 class SalonDetailsCubit extends Cubit<SalonDetailsState> {
   SalonDetailsCubit() : super(const SalonDetailsLoading());
 
-  void load(int salonId) {
+  void load(int salonId, {String? couponCode}) {
     emit(const SalonDetailsLoading());
-    // Simulate async load
     Future.delayed(const Duration(milliseconds: 600), () {
       if (isClosed) return;
-      emit(SalonDetailsLoaded(salon: _mockSalon(salonId)));
+      emit(SalonDetailsLoaded(salon: _mockSalon(salonId), couponCode: couponCode));
     });
   }
 
