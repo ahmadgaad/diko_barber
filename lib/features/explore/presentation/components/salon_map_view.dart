@@ -37,10 +37,11 @@ class SalonMapViewState extends State<SalonMapView> {
   GoogleMapController? _controller;
   SalonMarkerIcons? _icons;
 
+  final ValueNotifier<Set<Marker>> _markersNotifier = ValueNotifier({});
+
   static const _riyadhCenter = LatLng(24.7136, 46.6753);
 
-  LatLng get _initialTarget =>
-      widget.userLocation ?? _riyadhCenter;
+  LatLng get _initialTarget => widget.userLocation ?? _riyadhCenter;
 
   @override
   void initState() {
@@ -51,14 +52,22 @@ class SalonMapViewState extends State<SalonMapView> {
   Future<void> _loadIcons() async {
     final icons = await SalonMarkerIcons.generate();
     if (!mounted) return;
-    setState(() => _icons = icons);
+    _icons = icons;
+    _markersNotifier.value = _buildMarkers();
   }
 
   @override
   void didUpdateWidget(SalonMapView oldWidget) {
     super.didUpdateWidget(oldWidget);
-    if (widget.highlightedSalonId != oldWidget.highlightedSalonId &&
-        widget.highlightedSalonId != null) {
+
+    final salonsChanged = widget.salons != oldWidget.salons;
+    final highlightChanged = widget.highlightedSalonId != oldWidget.highlightedSalonId;
+
+    if (salonsChanged || highlightChanged) {
+      _markersNotifier.value = _buildMarkers();
+    }
+
+    if (highlightChanged && widget.highlightedSalonId != null) {
       _animateToSalon(widget.highlightedSalonId!);
     }
   }
@@ -101,6 +110,7 @@ class SalonMapViewState extends State<SalonMapView> {
 
   @override
   void dispose() {
+    _markersNotifier.dispose();
     _controller?.dispose();
     super.dispose();
   }
@@ -112,20 +122,25 @@ class SalonMapViewState extends State<SalonMapView> {
 
     return Stack(
       children: [
-        GoogleMap(
-          initialCameraPosition: CameraPosition(
-            target: _initialTarget,
-            zoom: widget.initialZoom,
-          ),
-          markers: _buildMarkers(),
-          style: Theme.of(context).brightness == Brightness.dark
-              ? AppMapStyle.dark
-              : AppMapStyle.light,
-          myLocationEnabled: hasLocation,
-          myLocationButtonEnabled: false,
-          zoomControlsEnabled: false,
-          mapToolbarEnabled: false,
-          onMapCreated: (controller) => _controller = controller,
+        ValueListenableBuilder<Set<Marker>>(
+          valueListenable: _markersNotifier,
+          builder: (context, markers, child) {
+            return GoogleMap(
+              initialCameraPosition: CameraPosition(
+                target: _initialTarget,
+                zoom: widget.initialZoom,
+              ),
+              markers: markers,
+              style: Theme.of(context).brightness == Brightness.dark
+                  ? AppMapStyle.dark
+                  : AppMapStyle.light,
+              myLocationEnabled: hasLocation,
+              myLocationButtonEnabled: false,
+              zoomControlsEnabled: false,
+              mapToolbarEnabled: false,
+              onMapCreated: (controller) => _controller = controller,
+            );
+          },
         ),
         if (hasLocation)
           Positioned(

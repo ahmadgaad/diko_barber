@@ -29,8 +29,9 @@ class LocationService {
       if (placemarks.isEmpty) return null;
       final p = placemarks.first;
       final parts = [
-        p.subLocality,
+        p.country,
         p.locality,
+        p.subLocality,
         p.administrativeArea,
       ].where((s) => s != null && s.isNotEmpty).toSet().toList();
       return parts.isEmpty ? null : parts.join('، ');

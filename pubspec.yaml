@@ -25,6 +25,7 @@ dependencies:
   go_router: ^17.1.0
   google_maps_flutter: ^2.10.0
   google_maps_flutter_android: ^2.19.12
+  google_maps_flutter_platform_interface: ^2.10.0
   image_picker: ^1.2.2
   internet_connection_checker_plus: ^3.0.1
   intl: ^0.20.2
