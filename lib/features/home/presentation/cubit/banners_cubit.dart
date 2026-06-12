@@ -13,11 +13,17 @@ class BannersCubit extends Cubit<BannersState> {
 
   Future<void> _load() async {
     final result = await _getBannersUseCase();
+    if (isClosed) return;
     switch (result) {
       case Success(:final data):
         emit(BannersLoaded(data));
       case Failure():
         emit(const BannersError());
     }
+  }
+
+  Future<void> refresh() async {
+    emit(const BannersLoading());
+    await _load();
   }
 }

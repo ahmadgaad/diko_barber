@@ -4,12 +4,12 @@ enum CampaignType {
   package,
   unknown;
 
-  static CampaignType fromString(String? value) => switch (value) {
-        'salon' => CampaignType.salon,
-        'service' => CampaignType.service,
-        'package' => CampaignType.package,
-        _ => CampaignType.unknown,
-      };
+  static CampaignType fromInt(int? value) => switch (value) {
+    3 => CampaignType.salon,
+    1 => CampaignType.service,
+    2 => CampaignType.package,
+    _ => CampaignType.unknown,
+  };
 }
 
 class Banner {

@@ -50,3 +50,7 @@ class ProfileLoaded extends ProfileState {
 class ProfileError extends ProfileState {
   const ProfileError();
 }
+
+class ProfileLoggedOut extends ProfileState {
+  const ProfileLoggedOut();
+}

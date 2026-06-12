@@ -6,7 +6,6 @@ import 'package:go_router/go_router.dart';
 import 'package:ronaq_barber/core/widgets/app_error_view.dart';
 import 'package:ronaq_barber/core/widgets/app_shimmer.dart';
 
-import '../components/language_toggle_button.dart';
 import '../components/onboarding_page_content.dart';
 import '../cubit/onboarding_cubit.dart';
 import '../cubit/onboarding_state.dart';
@@ -31,6 +30,23 @@ class _OnboardingViewState extends State<OnboardingView> {
   void dispose() {
     _pageController.dispose();
     super.dispose();
+  }
+
+  void _onHorizontalSwipe(DragEndDetails details, int currentPage, int totalPages) {
+    final velocity = details.primaryVelocity ?? 0;
+    if (velocity.abs() < 300) return;
+
+    if (velocity > 0 && currentPage < totalPages - 1) {
+      _pageController.nextPage(
+        duration: const Duration(milliseconds: 400),
+        curve: Curves.easeInOut,
+      );
+    } else if (velocity < 0 && currentPage > 0) {
+      _pageController.previousPage(
+        duration: const Duration(milliseconds: 400),
+        curve: Curves.easeInOut,
+      );
+    }
   }
 
   @override
@@ -80,13 +96,17 @@ class _OnboardingViewState extends State<OnboardingView> {
     final isLastPage = currentPage == totalPages - 1;
     final item = items[currentPage];
 
-    return Stack(
+    return GestureDetector(
+      behavior: HitTestBehavior.translucent,
+      onHorizontalDragEnd: (details) =>
+          _onHorizontalSwipe(details, currentPage, totalPages),
+      child: Stack(
       children: [
-        // Sliding images — natural page physics for a smooth, physical feel
+        // Images — physics disabled; swipe is handled by the outer GestureDetector.
         PageView.builder(
           controller: _pageController,
           onPageChanged: cubit.onPageChanged,
-          physics: const PageScrollPhysics(),
+          physics: const NeverScrollableScrollPhysics(),
           itemCount: totalPages,
           itemBuilder: (_, index) => Image.network(
             items[index].imageUrl,
@@ -122,7 +142,7 @@ class _OnboardingViewState extends State<OnboardingView> {
         ),
 
         // Static language toggle
-        Positioned(top: 70.h, right: 16.w, child: const LanguageToggleButton()),
+        // Positioned(top: 70.h, right: 16.w, child: const LanguageToggleButton()),
 
         // Animated text content — fade + scale for a premium feel
         Positioned(
@@ -164,6 +184,7 @@ class _OnboardingViewState extends State<OnboardingView> {
           ),
         ),
       ],
+    ),
     );
   }
 }

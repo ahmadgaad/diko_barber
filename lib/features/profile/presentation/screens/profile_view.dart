@@ -20,10 +20,13 @@ class ProfileView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colors = AppColors.of(context);
-    return BlocBuilder<ProfileCubit, ProfileState>(
+    return BlocConsumer<ProfileCubit, ProfileState>(
+      listenWhen: (previous, current) => current is ProfileLoggedOut,
+      listener: (context, state) => context.go(AppRoutes.login),
       builder: (context, state) => switch (state) {
         ProfileLoading() => _ProfileShimmer(colors: colors),
         ProfileError() => const SizedBox.shrink(),
+        ProfileLoggedOut() => const SizedBox.shrink(),
         ProfileLoaded() => _ProfileContent(state: state, colors: colors),
       },
     );
@@ -88,6 +91,13 @@ class _ProfileContent extends StatelessWidget {
                 label: tr('profile.my_reviews'),
                 colors: colors,
                 onTap: () {},
+              ),
+              _SettingsTile(
+                asset: SvgResources.deleteAccount,
+                accent: colors.error500,
+                label: tr('profile.delete_account'),
+                colors: colors,
+                onTap: () => _showDeleteAccountSheet(context, colors),
                 isLast: true,
               ),
             ],
@@ -99,7 +109,7 @@ class _ProfileContent extends StatelessWidget {
             children: [
               _NotificationsTile(state: state, colors: colors),
               _ThemeTile(colors: colors),
-              _LanguageTile(colors: colors),
+              // _LanguageTile(colors: colors),
             ],
           ),
           SizedBox(height: 18.h),
@@ -456,6 +466,7 @@ class _SettingsTile extends StatelessWidget {
                         SvgResources.chevronRight,
                         width: 18.r,
                         height: 18.r,
+                        matchTextDirection: true,
                         colorFilter: ColorFilter.mode(
                           colors.neutral400,
                           BlendMode.srcIn,
@@ -679,7 +690,7 @@ class _SignOutButton extends StatelessWidget {
                     foreground: Colors.white,
                     onTap: () {
                       Navigator.of(ctx).pop();
-                      context.go(AppRoutes.login);
+                      context.read<ProfileCubit>().logout();
                     },
                   ),
                 ),
@@ -690,6 +701,87 @@ class _SignOutButton extends StatelessWidget {
       ),
     );
   }
+}
+
+void _showDeleteAccountSheet(BuildContext context, AppColors colors) {
+  showModalBottomSheet<void>(
+    context: context,
+    backgroundColor: colors.neutral100,
+    shape: RoundedRectangleBorder(
+      borderRadius: BorderRadius.vertical(top: Radius.circular(22.r)),
+    ),
+    builder: (ctx) => Padding(
+      padding: EdgeInsets.fromLTRB(20.w, 14.h, 20.w, 36.h),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Container(
+            width: 40.w,
+            height: 4.h,
+            margin: EdgeInsets.only(bottom: 22.h),
+            decoration: BoxDecoration(
+              color: colors.neutral300,
+              borderRadius: BorderRadius.circular(999.r),
+            ),
+          ),
+          Container(
+            width: 58.r,
+            height: 58.r,
+            decoration: BoxDecoration(
+              color: colors.error50,
+              shape: BoxShape.circle,
+            ),
+            alignment: Alignment.center,
+            child: _Svg(
+              SvgResources.deleteAccount,
+              color: colors.error500,
+              size: 26.r,
+            ),
+          ),
+          SizedBox(height: 14.h),
+          Text(
+            tr('profile.delete_account_confirm_title'),
+            style: TextStyle(
+              fontSize: 17.sp,
+              fontWeight: FontWeight.w700,
+              color: colors.neutral900,
+            ),
+          ),
+          SizedBox(height: 6.h),
+          Text(
+            tr('profile.delete_account_confirm_body'),
+            textAlign: TextAlign.center,
+            style: TextStyle(fontSize: 13.sp, color: colors.neutral500),
+          ),
+          SizedBox(height: 24.h),
+          Row(
+            children: [
+              Expanded(
+                child: _SheetButton(
+                  label: tr('profile.cancel'),
+                  background: colors.neutral200,
+                  foreground: colors.neutral700,
+                  onTap: () => Navigator.of(ctx).pop(),
+                ),
+              ),
+              SizedBox(width: 12.w),
+              Expanded(
+                child: _SheetButton(
+                  label: tr('profile.delete_account'),
+                  background: colors.error500,
+                  foreground: Colors.white,
+                  onTap: () {
+                    Navigator.of(ctx).pop();
+                    // TODO: call DeleteAccountUseCase when endpoint is ready
+                  },
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    ),
+  );
 }
 
 class _SheetButton extends StatelessWidget {

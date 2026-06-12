@@ -4,6 +4,7 @@ import 'package:ronaq_barber/core/cache/cache_keys.dart';
 import 'package:ronaq_barber/core/cache/secure_storage_cache_client.dart';
 import 'package:ronaq_barber/core/networking/result.dart';
 import 'package:ronaq_barber/core/router/app_routes.dart';
+import 'package:ronaq_barber/core/services/location_service.dart';
 import 'package:ronaq_barber/core/shared/domain/entities/city.dart';
 import 'package:ronaq_barber/core/shared/domain/entities/neighborhood.dart';
 import 'package:ronaq_barber/core/shared/domain/use_cases/get_cities_use_case.dart';
@@ -21,11 +22,13 @@ class SignUpCubit extends Cubit<SignUpState> {
     required GetNeighborhoodsUseCase getNeighborhoodsUseCase,
     required SecureStorageCacheClient secureStorage,
     required SocialLoginUseCase socialLoginUseCase,
+    required LocationService locationService,
   }) : _signUpUseCase = signUpUseCase,
        _getCitiesUseCase = getCitiesUseCase,
        _getNeighborhoodsUseCase = getNeighborhoodsUseCase,
        _secureStorage = secureStorage,
        _socialLoginUseCase = socialLoginUseCase,
+       _locationService = locationService,
        super(const SignUpFormState()) {
     _loadCities();
   }
@@ -35,6 +38,7 @@ class SignUpCubit extends Cubit<SignUpState> {
   final GetNeighborhoodsUseCase _getNeighborhoodsUseCase;
   final SecureStorageCacheClient _secureStorage;
   final SocialLoginUseCase _socialLoginUseCase;
+  final LocationService _locationService;
 
   static final _emailRegex = RegExp(
     r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$',
@@ -226,6 +230,16 @@ class SignUpCubit extends Cubit<SignUpState> {
 
     emit(_formState.copyWith(isSubmitting: true, apiError: () => null));
 
+    final position = await _locationService.getCurrentPosition();
+    String? address;
+    if (position != null) {
+      address = await _locationService.getAddressFromCoordinates(
+        position.latitude,
+        position.longitude,
+      );
+    }
+    address ??= _buildLocationFallback();
+
     final params = SignUpParams(
       name: _formState.name,
       phone: _formState.phone.isNotEmpty ? _formState.phone : null,
@@ -237,6 +251,9 @@ class SignUpCubit extends Cubit<SignUpState> {
       gender: _formState.gender,
       age: _formState.age.isNotEmpty ? int.tryParse(_formState.age) : null,
       imagePath: _formState.imagePath,
+      lat: position?.latitude,
+      lng: position?.longitude,
+      location: address,
     );
 
     final result = await _signUpUseCase(params);
@@ -306,5 +323,13 @@ class SignUpCubit extends Cubit<SignUpState> {
     if (confirmation.isEmpty) return 'auth.password_confirmation_required';
     if (password != confirmation) return 'auth.password_confirmation_mismatch';
     return null;
+  }
+
+  String? _buildLocationFallback() {
+    final parts = [
+      _formState.selectedCity?.name,
+      _formState.selectedNeighborhood?.name,
+    ].whereType<String>().toList();
+    return parts.isEmpty ? null : parts.join(', ');
   }
 }

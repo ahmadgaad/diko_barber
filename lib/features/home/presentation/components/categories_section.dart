@@ -5,9 +5,11 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:ronaq_barber/core/resources/image_resources.dart';
 import 'package:ronaq_barber/core/shared/domain/entities/category.dart';
 import 'package:ronaq_barber/core/theme/app_colors.dart';
+import 'package:ronaq_barber/core/widgets/app_bottom_nav_bar.dart';
 import 'package:ronaq_barber/features/home/presentation/components/section_header.dart';
 import 'package:ronaq_barber/features/home/presentation/cubit/categories_cubit.dart';
 import 'package:ronaq_barber/features/home/presentation/cubit/categories_state.dart';
+import 'package:ronaq_barber/features/home/presentation/screens/home_view.dart';
 import 'package:shimmer/shimmer.dart';
 
 class CategoriesSection extends StatelessWidget {
@@ -38,12 +40,17 @@ class _CategoriesList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final scope = HomeScope.of(context);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Padding(
           padding: EdgeInsets.symmetric(horizontal: 20.w),
-          child: SectionHeader(titleKey: 'home.categories', colors: colors),
+          child: SectionHeader(
+            titleKey: 'home.categories',
+            colors: colors,
+            onSeeMore: () => scope.onSwitchTab(HomeTab.explore),
+          ),
         ),
         SizedBox(height: 12.h),
         SingleChildScrollView(
@@ -55,24 +62,40 @@ class _CategoriesList extends StatelessWidget {
             children: categories.map((category) {
               return Padding(
                 padding: EdgeInsetsDirectional.only(end: 16.w),
-                child: _CategoryItem(category: category, colors: colors),
+                child: _CategoryItem(
+                  category: category,
+                  colors: colors,
+                  onTap: () => scope.onSwitchTab(
+                    HomeTab.explore,
+                    category: category,
+                  ),
+                ),
               );
             }).toList(),
           ),
         ),
+        SizedBox(height: 14.h),
       ],
     );
   }
 }
 
 class _CategoryItem extends StatelessWidget {
-  const _CategoryItem({required this.category, required this.colors});
+  const _CategoryItem({
+    required this.category,
+    required this.colors,
+    required this.onTap,
+  });
   final Category category;
   final AppColors colors;
+  final VoidCallback onTap;
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
+    return GestureDetector(
+      onTap: onTap,
+      behavior: HitTestBehavior.opaque,
+      child: SizedBox(
       width: 74.w,
       child: Column(
         children: [
@@ -119,7 +142,7 @@ class _CategoryItem extends StatelessWidget {
           ),
         ],
       ),
-    );
+    ));
   }
 }
 

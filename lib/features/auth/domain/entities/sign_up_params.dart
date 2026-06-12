@@ -11,6 +11,9 @@ class SignUpParams {
     this.age,
     this.fcmToken,
     this.imagePath,
+    this.lat,
+    this.lng,
+    this.location,
   });
 
   final String name;
@@ -24,4 +27,7 @@ class SignUpParams {
   final int? age;
   final String? fcmToken;
   final String? imagePath;
+  final double? lat;
+  final double? lng;
+  final String? location;
 }

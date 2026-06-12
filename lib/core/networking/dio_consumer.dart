@@ -1,12 +1,12 @@
 import 'dart:io';
 
 import 'package:dio/dio.dart';
-import 'package:ronaq_barber/core/cache/cache_keys.dart';
-import 'package:ronaq_barber/core/networking/api_error_handler.dart';
-import 'package:ronaq_barber/core/networking/api_response.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/foundation.dart';
 import 'package:pretty_dio_logger/pretty_dio_logger.dart';
+import 'package:ronaq_barber/core/cache/cache_keys.dart';
+import 'package:ronaq_barber/core/networking/api_error_handler.dart';
+import 'package:ronaq_barber/core/networking/api_response.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'api_consumer.dart';
@@ -35,10 +35,7 @@ class DioConsumer implements INetworkService {
     dioClient.options = BaseOptions(
       baseUrl: _baseUrl,
       contentType: 'application/json',
-      headers: {
-        'Accept': 'application/json',
-        'Accept-Language': language,
-      },
+      headers: {'Accept': 'application/json', 'Accept-Language': language},
       followRedirects: false,
       validateStatus: (status) => status != null && status < 500,
       receiveDataWhenStatusError: true,
@@ -49,7 +46,13 @@ class DioConsumer implements INetworkService {
 
     dioClient.interceptors.addAll([
       authInterceptor,
-      if (kDebugMode) PrettyDioLogger(requestBody: true, requestHeader: true),
+      if (kDebugMode)
+        PrettyDioLogger(
+          requestBody: true,
+          requestHeader: true,
+          enabled: true,
+          request: true,
+        ),
     ]);
   }
 
@@ -152,18 +155,12 @@ class DioConsumer implements INetworkService {
       final response = await request();
       return _parseResponse(response);
     } on SocketException {
-      return ApiResponse(
-        status: false,
-        message: 'no_internet_connection'.tr(),
-      );
+      return ApiResponse(status: false, message: 'no_internet_connection'.tr());
     } on DioException catch (e) {
       final errorModel = ApiErrorHandler.handle(e);
       return ApiResponse(status: false, message: errorModel.message);
     } on Exception catch (_) {
-      return ApiResponse(
-        status: false,
-        message: 'unknown_error_occurred'.tr(),
-      );
+      return ApiResponse(status: false, message: 'unknown_error_occurred'.tr());
     }
   }
 

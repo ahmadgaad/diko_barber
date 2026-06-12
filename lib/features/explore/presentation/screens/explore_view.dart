@@ -2,7 +2,10 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:ronaq_barber/core/resources/svg_resources.dart';
 import 'package:ronaq_barber/core/theme/app_colors.dart';
 import 'package:ronaq_barber/features/explore/presentation/components/category_filter_chips.dart';
 import 'package:ronaq_barber/features/explore/presentation/components/explore_empty_state.dart';
@@ -23,6 +26,7 @@ class ExploreView extends StatefulWidget {
 
 class _ExploreViewState extends State<ExploreView> {
   final _sheetController = DraggableScrollableController();
+  final _searchController = TextEditingController();
   ScrollController? _sheetScrollController;
 
   static const _maxSize = 0.92;
@@ -46,6 +50,7 @@ class _ExploreViewState extends State<ExploreView> {
   void dispose() {
     _sheetController.removeListener(_onSheetScroll);
     _sheetController.dispose();
+    _searchController.dispose();
     super.dispose();
   }
 
@@ -92,6 +97,11 @@ class _ExploreViewState extends State<ExploreView> {
                     salons: state.salons,
                     highlightedSalonId: state.highlightedSalonId,
                     onPinTapped: (id) => _onPinTapped(state, id),
+                    userLocation: state.userLat != null && state.userLng != null
+                        ? LatLng(state.userLat!, state.userLng!)
+                        : null,
+                    locationButtonBottomPadding:
+                        _midSize * MediaQuery.sizeOf(context).height,
                   )
                 : Container(color: colors.neutral200),
           ),
@@ -157,7 +167,16 @@ class _ExploreViewState extends State<ExploreView> {
                       );
                     },
                     child: BlocBuilder<ExploreCubit, ExploreState>(
-                      builder: (context, state) => _SheetHeader(state: state),
+                      builder: (context, state) => _SheetHeader(
+                        state: state,
+                        searchController: _searchController,
+                        onSearch: (q) =>
+                            context.read<ExploreCubit>().search(q),
+                        onClearSearch: () {
+                          _searchController.clear();
+                          context.read<ExploreCubit>().search('');
+                        },
+                      ),
                     ),
                   ),
                   // Scrollable content only.
@@ -174,6 +193,13 @@ class _ExploreViewState extends State<ExploreView> {
                                 child: const ExploreShimmer(),
                               ),
                             ),
+                            ExploreLoaded() when state.isLoadingSalons =>
+                              SliverToBoxAdapter(
+                                child: Padding(
+                                  padding: EdgeInsets.symmetric(horizontal: 16.w),
+                                  child: const ExploreShimmer(showCategoryChips: false),
+                                ),
+                              ),
                             ExploreLoaded() when state.salons.isEmpty =>
                               const SliverFillRemaining(
                                 hasScrollBody: false,
@@ -239,8 +265,17 @@ class _ExploreViewState extends State<ExploreView> {
 }
 
 class _SheetHeader extends StatelessWidget {
-  const _SheetHeader({required this.state});
+  const _SheetHeader({
+    required this.state,
+    required this.searchController,
+    required this.onSearch,
+    required this.onClearSearch,
+  });
+
   final ExploreState state;
+  final TextEditingController searchController;
+  final ValueChanged<String> onSearch;
+  final VoidCallback onClearSearch;
 
   @override
   Widget build(BuildContext context) {
@@ -292,6 +327,15 @@ class _SheetHeader extends StatelessWidget {
             ],
           ),
         ),
+        Padding(
+          padding: EdgeInsets.fromLTRB(16.w, 0, 16.w, 12.h),
+          child: _ExploreSearchBar(
+            controller: searchController,
+            colors: colors,
+            onChanged: onSearch,
+            onClear: onClearSearch,
+          ),
+        ),
         if (state case ExploreLoaded(
           :final categories,
           :final selectedCategory,
@@ -304,6 +348,87 @@ class _SheetHeader extends StatelessWidget {
             ),
           ),
       ],
+    );
+  }
+}
+
+class _ExploreSearchBar extends StatelessWidget {
+  const _ExploreSearchBar({
+    required this.controller,
+    required this.colors,
+    required this.onChanged,
+    required this.onClear,
+  });
+
+  final TextEditingController controller;
+  final AppColors colors;
+  final ValueChanged<String> onChanged;
+  final VoidCallback onClear;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: 46.h,
+      decoration: BoxDecoration(
+        color: colors.neutral100,
+        borderRadius: BorderRadius.circular(14.r),
+        border: Border.all(color: colors.neutral200),
+      ),
+      child: Row(
+        children: [
+          SizedBox(width: 12.w),
+          SvgPicture.asset(
+            SvgResources.search,
+            width: 18.r,
+            height: 18.r,
+            colorFilter: ColorFilter.mode(colors.neutral400, BlendMode.srcIn),
+          ),
+          SizedBox(width: 8.w),
+          Expanded(
+            child: TextField(
+              controller: controller,
+              onChanged: onChanged,
+              textInputAction: TextInputAction.search,
+              style: TextStyle(fontSize: 14.sp, color: colors.neutral900),
+              decoration: InputDecoration(
+                border: InputBorder.none,
+                isDense: true,
+                contentPadding: EdgeInsets.zero,
+                hintText: tr('explore.search_hint'),
+                hintStyle: TextStyle(
+                  fontSize: 14.sp,
+                  color: colors.neutral400,
+                ),
+              ),
+            ),
+          ),
+          ValueListenableBuilder(
+            valueListenable: controller,
+            builder: (_, value, _) {
+              if (value.text.isEmpty) return const SizedBox.shrink();
+              return GestureDetector(
+                onTap: onClear,
+                child: Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 10.w),
+                  child: Container(
+                    width: 18.r,
+                    height: 18.r,
+                    decoration: BoxDecoration(
+                      color: colors.neutral300,
+                      shape: BoxShape.circle,
+                    ),
+                    child: Icon(
+                      Icons.close_rounded,
+                      size: 11.r,
+                      color: colors.neutral700,
+                    ),
+                  ),
+                ),
+              );
+            },
+          ),
+        ],
+      ),
     );
   }
 }

@@ -1,6 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ronaq_barber/core/networking/result.dart';
 import 'package:ronaq_barber/core/router/app_routes.dart';
+import 'package:ronaq_barber/core/services/location_service.dart';
 import 'package:ronaq_barber/core/shared/domain/entities/city.dart';
 import 'package:ronaq_barber/core/shared/domain/entities/neighborhood.dart';
 import 'package:ronaq_barber/core/shared/domain/use_cases/get_categories_use_case.dart';
@@ -17,10 +18,12 @@ class SalonRegisterCubit extends Cubit<SalonRegisterState> {
     required GetCitiesUseCase getCitiesUseCase,
     required GetNeighborhoodsUseCase getNeighborhoodsUseCase,
     required GetCategoriesUseCase getCategoriesUseCase,
+    required LocationService locationService,
   })  : _salonRegisterUseCase = salonRegisterUseCase,
         _getCitiesUseCase = getCitiesUseCase,
         _getNeighborhoodsUseCase = getNeighborhoodsUseCase,
         _getCategoriesUseCase = getCategoriesUseCase,
+        _locationService = locationService,
         super(const SalonRegisterFormState()) {
     _loadCities();
   }
@@ -29,6 +32,7 @@ class SalonRegisterCubit extends Cubit<SalonRegisterState> {
   final GetCitiesUseCase _getCitiesUseCase;
   final GetNeighborhoodsUseCase _getNeighborhoodsUseCase;
   final GetCategoriesUseCase _getCategoriesUseCase;
+  final LocationService _locationService;
 
   static final _emailRegex = RegExp(
     r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$',
@@ -235,6 +239,16 @@ class SalonRegisterCubit extends Cubit<SalonRegisterState> {
 
     emit(_formState.copyWith(isSubmitting: true, apiError: () => null));
 
+    final position = await _locationService.getCurrentPosition();
+    String? address;
+    if (position != null) {
+      address = await _locationService.getAddressFromCoordinates(
+        position.latitude,
+        position.longitude,
+      );
+    }
+    address ??= _buildLocationFallback();
+
     final params = SalonRegisterParams(
       ownerName: _formState.ownerName,
       name: _formState.salonName,
@@ -248,7 +262,9 @@ class SalonRegisterCubit extends Cubit<SalonRegisterState> {
       neighborhoodId: _formState.selectedNeighborhood?.id,
       description:
           _formState.description.isNotEmpty ? _formState.description : null,
-      location: _formState.location.isNotEmpty ? _formState.location : null,
+      location: address ?? (_formState.location.isNotEmpty ? _formState.location : null),
+      lat: position?.latitude,
+      lng: position?.longitude,
       commercialRegistrationNumber:
           _formState.commercialRegistrationNumber.isNotEmpty
               ? _formState.commercialRegistrationNumber
@@ -343,5 +359,13 @@ class SalonRegisterCubit extends Cubit<SalonRegisterState> {
       return 'salon_auth.password_confirmation_mismatch';
     }
     return null;
+  }
+
+  String? _buildLocationFallback() {
+    final parts = [
+      _formState.selectedCity?.name,
+      _formState.selectedNeighborhood?.name,
+    ].whereType<String>().toList();
+    return parts.isEmpty ? null : parts.join(', ');
   }
 }

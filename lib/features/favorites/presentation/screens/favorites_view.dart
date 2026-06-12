@@ -175,7 +175,7 @@ class _SalonTile extends StatelessWidget {
             ClipRRect(
               borderRadius: BorderRadius.circular(12.r),
               child: CachedNetworkImage(
-                imageUrl: salon.logo,
+                imageUrl: salon.image,
                 width: 72.r,
                 height: 72.r,
                 fit: BoxFit.cover,
@@ -213,7 +213,7 @@ class _SalonTile extends StatelessWidget {
                           color: const Color(0xFFFFC107), size: 14.r),
                       SizedBox(width: 3.w),
                       Text(
-                        salon.rating.toStringAsFixed(1),
+                        salon.averageRating.toStringAsFixed(1),
                         style: TextStyle(
                             fontSize: 12.sp, color: colors.neutral700),
                       ),
@@ -221,7 +221,7 @@ class _SalonTile extends StatelessWidget {
                       _Dot(colors: colors),
                       SizedBox(width: 8.w),
                       Text(
-                        '${salon.distance.toStringAsFixed(1)} ${tr('home.km')}',
+                        '${salon.distance?.toStringAsFixed(1) ?? '-'} ${tr('home.km')}',
                         style: TextStyle(
                             fontSize: 12.sp, color: colors.neutral500),
                       ),

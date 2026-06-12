@@ -4,23 +4,18 @@ import 'package:ronaq_barber/core/theme/app_colors.dart';
 import 'package:shimmer/shimmer.dart';
 
 class ExploreShimmer extends StatelessWidget {
-  const ExploreShimmer({super.key, this.showMapBlock = false});
+  const ExploreShimmer({
+    super.key,
+    this.showCategoryChips = true,
+  });
 
-  /// The explore tab shows a map preview placeholder above the grid;
-  /// the full-map sheet does not.
-  final bool showMapBlock;
+  /// Pass false when the real category chips are already visible in the header
+  /// (i.e. during isLoadingSalons on an already-loaded state).
+  final bool showCategoryChips;
 
   @override
   Widget build(BuildContext context) {
     final colors = AppColors.of(context);
-
-    Widget block(double h, double r) => Container(
-      height: h,
-      decoration: BoxDecoration(
-        color: colors.neutral200,
-        borderRadius: BorderRadius.circular(r),
-      ),
-    );
 
     return Shimmer.fromColors(
       baseColor: colors.neutral200,
@@ -28,31 +23,105 @@ class ExploreShimmer extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          if (showMapBlock) ...[block(150.h, 16.r), SizedBox(height: 12.h)],
-          Row(
-            children: List.generate(4, (_) {
-              return Padding(
-                padding: EdgeInsetsDirectional.only(end: 8.w),
-                child: Container(
-                  width: 70.w,
-                  height: 34.h,
-                  decoration: BoxDecoration(
-                    color: colors.neutral200,
-                    borderRadius: BorderRadius.circular(999.r),
-                  ),
-                ),
-              );
-            }),
-          ),
-          SizedBox(height: 12.h),
-          GridView.count(
-            crossAxisCount: 2,
-            crossAxisSpacing: 12.w,
-            mainAxisSpacing: 12.h,
-            childAspectRatio: 0.78,
+          if (showCategoryChips) ...[
+            _ChipRow(colors: colors),
+            SizedBox(height: 12.h),
+          ],
+          GridView.builder(
             shrinkWrap: true,
+            padding: EdgeInsets.zero,
             physics: const NeverScrollableScrollPhysics(),
-            children: List.generate(4, (_) => block(0, 16.r)),
+            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 2,
+              crossAxisSpacing: 12.w,
+              mainAxisSpacing: 12.h,
+              childAspectRatio: 0.78,
+            ),
+            itemCount: 4,
+            itemBuilder: (_, _) => _ShimmerGridCard(colors: colors),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _ChipRow extends StatelessWidget {
+  const _ChipRow({required this.colors});
+  final AppColors colors;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: List.generate(4, (i) {
+        return Padding(
+          padding: EdgeInsetsDirectional.only(end: 8.w),
+          child: Container(
+            width: 70.w,
+            height: 34.h,
+            decoration: BoxDecoration(
+              color: colors.neutral200,
+              borderRadius: BorderRadius.circular(999.r),
+            ),
+          ),
+        );
+      }),
+    );
+  }
+}
+
+/// Skeleton that mirrors the structure of SalonGridCard.
+class _ShimmerGridCard extends StatelessWidget {
+  const _ShimmerGridCard({required this.colors});
+  final AppColors colors;
+
+  Widget _box(double? w, double h, double radius) => Container(
+        width: w,
+        height: h,
+        decoration: BoxDecoration(
+          color: colors.neutral200,
+          borderRadius: BorderRadius.circular(radius),
+        ),
+      );
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+        color: colors.neutral100,
+        borderRadius: BorderRadius.circular(16.r),
+        border: Border.all(color: colors.neutral200),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Cover image placeholder
+          ClipRRect(
+            borderRadius: BorderRadius.vertical(top: Radius.circular(15.r)),
+            child: _box(double.infinity, 100.h, 0),
+          ),
+          // Content
+          Padding(
+            padding: EdgeInsets.fromLTRB(10.w, 8.h, 10.w, 10.h),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // Name + favorite icon row
+                Row(
+                  children: [
+                    Expanded(child: _box(null, 13.h, 4.r)),
+                    SizedBox(width: 8.w),
+                    _box(16.r, 16.r, 4.r),
+                  ],
+                ),
+                SizedBox(height: 6.h),
+                // Rating + distance row
+                _box(80.w, 11.h, 4.r),
+                SizedBox(height: 8.h),
+                // Open/closed status pill
+                _box(48.w, 20.h, 999.r),
+              ],
+            ),
           ),
         ],
       ),

@@ -35,6 +35,8 @@ class SalonAuthRemoteDataSourceImpl implements SalonAuthRemoteDataSource {
       'neighborhood_id': ?params.neighborhoodId,
       'description': ?params.description,
       'location': ?params.location,
+      'lat': ?params.lat?.toString(),
+      'long': ?params.lng?.toString(),
       'commercial_registration_number': ?params.commercialRegistrationNumber,
     };
 

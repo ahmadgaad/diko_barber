@@ -1,4 +1,5 @@
 import 'package:ronaq_barber/core/networking/api_consumer.dart';
+import 'package:ronaq_barber/core/services/location_service.dart';
 import 'package:ronaq_barber/core/networking/dio_consumer.dart';
 import 'package:ronaq_barber/core/networking/interceptors/authorization_interceptor.dart';
 import 'package:ronaq_barber/core/networking/network_info.dart';
@@ -7,6 +8,7 @@ import 'package:ronaq_barber/core/shared/data/repositories/shared_repository_imp
 import 'package:ronaq_barber/core/shared/domain/repositories/shared_repository.dart';
 import 'package:ronaq_barber/core/shared/domain/use_cases/get_banners_use_case.dart';
 import 'package:ronaq_barber/core/shared/domain/use_cases/get_categories_use_case.dart';
+import 'package:ronaq_barber/core/shared/domain/use_cases/get_nearest_salons_use_case.dart';
 import 'package:ronaq_barber/features/home/presentation/cubit/categories_cubit.dart';
 import 'package:ronaq_barber/core/shared/domain/use_cases/get_cities_use_case.dart';
 import 'package:ronaq_barber/core/shared/domain/use_cases/get_neighborhoods_use_case.dart';
@@ -55,6 +57,7 @@ import 'package:ronaq_barber/features/onboarding/presentation/cubit/onboarding_c
 import 'package:ronaq_barber/features/auth/data/repositories/auth_repository_impl.dart';
 import 'package:ronaq_barber/features/auth/domain/repositories/auth_repository.dart';
 import 'package:ronaq_barber/features/auth/domain/use_cases/forgot_password_use_case.dart';
+import 'package:ronaq_barber/features/auth/domain/use_cases/logout_use_case.dart';
 import 'package:ronaq_barber/features/auth/domain/use_cases/reset_password_use_case.dart';
 import 'package:ronaq_barber/features/auth/domain/use_cases/sign_in_use_case.dart';
 import 'package:ronaq_barber/features/auth/domain/use_cases/sign_up_use_case.dart';
@@ -84,6 +87,7 @@ Future<void> setupServiceLocator() async {
   sl.registerLazySingleton<INetworkInfo>(
     () => NetworkInfo(sl<InternetConnection>()),
   );
+  sl.registerLazySingleton<LocationService>(LocationService.new);
   sl.registerLazySingleton<Dio>(() => Dio());
   sl.registerLazySingleton<AuthorizationInterceptor>(
     () => AuthorizationInterceptor(),
@@ -153,6 +157,9 @@ Future<void> setupServiceLocator() async {
   sl.registerLazySingleton<GetBannersUseCase>(
     () => GetBannersUseCase(sl<SharedRepository>()),
   );
+  sl.registerLazySingleton<GetNearestSalonsUseCase>(
+    () => GetNearestSalonsUseCase(sl<SharedRepository>()),
+  );
   sl.registerLazySingleton<GetLocaleUseCase>(
     () => GetLocaleUseCase(sl<LocaleRepository>()),
   );
@@ -195,6 +202,9 @@ Future<void> setupServiceLocator() async {
   sl.registerLazySingleton<ResetPasswordUseCase>(
     () => ResetPasswordUseCase(sl<AuthRepository>()),
   );
+  sl.registerLazySingleton<LogoutUseCase>(
+    () => LogoutUseCase(sl<AuthRepository>()),
+  );
   sl.registerLazySingleton<SalonRegisterUseCase>(
     () => SalonRegisterUseCase(sl<SalonAuthRepository>()),
   );
@@ -223,6 +233,7 @@ Future<void> setupServiceLocator() async {
       signInUseCase: sl<SignInUseCase>(),
       socialLoginUseCase: sl<SocialLoginUseCase>(),
       secureStorage: sl<SecureStorageCacheClient>(),
+      cache: sl<SharedPrefCacheClient>(),
     ),
   );
   sl.registerFactory<SignUpCubit>(
@@ -232,6 +243,7 @@ Future<void> setupServiceLocator() async {
       getNeighborhoodsUseCase: sl<GetNeighborhoodsUseCase>(),
       secureStorage: sl<SecureStorageCacheClient>(),
       socialLoginUseCase: sl<SocialLoginUseCase>(),
+      locationService: sl<LocationService>(),
     ),
   );
   sl.registerFactoryParam<VerifyOtpCubit, String, void>(
@@ -239,6 +251,7 @@ Future<void> setupServiceLocator() async {
       verifyOtpUseCase: sl<VerifyOtpUseCase>(),
       resendVerificationUseCase: sl<ResendVerificationUseCase>(),
       secureStorage: sl<SecureStorageCacheClient>(),
+      cache: sl<SharedPrefCacheClient>(),
       email: email,
     ),
   );
@@ -261,6 +274,7 @@ Future<void> setupServiceLocator() async {
       getCitiesUseCase: sl<GetCitiesUseCase>(),
       getNeighborhoodsUseCase: sl<GetNeighborhoodsUseCase>(),
       getCategoriesUseCase: sl<GetCategoriesUseCase>(),
+      locationService: sl<LocationService>(),
     ),
   );
   sl.registerFactoryParam<SalonVerifyOtpCubit, String, void>(
@@ -271,7 +285,7 @@ Future<void> setupServiceLocator() async {
     ),
   );
   sl.registerFactory<HomeCubit>(
-    () => HomeCubit(sl<SecureStorageCacheClient>()),
+    () => HomeCubit(sl<SecureStorageCacheClient>(), sl<SharedPrefCacheClient>()),
   );
   sl.registerFactory<BannersCubit>(
     () => BannersCubit(sl<GetBannersUseCase>()),
@@ -279,16 +293,29 @@ Future<void> setupServiceLocator() async {
   sl.registerFactory<CategoriesCubit>(
     () => CategoriesCubit(sl<GetCategoriesUseCase>()),
   );
-  sl.registerFactory<SalonsCubit>(SalonsCubit.new);
+  sl.registerFactory<SalonsCubit>(
+    () => SalonsCubit(sl<GetNearestSalonsUseCase>(), sl<LocationService>(), sl<SharedPrefCacheClient>()),
+  );
   sl.registerFactory<CouponsCubit>(CouponsCubit.new);
   sl.registerFactory<FeaturedServicesCubit>(FeaturedServicesCubit.new);
   sl.registerFactory<FeaturedPackagesCubit>(FeaturedPackagesCubit.new);
-  sl.registerFactory<ExploreCubit>(ExploreCubit.new);
+  sl.registerFactory<ExploreCubit>(
+    () => ExploreCubit(
+      sl<GetCategoriesUseCase>(),
+      sl<GetNearestSalonsUseCase>(),
+      sl<LocationService>(),
+    ),
+  );
   sl.registerFactory<SearchCubit>(() => SearchCubit(sl<SharedPrefCacheClient>()));
   sl.registerFactory<SalonDetailsCubit>(SalonDetailsCubit.new);
   sl.registerFactory<BookingsCubit>(BookingsCubit.new);
   sl.registerFactory<FavoritesCubit>(FavoritesCubit.new);
-  sl.registerFactory<ProfileCubit>(ProfileCubit.new);
+  sl.registerFactory<ProfileCubit>(
+    () => ProfileCubit(
+      logoutUseCase: sl<LogoutUseCase>(),
+      secureStorage: sl<SecureStorageCacheClient>(),
+    ),
+  );
 
   // Theme — singleton so RonaqBarberApp and ProfileView share the same instance
   final themeCubit = ThemeCubit(sl<SharedPrefCacheClient>());

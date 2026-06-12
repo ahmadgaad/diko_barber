@@ -13,11 +13,17 @@ class CategoriesCubit extends Cubit<CategoriesState> {
 
   Future<void> _load() async {
     final result = await _getCategoriesUseCase();
+    if (isClosed) return;
     switch (result) {
       case Success(:final data):
         emit(CategoriesLoaded(data));
       case Failure():
         emit(const CategoriesError());
     }
+  }
+
+  Future<void> refresh() async {
+    emit(const CategoriesLoading());
+    await _load();
   }
 }

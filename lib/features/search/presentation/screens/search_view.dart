@@ -358,7 +358,7 @@ class _RecentItem extends StatelessWidget {
             ClipRRect(
               borderRadius: BorderRadius.circular(10.r),
               child: CachedNetworkImage(
-                imageUrl: salon.logo,
+                imageUrl: salon.image,
                 width: 44.r,
                 height: 44.r,
                 fit: BoxFit.cover,
@@ -474,7 +474,7 @@ class _TrendingCard extends StatelessWidget {
               ClipRRect(
                 borderRadius: BorderRadius.circular(14.r),
                 child: CachedNetworkImage(
-                  imageUrl: salon.logo,
+                  imageUrl: salon.image,
                   width: 150.w,
                   height: 106.h,
                   fit: BoxFit.cover,
@@ -539,7 +539,7 @@ class _TrendingCard extends StatelessWidget {
                   color: const Color(0xFFFFC107), size: 13.r),
               SizedBox(width: 2.w),
               Text(
-                salon.rating.toStringAsFixed(1),
+                salon.averageRating.toStringAsFixed(1),
                 style: TextStyle(
                   fontSize: 11.sp,
                   fontWeight: FontWeight.w500,
@@ -557,7 +557,7 @@ class _TrendingCard extends StatelessWidget {
               ),
               SizedBox(width: 5.w),
               Text(
-                '${salon.distance.toStringAsFixed(1)} ${tr('home.km')}',
+                '${salon.distance?.toStringAsFixed(1) ?? '-'} ${tr('home.km')}',
                 style: TextStyle(
                   fontSize: 11.sp,
                   color: colors.neutral500,
@@ -648,7 +648,7 @@ class _ResultTile extends StatelessWidget {
             ClipRRect(
               borderRadius: BorderRadius.circular(12.r),
               child: CachedNetworkImage(
-                imageUrl: salon.logo,
+                imageUrl: salon.image,
                 width: 56.r,
                 height: 56.r,
                 fit: BoxFit.cover,
@@ -689,7 +689,7 @@ class _ResultTile extends StatelessWidget {
                           color: const Color(0xFFFFC107), size: 13.r),
                       SizedBox(width: 3.w),
                       Text(
-                        salon.rating.toStringAsFixed(1),
+                        salon.averageRating.toStringAsFixed(1),
                         style: TextStyle(
                           fontSize: 12.sp,
                           color: colors.neutral600,

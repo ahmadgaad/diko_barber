@@ -38,6 +38,8 @@ abstract class AuthRemoteDataSource {
     required String password,
     required String passwordConfirmation,
   });
+
+  Future<ApiResponse<dynamic>> logout();
 }
 
 class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
@@ -71,6 +73,9 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       'age': ?params.age,
       'fcm_token': ?params.fcmToken,
       'verify_with': 2,
+      'lat': ?params.lat?.toString(),
+      'long': ?params.lng?.toString(),
+      'location': ?params.location,
     };
 
     if (params.imagePath != null) {
@@ -151,5 +156,10 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
         'password_confirmation': passwordConfirmation,
       },
     );
+  }
+
+  @override
+  Future<ApiResponse<dynamic>> logout() {
+    return _networkService.postData(endPoint: EndPoints.logout);
   }
 }

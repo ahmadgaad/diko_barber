@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ronaq_barber/core/cache/cache_keys.dart';
 import 'package:ronaq_barber/core/cache/secure_storage_cache_client.dart';
+import 'package:ronaq_barber/core/cache/shared_pref_cache_client.dart';
 import 'package:ronaq_barber/core/networking/result.dart';
 import 'package:ronaq_barber/features/auth/domain/use_cases/resend_verification_use_case.dart';
 import 'package:ronaq_barber/features/auth/domain/use_cases/verify_otp_use_case.dart';
@@ -14,10 +15,12 @@ class VerifyOtpCubit extends Cubit<VerifyOtpState> {
     required VerifyOtpUseCase verifyOtpUseCase,
     required ResendVerificationUseCase resendVerificationUseCase,
     required SecureStorageCacheClient secureStorage,
+    required SharedPrefCacheClient cache,
     required this.email,
   }) : _verifyOtpUseCase = verifyOtpUseCase,
        _resendVerificationUseCase = resendVerificationUseCase,
        _secureStorage = secureStorage,
+       _cache = cache,
        super(const VerifyOtpFormState()) {
     _startCountdown();
   }
@@ -25,6 +28,7 @@ class VerifyOtpCubit extends Cubit<VerifyOtpState> {
   final VerifyOtpUseCase _verifyOtpUseCase;
   final ResendVerificationUseCase _resendVerificationUseCase;
   final SecureStorageCacheClient _secureStorage;
+  final SharedPrefCacheClient _cache;
   final String email;
   Timer? _timer;
 
@@ -68,6 +72,9 @@ class VerifyOtpCubit extends Cubit<VerifyOtpState> {
         }
         await _secureStorage.set(CacheKeys.userIsVerified, 'true');
         await _secureStorage.set(CacheKeys.userName, data.user.name);
+        if (data.user.location != null && data.user.location!.isNotEmpty) {
+          await _cache.set(CacheKeys.userLocation, data.user.location!);
+        }
         emit(const VerifyOtpSuccess());
       case Failure(:final error):
         emit(

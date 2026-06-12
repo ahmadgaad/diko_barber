@@ -6,9 +6,11 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:ronaq_barber/core/shared/domain/entities/salon.dart';
 import 'package:ronaq_barber/core/theme/app_colors.dart';
+import 'package:ronaq_barber/core/widgets/app_bottom_nav_bar.dart';
 import 'package:ronaq_barber/features/home/presentation/components/section_header.dart';
 import 'package:ronaq_barber/features/home/presentation/cubit/salons_cubit.dart';
 import 'package:ronaq_barber/features/home/presentation/cubit/salons_state.dart';
+import 'package:ronaq_barber/features/home/presentation/screens/home_view.dart';
 import 'package:shimmer/shimmer.dart';
 
 class NearbySalonsSection extends StatelessWidget {
@@ -20,8 +22,12 @@ class NearbySalonsSection extends StatelessWidget {
     return BlocBuilder<SalonsCubit, SalonsState>(
       builder: (context, state) => switch (state) {
         SalonsLoading() => _SalonsShimmer(colors: colors),
-        SalonsLoaded(:final salons) when salons.isEmpty => const SizedBox.shrink(),
-        SalonsLoaded(:final salons) => _SalonsList(salons: salons, colors: colors),
+        SalonsLoaded(:final salons) when salons.isEmpty =>
+          const SizedBox.shrink(),
+        SalonsLoaded(:final salons) => _SalonsList(
+          salons: salons,
+          colors: colors,
+        ),
         SalonsError() => const SizedBox.shrink(),
       },
     );
@@ -42,7 +48,11 @@ class _SalonsList extends StatelessWidget {
       children: [
         Padding(
           padding: EdgeInsets.symmetric(horizontal: 20.w),
-          child: SectionHeader(titleKey: 'home.nearby_salons', colors: colors),
+          child: SectionHeader(
+            titleKey: 'home.nearby_salons',
+            colors: colors,
+            onSeeMore: () => HomeScope.of(context).onSwitchTab(HomeTab.explore),
+          ),
         ),
         SizedBox(height: 12.h),
         SingleChildScrollView(
@@ -62,6 +72,7 @@ class _SalonsList extends StatelessWidget {
             }).toList(),
           ),
         ),
+        SizedBox(height: 14.h),
       ],
     );
   }
@@ -94,10 +105,14 @@ class _SalonCard extends StatelessWidget {
           SizedBox(height: 4.h),
           Row(
             children: [
-              Icon(Icons.star_rounded, color: const Color(0xFFFFC107), size: 14.r),
+              Icon(
+                Icons.star_rounded,
+                color: const Color(0xFFFFC107),
+                size: 14.r,
+              ),
               SizedBox(width: 2.w),
               Text(
-                salon.rating.toStringAsFixed(1),
+                salon.averageRating.toStringAsFixed(1),
                 style: TextStyle(
                   fontSize: 12.sp,
                   fontWeight: FontWeight.w500,
@@ -115,7 +130,7 @@ class _SalonCard extends StatelessWidget {
               ),
               SizedBox(width: 6.w),
               Text(
-                '${salon.distance.toStringAsFixed(1)} ${tr('home.km')}',
+                '${salon.distance?.toStringAsFixed(1) ?? '-'} ${tr('home.km')}',
                 style: TextStyle(
                   fontSize: 12.sp,
                   fontWeight: FontWeight.w400,
@@ -146,7 +161,7 @@ class _SalonImage extends StatelessWidget {
         ClipRRect(
           borderRadius: BorderRadius.circular(12.r),
           child: CachedNetworkImage(
-            imageUrl: salon.logo,
+            imageUrl: salon.image,
             width: 160.w,
             height: 110.h,
             fit: BoxFit.cover,
@@ -166,7 +181,11 @@ class _SalonImage extends StatelessWidget {
                 borderRadius: BorderRadius.circular(12.r),
               ),
               alignment: Alignment.center,
-              child: Icon(Icons.store_outlined, color: colors.neutral400, size: 32.r),
+              child: Icon(
+                Icons.store_outlined,
+                color: colors.neutral400,
+                size: 32.r,
+              ),
             ),
           ),
         ),

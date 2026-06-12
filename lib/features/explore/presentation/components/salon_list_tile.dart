@@ -66,7 +66,7 @@ class SalonListTile extends StatelessWidget {
                       ),
                       SizedBox(width: 2.w),
                       Text(
-                        salon.rating.toStringAsFixed(1),
+                        salon.averageRating.toStringAsFixed(1),
                         style: TextStyle(
                           fontSize: 12.sp,
                           fontWeight: FontWeight.w500,
@@ -77,7 +77,7 @@ class SalonListTile extends StatelessWidget {
                       _Dot(colors: colors),
                       SizedBox(width: 6.w),
                       Text(
-                        '${salon.distance.toStringAsFixed(1)} ${tr('home.km')}',
+                        '${salon.distance?.toStringAsFixed(1) ?? '-'} ${tr('home.km')}',
                         style: TextStyle(
                           fontSize: 12.sp,
                           fontWeight: FontWeight.w400,
@@ -126,7 +126,7 @@ class _SalonImage extends StatelessWidget {
     return ClipRRect(
       borderRadius: BorderRadius.circular(12.r),
       child: CachedNetworkImage(
-        imageUrl: salon.logo,
+        imageUrl: salon.image,
         width: 84.r,
         height: 84.r,
         fit: BoxFit.cover,

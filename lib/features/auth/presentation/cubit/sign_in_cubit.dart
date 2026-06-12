@@ -2,6 +2,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:ronaq_barber/core/cache/cache_keys.dart';
 import 'package:ronaq_barber/core/cache/secure_storage_cache_client.dart';
+import 'package:ronaq_barber/core/cache/shared_pref_cache_client.dart';
 import 'package:ronaq_barber/core/networking/result.dart';
 import 'package:ronaq_barber/core/router/app_routes.dart';
 import 'package:ronaq_barber/features/auth/domain/use_cases/sign_in_use_case.dart';
@@ -14,14 +15,17 @@ class SignInCubit extends Cubit<SignInState> {
     required SignInUseCase signInUseCase,
     required SocialLoginUseCase socialLoginUseCase,
     required SecureStorageCacheClient secureStorage,
+    required SharedPrefCacheClient cache,
   })  : _signInUseCase = signInUseCase,
         _socialLoginUseCase = socialLoginUseCase,
         _secureStorage = secureStorage,
+        _cache = cache,
         super(const SignInFormState());
 
   final SignInUseCase _signInUseCase;
   final SocialLoginUseCase _socialLoginUseCase;
   final SecureStorageCacheClient _secureStorage;
+  final SharedPrefCacheClient _cache;
 
   static final _emailRegex = RegExp(
     r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$',
@@ -73,6 +77,9 @@ class SignInCubit extends Cubit<SignInState> {
         }
         await _secureStorage.set(CacheKeys.userIsVerified, data.isVerified.toString());
         await _secureStorage.set(CacheKeys.userName, data.user.name);
+        if (data.user.location != null && data.user.location!.isNotEmpty) {
+          await _cache.set(CacheKeys.userLocation, data.user.location!);
+        }
         if (data.isVerified) {
           emit(const SignInSuccess());
         } else {
@@ -114,6 +121,9 @@ class SignInCubit extends Cubit<SignInState> {
         }
         await _secureStorage.set(CacheKeys.userIsVerified, data.isVerified.toString());
         await _secureStorage.set(CacheKeys.userName, data.user.name);
+        if (data.user.location != null && data.user.location!.isNotEmpty) {
+          await _cache.set(CacheKeys.userLocation, data.user.location!);
+        }
         emit(const SignInSuccess());
       case Failure(:final error):
         emit(_formState.copyWith(

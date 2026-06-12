@@ -9,8 +9,9 @@ class SalonsLoading extends SalonsState {
 }
 
 class SalonsLoaded extends SalonsState {
-  const SalonsLoaded(this.salons);
+  const SalonsLoaded(this.salons, {this.location});
   final List<Salon> salons;
+  final String? location;
 }
 
 class SalonsError extends SalonsState {

@@ -50,7 +50,8 @@ class _SignUpViewState extends State<SignUpView> {
       listenWhen: (previous, current) {
         if (current is SignUpFormState) {
           if (previous is SignUpFormState) {
-            return current.apiError != null && current.apiError != previous.apiError;
+            return current.apiError != null &&
+                current.apiError != previous.apiError;
           }
           return current.apiError != null;
         }
@@ -61,7 +62,7 @@ class _SignUpViewState extends State<SignUpView> {
           case SignUpNavigate(:final target):
             context.go(target);
           case SignUpSuccess(:final email):
-            context.push(AppRoutes.verifyOtp, extra: email);
+            context.go(AppRoutes.verifyOtp, extra: email);
           case SignUpSocialSuccess():
             context.go(AppRoutes.home);
           case SignUpFormState(:final apiError) when apiError != null:
@@ -87,8 +88,10 @@ class _SignUpViewState extends State<SignUpView> {
                         UserTypeToggle(
                           isCustomer: true,
                           onCustomerTap: () {},
-                          onSalonOwnerTap: () =>
-                              context.go(AppRoutes.salonSignup, extra: 'toggle'),
+                          onSalonOwnerTap: () => context.go(
+                            AppRoutes.salonSignup,
+                            extra: 'toggle',
+                          ),
                         ),
                         _buildStepIndicator(context, formState),
                         SizedBox(height: 8.h),
@@ -240,8 +243,9 @@ class _SignUpViewState extends State<SignUpView> {
             hint: tr('auth.email_hint'),
             controller: _emailController,
             onChanged: cubit.onEmailChanged,
-            errorText:
-                state.contactError != null ? tr(state.contactError!) : null,
+            errorText: state.contactError != null
+                ? tr(state.contactError!)
+                : null,
             isRequired: true,
             keyboardType: TextInputType.emailAddress,
             textInputAction: TextInputAction.next,

@@ -1,3 +1,4 @@
+import 'package:ronaq_barber/core/shared/domain/entities/category.dart';
 import 'package:ronaq_barber/core/shared/domain/entities/salon.dart';
 
 sealed class ExploreState {
@@ -15,39 +16,52 @@ class ExploreLoaded extends ExploreState {
     this.query = '',
     this.selectedCategory,
     this.highlightedSalonId,
+    this.isLoadingSalons = false,
+    this.userLat,
+    this.userLng,
   });
 
-  /// Salons after applying [query] and [selectedCategory] filters.
+  /// Salons currently displayed (may be stale while [isLoadingSalons] is true).
   final List<Salon> salons;
 
-  /// All available category filter chips.
-  final List<String> categories;
+  /// All available category filter chips from the API.
+  final List<Category> categories;
 
   final String query;
 
   /// `null` means "All".
-  final String? selectedCategory;
+  final Category? selectedCategory;
 
   /// The salon whose map pin is currently highlighted (tapped).
   final int? highlightedSalonId;
 
+  /// True while a filtered/searched salon fetch is in flight.
+  final bool isLoadingSalons;
+
+  /// Device location — null if permission was denied.
+  final double? userLat;
+  final double? userLng;
+
   ExploreLoaded copyWith({
     List<Salon>? salons,
-    List<String>? categories,
+    List<Category>? categories,
     String? query,
-    String? Function()? selectedCategory,
+    bool? isLoadingSalons,
+    Category? Function()? selectedCategory,
     int? Function()? highlightedSalonId,
   }) {
     return ExploreLoaded(
       salons: salons ?? this.salons,
       categories: categories ?? this.categories,
       query: query ?? this.query,
-      selectedCategory: selectedCategory != null
-          ? selectedCategory()
-          : this.selectedCategory,
+      isLoadingSalons: isLoadingSalons ?? this.isLoadingSalons,
+      selectedCategory:
+          selectedCategory != null ? selectedCategory() : this.selectedCategory,
       highlightedSalonId: highlightedSalonId != null
           ? highlightedSalonId()
           : this.highlightedSalonId,
+      userLat: userLat,
+      userLng: userLng,
     );
   }
 }

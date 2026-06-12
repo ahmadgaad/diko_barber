@@ -233,6 +233,9 @@
     "sign_out": "تسجيل الخروج",
     "sign_out_confirm_title": "تسجيل الخروج؟",
     "sign_out_confirm_body": "هل أنت متأكد أنك تريد تسجيل الخروج من حسابك؟",
+    "delete_account": "حذف الحساب",
+    "delete_account_confirm_title": "حذف الحساب؟",
+    "delete_account_confirm_body": "هذا الإجراء نهائي ولا يمكن التراجع عنه. ستُفقد جميع بياناتك.",
     "cancel": "إلغاء",
     "version": "الإصدار {version}"
   },

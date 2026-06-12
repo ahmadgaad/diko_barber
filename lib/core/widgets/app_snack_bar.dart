@@ -96,7 +96,8 @@ class _SnackBarWidgetState extends State<_SnackBarWidget>
   @override
   Widget build(BuildContext context) {
     final colors = AppColors.of(context);
-    final bottomPadding = MediaQuery.of(context).padding.bottom;
+    final mediaQuery = MediaQuery.of(context);
+    final bottomOffset = mediaQuery.viewInsets.bottom + mediaQuery.padding.bottom;
 
     final (bg, icon, fg) = switch (widget.type) {
       SnackBarType.error   => (colors.error50,   Icons.error_outline_rounded,            colors.error600),
@@ -105,7 +106,7 @@ class _SnackBarWidgetState extends State<_SnackBarWidget>
     };
 
     return Positioned(
-      bottom: bottomPadding + 16.h,
+      bottom: bottomOffset + 16.h,
       left: 16.w,
       right: 16.w,
       child: SlideTransition(

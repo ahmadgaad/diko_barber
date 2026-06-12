@@ -1,6 +1,8 @@
-import 'package:ronaq_barber/core/theme/app_colors.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:ronaq_barber/core/theme/app_colors.dart';
+import 'package:ronaq_barber/core/utils/arabic_digits_formatter.dart';
 
 class AppTextFormField extends StatelessWidget {
   const AppTextFormField({
@@ -17,6 +19,7 @@ class AppTextFormField extends StatelessWidget {
     this.textInputAction,
     this.maxLines = 1,
     this.minLines,
+    this.inputFormatters,
   });
 
   final String label;
@@ -31,6 +34,7 @@ class AppTextFormField extends StatelessWidget {
   final TextInputAction? textInputAction;
   final int maxLines;
   final int? minLines;
+  final List<TextInputFormatter>? inputFormatters;
 
   @override
   Widget build(BuildContext context) {
@@ -78,10 +82,21 @@ class AppTextFormField extends StatelessWidget {
     );
   }
 
+  static final _numericTypes = {
+    TextInputType.number,
+    TextInputType.phone,
+  };
+
   Widget _buildTextField(AppColors colors, bool hasError) {
     final borderColor = hasError ? colors.error500 : colors.neutral300;
     final isMultiline = maxLines > 1;
     final radius = isMultiline ? BorderRadius.circular(16.r) : BorderRadius.circular(999.r);
+
+    final isNumeric = keyboardType != null && _numericTypes.contains(keyboardType);
+    final formatters = [
+      if (isNumeric) const ArabicDigitsFormatter(),
+      ...?inputFormatters,
+    ];
 
     return TextField(
       controller: controller,
@@ -91,6 +106,7 @@ class AppTextFormField extends StatelessWidget {
       textInputAction: textInputAction,
       maxLines: maxLines,
       minLines: minLines,
+      inputFormatters: formatters.isEmpty ? null : formatters,
       style: TextStyle(
         fontSize: 16.sp,
         fontWeight: FontWeight.w400,

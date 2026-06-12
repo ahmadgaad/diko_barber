@@ -15,6 +15,8 @@ class SalonRegisterParams {
     this.commercialRegistrationNumber,
     this.logoPath,
     this.commercialRegistrationImagePath,
+    this.lat,
+    this.lng,
   });
 
   final String ownerName;
@@ -32,4 +34,6 @@ class SalonRegisterParams {
   final String? commercialRegistrationNumber;
   final String? logoPath;
   final String? commercialRegistrationImagePath;
+  final double? lat;
+  final double? lng;
 }

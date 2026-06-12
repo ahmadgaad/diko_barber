@@ -7,4 +7,5 @@ abstract final class CacheKeys {
   static const userName = 'user_name';
   static const themeMode = 'app_theme_mode';
   static const recentSearches = 'recent_searches';
+  static const userLocation = 'user_location';
 }

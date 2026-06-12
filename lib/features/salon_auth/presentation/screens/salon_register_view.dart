@@ -68,7 +68,7 @@ class _SalonRegisterViewState extends State<SalonRegisterView> {
           case SalonRegisterNavigate(:final target):
             context.go(target);
           case SalonRegisterSuccess(:final email):
-            context.push(AppRoutes.salonVerifyOtp, extra: email);
+            context.go(AppRoutes.salonVerifyOtp, extra: email);
           case SalonRegisterFormState(:final apiError) when apiError != null:
             AppSnackBar.show(context, message: apiError);
           case SalonRegisterFormState():

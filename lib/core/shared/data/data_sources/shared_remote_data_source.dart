@@ -7,6 +7,9 @@ abstract class SharedRemoteDataSource {
   Future<ApiResponse<dynamic>> getNeighborhoods({required int cityId});
   Future<ApiResponse<dynamic>> getCategories({int? specialization});
   Future<ApiResponse<dynamic>> getBanners();
+  Future<ApiResponse<dynamic>> getNearestSalons(
+    Map<String, dynamic> queryParams,
+  );
 }
 
 class SharedRemoteDataSourceImpl implements SharedRemoteDataSource {
@@ -37,4 +40,13 @@ class SharedRemoteDataSourceImpl implements SharedRemoteDataSource {
   @override
   Future<ApiResponse<dynamic>> getBanners() =>
       _networkService.getData(endPoint: EndPoints.banners);
+
+  @override
+  Future<ApiResponse<dynamic>> getNearestSalons(
+    Map<String, dynamic> queryParams,
+  ) =>
+      _networkService.getData(
+        endPoint: EndPoints.nearestSalons,
+        queryParameters: queryParams,
+      );
 }

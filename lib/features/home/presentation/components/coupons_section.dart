@@ -23,8 +23,10 @@ class CouponsSection extends StatelessWidget {
         CouponsLoading() => _CouponsShimmer(colors: colors),
         CouponsLoaded(:final coupons) when coupons.isEmpty =>
           const SizedBox.shrink(),
-        CouponsLoaded(:final coupons) =>
-          _CouponsList(coupons: coupons, colors: colors),
+        CouponsLoaded(:final coupons) => _CouponsList(
+          coupons: coupons,
+          colors: colors,
+        ),
         CouponsError() => const SizedBox.shrink(),
       },
     );
@@ -61,6 +63,7 @@ class _CouponsList extends StatelessWidget {
             }).toList(),
           ),
         ),
+        SizedBox(height: 14.h),
       ],
     );
   }
@@ -226,19 +229,19 @@ class _TicketBody extends StatelessWidget {
           const Spacer(),
           Row(
             children: [
-              Icon(
-                Icons.timer_outlined,
-                size: 13.r,
-                color: colors.neutral400,
-              ),
+              Icon(Icons.timer_outlined, size: 13.r, color: colors.neutral400),
               SizedBox(width: 4.w),
               Expanded(
                 child: Text(
-                  tr('home.valid_until', namedArgs: {
-                    'date': DateFormat('dd MMM yyyy',
-                            context.locale.languageCode)
-                        .format(coupon.expiresAt),
-                  }),
+                  tr(
+                    'home.valid_until',
+                    namedArgs: {
+                      'date': DateFormat(
+                        'dd MMM yyyy',
+                        context.locale.languageCode,
+                      ).format(coupon.expiresAt),
+                    },
+                  ),
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                   style: TextStyle(
@@ -309,11 +312,8 @@ class _SalonLogo extends StatelessWidget {
             size: 11.r,
           ),
         ),
-        placeholder: (_, _) => Container(
-          width: 18.r,
-          height: 18.r,
-          color: colors.neutral200,
-        ),
+        placeholder: (_, _) =>
+            Container(width: 18.r, height: 18.r, color: colors.neutral200),
       ),
     );
   }
@@ -404,12 +404,12 @@ class _TicketClipper extends CustomClipper<Path> {
 
   @override
   Path getClip(Size size) => _ticketPath(
-        width: size.width,
-        height: size.height,
-        stubW: stubW,
-        notchR: notchR,
-        cornerR: cornerR,
-      );
+    width: size.width,
+    height: size.height,
+    stubW: stubW,
+    notchR: notchR,
+    cornerR: cornerR,
+  );
 
   @override
   bool shouldReclip(_TicketClipper old) =>

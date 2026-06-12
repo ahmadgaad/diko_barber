@@ -38,6 +38,7 @@ abstract class SvgResources {
   static const String shield = 'assets/svgs/shield.svg';
   static const String info = 'assets/svgs/info.svg';
   static const String logout = 'assets/svgs/logout.svg';
+  static const String deleteAccount = 'assets/svgs/delete_account.svg';
   static const String edit = 'assets/svgs/edit.svg';
   static const String loyalty = 'assets/svgs/loyalty.svg';
   static const String wallet = 'assets/svgs/wallet.svg';

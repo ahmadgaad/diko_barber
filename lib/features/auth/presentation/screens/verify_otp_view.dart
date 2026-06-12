@@ -2,11 +2,10 @@ import 'package:easy_localization/easy_localization.dart' hide TextDirection;
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:pinput/pinput.dart';
-import 'package:ronaq_barber/core/resources/svg_resources.dart';
 import 'package:ronaq_barber/core/theme/app_colors.dart';
+import 'package:ronaq_barber/core/utils/arabic_digits_formatter.dart';
 import 'package:ronaq_barber/features/auth/presentation/cubit/verify_otp_cubit.dart';
 import 'package:ronaq_barber/features/auth/presentation/cubit/verify_otp_state.dart';
 
@@ -37,32 +36,12 @@ class VerifyOtpView extends StatelessWidget {
 
   Widget _buildAppBar(BuildContext context) {
     final colors = AppColors.of(context);
-    final isRtl = Directionality.of(context) == TextDirection.rtl;
 
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
       child: Row(
         children: [
-          GestureDetector(
-            onTap: () => context.pop(),
-            child: SizedBox(
-              width: 24.w,
-              height: 24.w,
-              child: Center(
-                child: Transform.scale(
-                  scaleX: isRtl ? -1 : 1,
-                  child: SvgPicture.asset(
-                    SvgResources.arrowBack,
-                    fit: BoxFit.scaleDown,
-                    colorFilter: ColorFilter.mode(
-                      colors.neutral900,
-                      BlendMode.srcIn,
-                    ),
-                  ),
-                ),
-              ),
-            ),
-          ),
+          SizedBox(width: 24.w),
           Expanded(
             child: Text(
               tr('auth.verify_email_title'),
@@ -213,6 +192,7 @@ class VerifyOtpView extends StatelessWidget {
                 ),
               ),
               keyboardType: TextInputType.number,
+              inputFormatters: const [ArabicDigitsFormatter()],
               onChanged: context.read<VerifyOtpCubit>().onOtpChanged,
               onCompleted: (_) => context.read<VerifyOtpCubit>().verify(),
               forceErrorState: hasError,

@@ -8,9 +8,15 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class HomeHeader extends StatelessWidget {
-  const HomeHeader({super.key, required this.userName, this.onSearchTap});
+  const HomeHeader({
+    super.key,
+    required this.userName,
+    this.location,
+    this.onSearchTap,
+  });
 
   final String userName;
+  final String? location;
   final VoidCallback? onSearchTap;
 
   @override
@@ -26,30 +32,35 @@ class HomeHeader extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Row(
-                  children: [
-                    SvgPicture.asset(
-                      SvgResources.locationPin,
-                      width: 14.r,
-                      height: 14.r,
-                      colorFilter:
-                          ColorFilter.mode(splashOrange, BlendMode.srcIn),
-                    ),
-                    SizedBox(width: 4.w),
-                    Text(
-                      tr('home.location'),
-                      style: TextStyle(
-                        fontSize: 12.sp,
-                        fontWeight: FontWeight.w500,
-                        color: colors.neutral500,
+                if (location != null) ...[
+                  Row(
+                    children: [
+                      SvgPicture.asset(
+                        SvgResources.locationPin,
+                        width: 14.r,
+                        height: 14.r,
+                        colorFilter:
+                            ColorFilter.mode(splashOrange, BlendMode.srcIn),
                       ),
-                    ),
-                    SizedBox(width: 2.w),
-                    Icon(Icons.keyboard_arrow_down_rounded,
-                        size: 14.r, color: colors.neutral500),
-                  ],
-                ),
-                SizedBox(height: 4.h),
+                      SizedBox(width: 4.w),
+                      Flexible(
+                        child: Text(
+                          location!,
+                          style: TextStyle(
+                            fontSize: 12.sp,
+                            fontWeight: FontWeight.w500,
+                            color: colors.neutral500,
+                          ),
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+                      SizedBox(width: 2.w),
+                      Icon(Icons.keyboard_arrow_down_rounded,
+                          size: 14.r, color: colors.neutral500),
+                    ],
+                  ),
+                  SizedBox(height: 4.h),
+                ],
                 Text(
                   tr('home.greeting', namedArgs: {'name': userName}),
                   style: TextStyle(

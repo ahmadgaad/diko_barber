@@ -85,29 +85,31 @@ class SalonGridCard extends StatelessWidget {
                       ),
                       SizedBox(width: 2.w),
                       Text(
-                        salon.rating.toStringAsFixed(1),
+                        salon.averageRating.toStringAsFixed(1),
                         style: TextStyle(
                           fontSize: 11.sp,
                           fontWeight: FontWeight.w500,
                           color: colors.neutral700,
                         ),
                       ),
-                      SizedBox(width: 4.w),
-                      Text(
-                        '·',
-                        style: TextStyle(
-                          color: colors.neutral400,
-                          fontSize: 11.sp,
+                      if (salon.distance != null) ...[
+                        SizedBox(width: 4.w),
+                        Text(
+                          '·',
+                          style: TextStyle(
+                            color: colors.neutral400,
+                            fontSize: 11.sp,
+                          ),
                         ),
-                      ),
-                      SizedBox(width: 4.w),
-                      Text(
-                        '${salon.distance.toStringAsFixed(1)} ${tr('home.km')}',
-                        style: TextStyle(
-                          fontSize: 11.sp,
-                          color: colors.neutral600,
+                        SizedBox(width: 4.w),
+                        Text(
+                          '${salon.distance!.toStringAsFixed(1)} ${tr('home.km')}',
+                          style: TextStyle(
+                            fontSize: 11.sp,
+                            color: colors.neutral600,
+                          ),
                         ),
-                      ),
+                      ],
                     ],
                   ),
                   SizedBox(height: 6.h),
@@ -132,7 +134,7 @@ class _CoverImage extends StatelessWidget {
     return ClipRRect(
       borderRadius: BorderRadius.vertical(top: Radius.circular(15.r)),
       child: CachedNetworkImage(
-        imageUrl: salon.logo,
+        imageUrl: salon.image,
         width: double.infinity,
         height: 100.h,
         fit: BoxFit.cover,

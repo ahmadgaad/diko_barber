@@ -186,4 +186,19 @@ class AuthRepositoryImpl implements AuthRepository {
       return Failure(ApiErrorModel(message: 'حدث خطأ غير معروف'));
     }
   }
+
+  @override
+  Future<Result<ApiErrorModel, void>> logout() async {
+    try {
+      final response = await _remoteDataSource.logout();
+      if (response.isError) {
+        return Failure(
+          ApiErrorModel(message: response.message ?? 'حدث خطأ غير معروف'),
+        );
+      }
+      return const Success(null);
+    } catch (_) {
+      return Failure(ApiErrorModel(message: 'حدث خطأ غير معروف'));
+    }
+  }
 }

@@ -21,6 +21,9 @@ abstract final class EndPoints {
   static const String categories = 'shared/categories';
   static const String banners = 'shared/banners';
 
+  // User
+  static const String nearestSalons = 'user/nearest-salons';
+
   // Salon Auth
   static const String salonRegister = 'salon-auth/register';
   static const String salonVerifyOtp = 'salon-auth/verify-otp';
