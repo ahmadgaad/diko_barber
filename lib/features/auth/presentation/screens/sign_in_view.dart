@@ -1,18 +1,19 @@
-import 'package:diko_barber/core/components/app_divider_with_text.dart';
-import 'package:diko_barber/core/components/app_gradient_button.dart';
-import 'package:diko_barber/core/components/app_text_form_field.dart';
-import 'package:diko_barber/core/router/app_routes.dart';
-import 'package:diko_barber/core/theme/app_colors.dart';
-import 'package:diko_barber/features/auth/presentation/components/sign_in_footer.dart';
-import 'package:diko_barber/features/auth/presentation/components/sign_in_header.dart';
-import 'package:diko_barber/features/auth/presentation/components/sign_in_social_row.dart';
-import 'package:diko_barber/features/auth/presentation/cubit/sign_in_cubit.dart';
-import 'package:diko_barber/features/auth/presentation/cubit/sign_in_state.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
+import 'package:ronaq_barber/core/router/app_routes.dart';
+import 'package:ronaq_barber/core/theme/app_colors.dart';
+import 'package:ronaq_barber/core/widgets/app_divider_with_text.dart';
+import 'package:ronaq_barber/core/widgets/app_gradient_button.dart';
+import 'package:ronaq_barber/core/widgets/app_snack_bar.dart';
+import 'package:ronaq_barber/core/widgets/app_text_form_field.dart';
+import 'package:ronaq_barber/features/auth/presentation/components/sign_in_footer.dart';
+import 'package:ronaq_barber/features/auth/presentation/components/sign_in_header.dart';
+import 'package:ronaq_barber/features/auth/presentation/components/sign_in_social_row.dart';
+import 'package:ronaq_barber/features/auth/presentation/cubit/sign_in_cubit.dart';
+import 'package:ronaq_barber/features/auth/presentation/cubit/sign_in_state.dart';
 
 class SignInView extends StatefulWidget {
   const SignInView({super.key});
@@ -35,12 +36,26 @@ class _SignInViewState extends State<SignInView> {
   @override
   Widget build(BuildContext context) {
     return BlocListener<SignInCubit, SignInState>(
+      listenWhen: (previous, current) {
+        if (current is SignInFormState) {
+          if (previous is SignInFormState) {
+            return current.apiError != null &&
+                current.apiError != previous.apiError;
+          }
+          return current.apiError != null;
+        }
+        return true;
+      },
       listener: (context, state) {
         switch (state) {
           case SignInNavigate(:final target):
-            context.go(target);
-          case SignInSuccess(:final email):
-            context.push(AppRoutes.verifyOtp, extra: email);
+            context.push(target);
+          case SignInSuccess():
+            context.go(AppRoutes.home);
+          case SignInNeedsVerification(:final contact):
+            context.push(AppRoutes.verifyOtp, extra: contact);
+          case SignInFormState(:final apiError) when apiError != null:
+            AppSnackBar.show(context, message: apiError);
           case SignInFormState():
             break;
         }
@@ -67,8 +82,8 @@ class _SignInViewState extends State<SignInView> {
         const SignInHeader(),
         _buildHeadingSection(context),
         _buildFormSection(context),
-        _buildDividerSection(),
-        _buildSocialSection(),
+        _buildDividerSection(context),
+        _buildSocialSection(context),
       ],
     );
   }
@@ -118,15 +133,15 @@ class _SignInViewState extends State<SignInView> {
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
               AppTextFormField(
-                label: tr('auth.email_label'),
-                hint: tr('auth.email_hint'),
+                label: tr('auth.login_label'),
+                hint: tr('auth.login_hint'),
                 controller: _emailController,
                 onChanged: cubit.onEmailChanged,
                 errorText: formState.emailError != null
                     ? tr(formState.emailError!)
                     : null,
                 isRequired: true,
-                keyboardType: TextInputType.emailAddress,
+                keyboardType: TextInputType.text,
                 textInputAction: TextInputAction.next,
               ),
               SizedBox(height: 16.h),
@@ -167,7 +182,8 @@ class _SignInViewState extends State<SignInView> {
               SizedBox(height: 32.h),
               AppGradientButton(
                 label: tr('auth.sign_in'),
-                enabled: formState.isValid && !formState.isSubmitting,
+                enabled: formState.isValid,
+                isLoading: formState.isSubmitting,
                 onTap: cubit.signIn,
               ),
             ],
@@ -177,17 +193,20 @@ class _SignInViewState extends State<SignInView> {
     );
   }
 
-  Widget _buildDividerSection() {
+  Widget _buildDividerSection(BuildContext context) {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 16.w),
       child: AppDividerWithText(text: tr('auth.or_continue_with')),
     );
   }
 
-  Widget _buildSocialSection() {
+  Widget _buildSocialSection(BuildContext context) {
     return Padding(
       padding: EdgeInsets.all(16.w),
-      child: const SignInSocialRow(),
+      child: SignInSocialRow(
+        onFacebookTap: () => context.read<SignInCubit>().loginWithFacebook(),
+      ),
     );
   }
+
 }

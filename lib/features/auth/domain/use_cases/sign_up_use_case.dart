@@ -1,3 +1,8 @@
+import 'package:ronaq_barber/core/networking/api_error_model.dart';
+import 'package:ronaq_barber/core/networking/result.dart';
+import 'package:ronaq_barber/features/auth/domain/entities/auth_response.dart';
+import 'package:ronaq_barber/features/auth/domain/entities/sign_up_params.dart';
+
 import '../repositories/auth_repository.dart';
 
 class SignUpUseCase {
@@ -5,10 +10,6 @@ class SignUpUseCase {
 
   final AuthRepository _repository;
 
-  Future<void> call({
-    required String fullName,
-    required String email,
-    required String password,
-  }) =>
-      _repository.signUp(fullName: fullName, email: email, password: password);
+  Future<Result<ApiErrorModel, AuthResponse>> call(SignUpParams params) =>
+      _repository.signUp(params);
 }

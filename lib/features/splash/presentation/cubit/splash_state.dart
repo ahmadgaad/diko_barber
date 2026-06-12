@@ -11,7 +11,11 @@ final class SplashAnimating extends SplashState {
 }
 
 final class SplashComplete extends SplashState {
-  const SplashComplete({required this.navigationTarget});
+  const SplashComplete({
+    required this.navigationTarget,
+    this.imagesToPrecache = const [],
+  });
 
   final String navigationTarget;
+  final List<String> imagesToPrecache;
 }

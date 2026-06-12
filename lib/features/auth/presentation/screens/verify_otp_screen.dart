@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'package:diko_barber/core/di/service_locator.dart';
-import 'package:diko_barber/features/auth/presentation/cubit/verify_otp_cubit.dart';
+import 'package:ronaq_barber/core/di/service_locator.dart';
+import 'package:ronaq_barber/features/auth/presentation/cubit/verify_otp_cubit.dart';
 
 import 'verify_otp_view.dart';
 

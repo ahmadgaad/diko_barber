@@ -1,11 +1,21 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-
-import 'package:diko_barber/core/components/social_icon_button.dart';
-import 'package:diko_barber/core/resources/svg_resources.dart';
+import 'package:ronaq_barber/core/resources/svg_resources.dart';
+import 'package:ronaq_barber/core/widgets/social_icon_button.dart';
 
 class SignInSocialRow extends StatelessWidget {
-  const SignInSocialRow({super.key});
+  const SignInSocialRow({
+    super.key,
+    this.onAppleTap,
+    this.onGoogleTap,
+    this.onFacebookTap,
+  });
+
+  final VoidCallback? onAppleTap;
+  final VoidCallback? onGoogleTap;
+  final VoidCallback? onFacebookTap;
 
   @override
   Widget build(BuildContext context) {
@@ -14,22 +24,24 @@ class SignInSocialRow extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        SocialIconButton(
-          svgPath: SvgResources.apple,
-          onTap: () {},
-          colorFilter: isDark
-              ? const ColorFilter.mode(Colors.white, BlendMode.srcIn)
-              : null,
-        ),
-        SizedBox(width: 16.w),
+        if (Platform.isIOS) ...[
+          SocialIconButton(
+            svgPath: SvgResources.apple,
+            onTap: onAppleTap ?? () {},
+            colorFilter: isDark
+                ? const ColorFilter.mode(Colors.white, BlendMode.srcIn)
+                : null,
+          ),
+          SizedBox(width: 16.w),
+        ],
         SocialIconButton(
           svgPath: SvgResources.google,
-          onTap: () {},
+          onTap: onGoogleTap ?? () {},
         ),
         SizedBox(width: 16.w),
         SocialIconButton(
           svgPath: SvgResources.facebook,
-          onTap: () {},
+          onTap: onFacebookTap ?? () {},
         ),
       ],
     );

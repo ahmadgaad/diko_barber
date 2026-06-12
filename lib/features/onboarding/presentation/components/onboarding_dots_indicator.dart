@@ -1,4 +1,4 @@
-import 'package:diko_barber/core/theme/app_colors.dart';
+import 'package:ronaq_barber/core/theme/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -18,7 +18,9 @@ class OnboardingDotsIndicator extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       children: List.generate(pageCount, (index) {
         final isActive = index == currentPage;
-        return Container(
+        return AnimatedContainer(
+          duration: const Duration(milliseconds: 300),
+          curve: Curves.easeInOutCubic,
           margin: EdgeInsets.symmetric(horizontal: 3.w),
           width: isActive ? 20.w : 8.w,
           height: 8.h,
@@ -30,7 +32,7 @@ class OnboardingDotsIndicator extends StatelessWidget {
               colors: isActive
                   ? [splashOrange, splashOrange, splashDark]
                   : [Colors.white, Colors.white, Colors.white],
-              stops: [0.0, 0.4, 1.0],
+              stops: const [0.0, 0.4, 1.0],
             ),
           ),
         );

@@ -10,6 +10,7 @@ final class SignInFormState extends SignInState {
     this.password = '',
     this.emailError,
     this.passwordError,
+    this.apiError,
     this.obscurePassword = true,
     this.isSubmitting = false,
   });
@@ -18,6 +19,7 @@ final class SignInFormState extends SignInState {
   final String password;
   final String? emailError;
   final String? passwordError;
+  final String? apiError;
   final bool obscurePassword;
   final bool isSubmitting;
 
@@ -32,6 +34,7 @@ final class SignInFormState extends SignInState {
     String? password,
     String? Function()? emailError,
     String? Function()? passwordError,
+    String? Function()? apiError,
     bool? obscurePassword,
     bool? isSubmitting,
   }) {
@@ -41,6 +44,7 @@ final class SignInFormState extends SignInState {
       emailError: emailError != null ? emailError() : this.emailError,
       passwordError:
           passwordError != null ? passwordError() : this.passwordError,
+      apiError: apiError != null ? apiError() : this.apiError,
       obscurePassword: obscurePassword ?? this.obscurePassword,
       isSubmitting: isSubmitting ?? this.isSubmitting,
     );
@@ -52,18 +56,26 @@ final class SignInFormState extends SignInState {
         password,
         emailError,
         passwordError,
+        apiError,
         obscurePassword,
         isSubmitting,
       ];
 }
 
 final class SignInSuccess extends SignInState {
-  const SignInSuccess({required this.email});
-
-  final String email;
+  const SignInSuccess();
 
   @override
-  List<Object?> get props => [email];
+  List<Object?> get props => [];
+}
+
+final class SignInNeedsVerification extends SignInState {
+  const SignInNeedsVerification({required this.contact});
+
+  final String contact;
+
+  @override
+  List<Object?> get props => [contact];
 }
 
 final class SignInNavigate extends SignInState {

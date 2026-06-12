@@ -1,9 +1,42 @@
+import 'package:ronaq_barber/core/networking/api_error_model.dart';
+import 'package:ronaq_barber/core/networking/result.dart';
+
+import '../entities/auth_response.dart';
+import '../entities/sign_up_params.dart';
+
 abstract class AuthRepository {
-  Future<void> signIn({required String email, required String password});
-  Future<void> signUp({
-    required String fullName,
+  Future<Result<ApiErrorModel, AuthResponse>> signIn({
     required String email,
     required String password,
   });
-  Future<void> verifyOtp({required String email, required String otp});
+
+  Future<Result<ApiErrorModel, AuthResponse>> signUp(SignUpParams params);
+
+  Future<Result<ApiErrorModel, AuthResponse>> verifyOtp({
+    required String key,
+    required String otp,
+  });
+
+  Future<Result<ApiErrorModel, void>> resendVerification({required String key});
+
+  Future<Result<ApiErrorModel, AuthResponse>> socialLogin({
+    required String provider,
+    required String accessToken,
+    String? idToken,
+    String? fcmToken,
+  });
+
+  Future<Result<ApiErrorModel, void>> forgotPassword({required String key});
+
+  Future<Result<ApiErrorModel, AuthResponse>> verifyResetPassword({
+    required String key,
+    required String otp,
+  });
+
+  Future<Result<ApiErrorModel, void>> resetPassword({
+    required String password,
+    required String passwordConfirmation,
+  });
+
+  Future<Result<ApiErrorModel, void>> logout();
 }
