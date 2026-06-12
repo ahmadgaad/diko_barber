@@ -1,3 +1,6 @@
+import 'package:ronaq_barber/core/shared/domain/entities/distance.dart';
+import 'package:ronaq_barber/core/shared/domain/entities/specialization.dart';
+
 class Salon {
   const Salon({
     required this.id,
@@ -10,8 +13,10 @@ class Salon {
     required this.isFavorite,
     required this.lat,
     required this.lng,
+    required this.specialization,
     this.location,
     this.distance,
+    this.withinRadius,
   });
 
   final int id;
@@ -24,12 +29,12 @@ class Salon {
   final bool isFavorite;
   final double lat;
   final double lng;
+  final Specialization specialization;
   final String? location;
+  final Distance? distance;
+  final bool? withinRadius;
 
-  /// Computed client-side or passed in — not returned by the API.
-  final double? distance;
-
-  Salon copyWith({double? distance}) {
+  Salon copyWith({Distance? distance}) {
     return Salon(
       id: id,
       name: name,
@@ -41,8 +46,10 @@ class Salon {
       isFavorite: isFavorite,
       lat: lat,
       lng: lng,
+      specialization: specialization,
       location: location,
       distance: distance ?? this.distance,
+      withinRadius: withinRadius,
     );
   }
 }

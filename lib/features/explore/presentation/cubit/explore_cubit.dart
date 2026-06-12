@@ -31,24 +31,23 @@ class ExploreCubit extends Cubit<ExploreState> {
   String _query = '';
   double? _lat;
   double? _lng;
+  int _currentPage = 1;
+  bool _hasMore = false;
 
   Future<void> _load() async {
     // Fetch location first so lat/lng are available for every subsequent request.
-    // Location failure is non-fatal — API falls back to the user's profile location.
     final position = await _locationService.getCurrentPosition();
     if (isClosed) return;
 
     _lat = position?.latitude;
     _lng = position?.longitude;
 
-    // Absorb any category selected while location was resolving so the initial
-    // salons request already carries the correct filter — one request instead of two.
+    // Absorb any category selected while location was resolving.
     if (_pendingCategory != null) {
       _selectedCategory = _pendingCategory;
       _pendingCategory = null;
     }
 
-    // Load categories and salons in parallel with correct coordinates and filter.
     final (categoriesResult, salonsResult) = await (
       _getCategoriesUseCase(),
       _getNearestSalonsUseCase(
@@ -56,6 +55,7 @@ class ExploreCubit extends Cubit<ExploreState> {
           lat: _lat,
           long: _lng,
           categoryIds: _selectedCategory != null ? [_selectedCategory!.id] : null,
+          page: 1,
         ),
       ),
     ).wait;
@@ -69,10 +69,13 @@ class ExploreCubit extends Cubit<ExploreState> {
 
     switch (salonsResult) {
       case Success(:final data):
+        _currentPage = 1;
+        _hasMore = data.hasMore;
         emit(ExploreLoaded(
-          salons: data,
+          salons: data.salons,
           categories: _categories,
           selectedCategory: _selectedCategory,
+          hasMore: _hasMore,
           userLat: _lat,
           userLng: _lng,
         ));
@@ -91,7 +94,6 @@ class ExploreCubit extends Cubit<ExploreState> {
   }
 
   void selectCategory(Category? category) {
-    // If still on the initial load, store the selection and apply it once ready.
     if (state is ExploreLoading) {
       _pendingCategory = category;
       return;
@@ -111,11 +113,25 @@ class ExploreCubit extends Cubit<ExploreState> {
     emit(current.copyWith(highlightedSalonId: () => id));
   }
 
-  Future<void> _fetchSalons() async {
+  Future<void> loadMore() async {
+    if (!_hasMore) return;
+    final current = state;
+    if (current is! ExploreLoaded) return;
+    if (current.isLoadingMore || current.isLoadingSalons) return;
+
+    _currentPage++;
+    await _fetchSalons(resetPage: false);
+  }
+
+  Future<void> _fetchSalons({bool resetPage = true}) async {
+    if (resetPage) _currentPage = 1;
+
     final current = state;
     if (current is ExploreLoaded) {
       emit(current.copyWith(
-        isLoadingSalons: true,
+        isLoadingSalons: resetPage,
+        isLoadingMore: !resetPage,
+        loadMoreFailed: false,
         selectedCategory: () => _selectedCategory,
         query: _query,
       ));
@@ -123,11 +139,12 @@ class ExploreCubit extends Cubit<ExploreState> {
 
     final result = await _getNearestSalonsUseCase(
       NearestSalonsParams(
-        categoryIds:
-            _selectedCategory != null ? [_selectedCategory!.id] : null,
+        categoryIds: _selectedCategory != null ? [_selectedCategory!.id] : null,
         search: _query.isEmpty ? null : _query,
         lat: _lat,
         long: _lng,
+        page: _currentPage,
+        perPage: 15,
       ),
     );
 
@@ -135,17 +152,32 @@ class ExploreCubit extends Cubit<ExploreState> {
 
     switch (result) {
       case Success(:final data):
+        _hasMore = data.hasMore;
         final current = state;
         if (current is ExploreLoaded) {
+          final newSalons = resetPage
+              ? data.salons
+              : [...current.salons, ...data.salons];
           emit(current.copyWith(
-            salons: data,
+            salons: newSalons,
             isLoadingSalons: false,
+            isLoadingMore: false,
+            hasMore: _hasMore,
             selectedCategory: () => _selectedCategory,
             query: _query,
           ));
         }
       case Failure():
-        emit(const ExploreError());
+        if (resetPage) {
+          emit(const ExploreError());
+        } else {
+          // Roll back page so retry fetches the same page again.
+          _currentPage--;
+          final current = state;
+          if (current is ExploreLoaded) {
+            emit(current.copyWith(isLoadingMore: false, loadMoreFailed: true));
+          }
+        }
     }
   }
 

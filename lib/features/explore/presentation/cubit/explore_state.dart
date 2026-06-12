@@ -17,6 +17,9 @@ class ExploreLoaded extends ExploreState {
     this.selectedCategory,
     this.highlightedSalonId,
     this.isLoadingSalons = false,
+    this.isLoadingMore = false,
+    this.hasMore = false,
+    this.loadMoreFailed = false,
     this.userLat,
     this.userLng,
   });
@@ -35,8 +38,17 @@ class ExploreLoaded extends ExploreState {
   /// The salon whose map pin is currently highlighted (tapped).
   final int? highlightedSalonId;
 
-  /// True while a filtered/searched salon fetch is in flight.
+  /// True while a filtered/searched salon fetch is in flight (replaces list).
   final bool isLoadingSalons;
+
+  /// True while the next page is being fetched (appended to list).
+  final bool isLoadingMore;
+
+  /// Whether more pages are available.
+  final bool hasMore;
+
+  /// Flips to true when a load-more request fails. Resets to false on next attempt.
+  final bool loadMoreFailed;
 
   /// Device location — null if permission was denied.
   final double? userLat;
@@ -47,6 +59,9 @@ class ExploreLoaded extends ExploreState {
     List<Category>? categories,
     String? query,
     bool? isLoadingSalons,
+    bool? isLoadingMore,
+    bool? hasMore,
+    bool? loadMoreFailed,
     Category? Function()? selectedCategory,
     int? Function()? highlightedSalonId,
   }) {
@@ -55,6 +70,9 @@ class ExploreLoaded extends ExploreState {
       categories: categories ?? this.categories,
       query: query ?? this.query,
       isLoadingSalons: isLoadingSalons ?? this.isLoadingSalons,
+      isLoadingMore: isLoadingMore ?? this.isLoadingMore,
+      hasMore: hasMore ?? this.hasMore,
+      loadMoreFailed: loadMoreFailed ?? this.loadMoreFailed,
       selectedCategory:
           selectedCategory != null ? selectedCategory() : this.selectedCategory,
       highlightedSalonId: highlightedSalonId != null

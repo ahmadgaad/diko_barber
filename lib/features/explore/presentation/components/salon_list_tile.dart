@@ -77,7 +77,7 @@ class SalonListTile extends StatelessWidget {
                       _Dot(colors: colors),
                       SizedBox(width: 6.w),
                       Text(
-                        '${salon.distance?.toStringAsFixed(1) ?? '-'} ${tr('home.km')}',
+                        salon.distance?.formatted ?? '-',
                         style: TextStyle(
                           fontSize: 12.sp,
                           fontWeight: FontWeight.w400,

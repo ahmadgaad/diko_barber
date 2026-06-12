@@ -1,4 +1,6 @@
+import 'package:ronaq_barber/core/shared/domain/entities/distance.dart';
 import 'package:ronaq_barber/core/shared/domain/entities/salon.dart';
+import 'package:ronaq_barber/core/shared/domain/entities/specialization.dart';
 
 class SalonModel extends Salon {
   const SalonModel({
@@ -12,8 +14,10 @@ class SalonModel extends Salon {
     required super.isFavorite,
     required super.lat,
     required super.lng,
+    required super.specialization,
     super.location,
     super.distance,
+    super.withinRadius,
   });
 
   factory SalonModel.fromJson(Map<String, dynamic> json) {
@@ -22,6 +26,8 @@ class SalonModel extends Salon {
             .map((c) => c['name'] as String)
             .toList() ??
         [];
+
+    final spec = json['specialization'] as Map<String, dynamic>;
 
     return SalonModel(
       id: json['id'] as int,
@@ -34,7 +40,18 @@ class SalonModel extends Salon {
       isFavorite: json['is_favorite'] as bool,
       lat: double.parse(json['lat'] as String),
       lng: double.parse(json['long'] as String),
+      specialization: Specialization(
+        id: spec['id'] as int,
+        name: spec['name'] as String,
+      ),
       location: json['location'] as String?,
+      distance: json['distance'] == null
+          ? null
+          : Distance(
+              value: json['distance']['value'] as num,
+              unit: json['distance']['unit'] as String,
+            ),
+      withinRadius: json['within_radius'] as bool?,
     );
   }
 }

@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ronaq_barber/core/cache/cache_keys.dart';
 import 'package:ronaq_barber/core/cache/shared_pref_cache_client.dart';
@@ -21,36 +23,100 @@ class SalonsCubit extends Cubit<SalonsState> {
   final LocationService _locationService;
   final SharedPrefCacheClient _cache;
 
+  double? _lat;
+  double? _lng;
+  int _currentPage = 1;
+  bool _hasMore = false;
+
   Future<void> _load() async {
-    final position = await _locationService.getCurrentPosition();
-    if (isClosed) return;
+    try {
+      final position = await _locationService.getCurrentPosition();
+      if (isClosed) return;
 
-    String? address;
-    if (position != null) {
-      address = await _locationService.getAddressFromCoordinates(
-        position.latitude,
-        position.longitude,
+      _lat = position?.latitude;
+      _lng = position?.longitude;
+
+      String? address;
+      if (position != null) {
+        address = await _locationService.getAddressFromCoordinates(
+          position.latitude,
+          position.longitude,
+        );
+        if (address != null) await _cache.set(CacheKeys.userLocation, address);
+      }
+
+      if (isClosed) return;
+
+      final result = await _getNearestSalonsUseCase(
+        NearestSalonsParams(
+          isHome: true,
+          lat: _lat,
+          long: _lng,
+        ),
       );
-      if (address != null) await _cache.set(CacheKeys.userLocation, address);
+
+      if (isClosed) return;
+
+      switch (result) {
+        case Success(:final data):
+          _currentPage = 1;
+          _hasMore = data.hasMore;
+          emit(SalonsLoaded(
+            data.salons,
+            location: address,
+            hasMore: _hasMore,
+          ));
+        case Failure():
+          emit(const SalonsError());
+      }
+    } catch (e, st) {
+      log('SalonsCubit._load failed', error: e, stackTrace: st, name: 'SalonsCubit');
+      if (!isClosed) emit(const SalonsError());
     }
+  }
 
-    if (isClosed) return;
+  Future<void> loadMore() async {
+    if (!_hasMore) return;
+    final current = state;
+    if (current is! SalonsLoaded) return;
+    if (current.isLoadingMore) return;
 
-    final result = await _getNearestSalonsUseCase(
-      NearestSalonsParams(
-        isHome: true,
-        lat: position?.latitude,
-        long: position?.longitude,
-      ),
-    );
+    _currentPage++;
+    emit(current.copyWith(isLoadingMore: true));
 
-    if (isClosed) return;
+    try {
+      final result = await _getNearestSalonsUseCase(
+        NearestSalonsParams(
+          lat: _lat,
+          long: _lng,
+          page: _currentPage,
+          perPage: 10,
+        ),
+      );
 
-    switch (result) {
-      case Success(:final data):
-        emit(SalonsLoaded(data, location: address));
-      case Failure():
-        emit(const SalonsError());
+      if (isClosed) return;
+      final updated = state;
+      if (updated is! SalonsLoaded) return;
+
+      switch (result) {
+        case Success(:final data):
+          _hasMore = data.hasMore;
+          emit(updated.copyWith(
+            salons: [...updated.salons, ...data.salons],
+            isLoadingMore: false,
+            hasMore: _hasMore,
+          ));
+        case Failure():
+          _currentPage--;
+          emit(updated.copyWith(isLoadingMore: false));
+      }
+    } catch (e, st) {
+      log('SalonsCubit.loadMore failed', error: e, stackTrace: st, name: 'SalonsCubit');
+      _currentPage--;
+      final updated = state;
+      if (!isClosed && updated is SalonsLoaded) {
+        emit(updated.copyWith(isLoadingMore: false));
+      }
     }
   }
 

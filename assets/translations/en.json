@@ -214,7 +214,8 @@
     "no_results_body": "Try a different search or category",
     "error_title": "Something went wrong",
     "error_body": "Please try again later",
-    "view_map": "View map"
+    "view_map": "View map",
+    "load_more_failed": "Failed to load more, please try again"
   },
   "profile": {
     "section_account": "Account",

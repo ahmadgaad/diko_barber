@@ -7,6 +7,7 @@ import 'package:go_router/go_router.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:ronaq_barber/core/resources/svg_resources.dart';
 import 'package:ronaq_barber/core/theme/app_colors.dart';
+import 'package:ronaq_barber/core/widgets/app_snack_bar.dart';
 import 'package:ronaq_barber/features/explore/presentation/components/category_filter_chips.dart';
 import 'package:ronaq_barber/features/explore/presentation/components/explore_empty_state.dart';
 import 'package:ronaq_barber/features/explore/presentation/components/explore_shimmer.dart';
@@ -54,6 +55,86 @@ class _ExploreViewState extends State<ExploreView> {
     super.dispose();
   }
 
+  List<Widget> _buildSlivers(
+    BuildContext context,
+    ExploreState state,
+    double navBarHeight,
+  ) {
+    return switch (state) {
+      ExploreLoading() => [
+          SliverToBoxAdapter(
+            child: Padding(
+              padding: EdgeInsets.symmetric(horizontal: 16.w),
+              child: const ExploreShimmer(),
+            ),
+          ),
+        ],
+      ExploreLoaded() when state.isLoadingSalons => [
+          SliverToBoxAdapter(
+            child: Padding(
+              padding: EdgeInsets.symmetric(horizontal: 16.w),
+              child: const ExploreShimmer(showCategoryChips: false),
+            ),
+          ),
+        ],
+      ExploreLoaded() when state.salons.isEmpty => [
+          const SliverFillRemaining(
+            hasScrollBody: false,
+            child: ExploreEmptyState(
+              icon: Icons.search_off_rounded,
+              titleKey: 'explore.no_results_title',
+              bodyKey: 'explore.no_results_body',
+            ),
+          ),
+        ],
+      ExploreLoaded() => [
+          SliverPadding(
+            padding: EdgeInsets.fromLTRB(16.w, 0, 16.w, 0),
+            sliver: SliverGrid.builder(
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 2,
+                crossAxisSpacing: 12.w,
+                mainAxisSpacing: 12.h,
+                childAspectRatio: 0.825,
+              ),
+              itemCount: state.salons.length,
+              itemBuilder: (context, index) {
+                final salon = state.salons[index];
+                return SalonGridCard(
+                  salon: salon,
+                  isHighlighted: salon.id == state.highlightedSalonId,
+                  onTap: () {
+                    context.read<ExploreCubit>().highlightSalon(salon.id);
+                    context.push('/salon/${salon.id}');
+                  },
+                );
+              },
+            ),
+          ),
+          SliverToBoxAdapter(
+            child: state.isLoadingMore
+                ? Padding(
+                    padding: EdgeInsets.fromLTRB(0, 16.h, 0, navBarHeight),
+                    child: const Center(
+                      child: CircularProgressIndicator(strokeWidth: 2),
+                    ),
+                  )
+                : SizedBox(height: navBarHeight),
+          ),
+        ],
+      ExploreError() => [
+          const SliverFillRemaining(
+            hasScrollBody: false,
+            child: ExploreEmptyState(
+              icon: Icons.error_outline_rounded,
+              titleKey: 'explore.error_title',
+              bodyKey: 'explore.error_body',
+            ),
+          ),
+        ],
+    };
+  }
+
   void _onPinTapped(ExploreLoaded state, int salonId) {
     context.read<ExploreCubit>().highlightSalon(salonId);
     final idx = state.salons.indexWhere((s) => s.id == salonId);
@@ -81,8 +162,18 @@ class _ExploreViewState extends State<ExploreView> {
     final colors = AppColors.of(context);
     final navBarHeight = 88.h + MediaQuery.paddingOf(context).bottom;
 
-    return Stack(
-      children: [
+    return BlocListener<ExploreCubit, ExploreState>(
+      listenWhen: (previous, current) =>
+          previous is ExploreLoaded &&
+          current is ExploreLoaded &&
+          !previous.loadMoreFailed &&
+          current.loadMoreFailed,
+      listener: (context, _) => AppSnackBar.show(
+        context,
+        message: tr('explore.load_more_failed'),
+      ),
+      child: Stack(
+        children: [
         // Map layer — only rebuilds on relevant state changes.
         Positioned.fill(
           child: BlocBuilder<ExploreCubit, ExploreState>(
@@ -182,75 +273,21 @@ class _ExploreViewState extends State<ExploreView> {
                   // Scrollable content only.
                   Expanded(
                     child: BlocBuilder<ExploreCubit, ExploreState>(
-                      builder: (context, state) => CustomScrollView(
-                        controller: scrollController,
-                        physics: const ClampingScrollPhysics(),
-                        slivers: [
-                          switch (state) {
-                            ExploreLoading() => SliverToBoxAdapter(
-                              child: Padding(
-                                padding: EdgeInsets.symmetric(horizontal: 16.w),
-                                child: const ExploreShimmer(),
-                              ),
-                            ),
-                            ExploreLoaded() when state.isLoadingSalons =>
-                              SliverToBoxAdapter(
-                                child: Padding(
-                                  padding: EdgeInsets.symmetric(horizontal: 16.w),
-                                  child: const ExploreShimmer(showCategoryChips: false),
-                                ),
-                              ),
-                            ExploreLoaded() when state.salons.isEmpty =>
-                              const SliverFillRemaining(
-                                hasScrollBody: false,
-                                child: ExploreEmptyState(
-                                  icon: Icons.search_off_rounded,
-                                  titleKey: 'explore.no_results_title',
-                                  bodyKey: 'explore.no_results_body',
-                                ),
-                              ),
-                            ExploreLoaded() => SliverPadding(
-                              padding: EdgeInsets.fromLTRB(
-                                16.w,
-                                0,
-                                16.w,
-                                navBarHeight,
-                              ),
-                              sliver: SliverGrid.builder(
-                                gridDelegate:
-                                    SliverGridDelegateWithFixedCrossAxisCount(
-                                      crossAxisCount: 2,
-                                      crossAxisSpacing: 12.w,
-                                      mainAxisSpacing: 12.h,
-                                      childAspectRatio: 0.78,
-                                    ),
-                                itemCount: state.salons.length,
-                                itemBuilder: (context, index) {
-                                  final salon = state.salons[index];
-                                  return SalonGridCard(
-                                    salon: salon,
-                                    isHighlighted:
-                                        salon.id == state.highlightedSalonId,
-                                    onTap: () {
-                                      context
-                                          .read<ExploreCubit>()
-                                          .highlightSalon(salon.id);
-                                      context.push('/salon/${salon.id}');
-                                    },
-                                  );
-                                },
-                              ),
-                            ),
-                            ExploreError() => const SliverFillRemaining(
-                              hasScrollBody: false,
-                              child: ExploreEmptyState(
-                                icon: Icons.error_outline_rounded,
-                                titleKey: 'explore.error_title',
-                                bodyKey: 'explore.error_body',
-                              ),
-                            ),
-                          },
-                        ],
+                      builder: (context, state) =>
+                          NotificationListener<ScrollNotification>(
+                        onNotification: (notification) {
+                          if (notification is ScrollEndNotification &&
+                              notification.metrics.pixels >=
+                                  notification.metrics.maxScrollExtent - 200) {
+                            context.read<ExploreCubit>().loadMore();
+                          }
+                          return false;
+                        },
+                        child: CustomScrollView(
+                          controller: scrollController,
+                          physics: const ClampingScrollPhysics(),
+                          slivers: _buildSlivers(context, state, navBarHeight),
+                        ),
                       ),
                     ),
                   ),
@@ -259,7 +296,8 @@ class _ExploreViewState extends State<ExploreView> {
             );
           },
         ),
-      ],
+        ],
+      ),
     );
   }
 }

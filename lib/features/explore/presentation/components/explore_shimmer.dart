@@ -7,11 +7,15 @@ class ExploreShimmer extends StatelessWidget {
   const ExploreShimmer({
     super.key,
     this.showCategoryChips = true,
+    this.itemCount = 4,
   });
 
   /// Pass false when the real category chips are already visible in the header
   /// (i.e. during isLoadingSalons on an already-loaded state).
   final bool showCategoryChips;
+
+  /// Number of skeleton cards to render.
+  final int itemCount;
 
   @override
   Widget build(BuildContext context) {
@@ -37,7 +41,7 @@ class ExploreShimmer extends StatelessWidget {
               mainAxisSpacing: 12.h,
               childAspectRatio: 0.78,
             ),
-            itemCount: 4,
+            itemCount: itemCount,
             itemBuilder: (_, _) => _ShimmerGridCard(colors: colors),
           ),
         ],

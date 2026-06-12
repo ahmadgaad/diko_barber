@@ -1,4 +1,5 @@
-import 'package:geolocator/geolocator.dart';
+import 'dart:developer';
+
 import 'package:ronaq_barber/core/networking/api_error_model.dart';
 import 'package:ronaq_barber/core/networking/result.dart';
 import 'package:ronaq_barber/core/shared/data/data_sources/shared_remote_data_source.dart';
@@ -12,7 +13,7 @@ import 'package:ronaq_barber/core/shared/domain/entities/category.dart';
 import 'package:ronaq_barber/core/shared/domain/entities/city.dart';
 import 'package:ronaq_barber/core/shared/domain/entities/nearest_salons_params.dart';
 import 'package:ronaq_barber/core/shared/domain/entities/neighborhood.dart';
-import 'package:ronaq_barber/core/shared/domain/entities/salon.dart';
+import 'package:ronaq_barber/core/shared/domain/entities/salons_page.dart';
 import 'package:ronaq_barber/core/shared/domain/repositories/shared_repository.dart';
 
 class SharedRepositoryImpl implements SharedRepository {
@@ -117,12 +118,14 @@ class SharedRepositoryImpl implements SharedRepository {
   }
 
   @override
-  Future<Result<ApiErrorModel, List<Salon>>> getNearestSalons(
+  Future<Result<ApiErrorModel, SalonsPage>> getNearestSalons(
     NearestSalonsParams params,
   ) async {
     try {
       final query = <String, dynamic>{
         'is_home': params.isHome ? '1' : '0',
+        'page': params.page.toString(),
+        'per_page': params.perPage.toString(),
       };
       if (params.lat != null) query['lat'] = params.lat.toString();
       if (params.long != null) query['long'] = params.long.toString();
@@ -144,26 +147,17 @@ class SharedRepositoryImpl implements SharedRepository {
         );
       }
 
-      final userLat = params.lat;
-      final userLng = params.long;
-
       final salons = (response.data as List)
           .whereType<Map<String, dynamic>>()
           .map(SalonModel.fromJson)
-          .map((salon) {
-            if (userLat == null || userLng == null) return salon;
-            final meters = Geolocator.distanceBetween(
-              userLat,
-              userLng,
-              salon.lat,
-              salon.lng,
-            );
-            return salon.copyWith(distance: meters / 1000);
-          })
           .toList();
 
-      return Success(salons);
-    } catch (_) {
+      return Success(SalonsPage(
+        salons: salons,
+        hasMore: response.pagination?.hasNextPage ?? false,
+      ));
+    } catch (e, st) {
+      log('getNearestSalons failed', error: e, stackTrace: st, name: 'SharedRepository');
       return Failure(ApiErrorModel(message: 'حدث خطأ غير معروف'));
     }
   }

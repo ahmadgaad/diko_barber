@@ -221,7 +221,7 @@ class _SalonTile extends StatelessWidget {
                       _Dot(colors: colors),
                       SizedBox(width: 8.w),
                       Text(
-                        '${salon.distance?.toStringAsFixed(1) ?? '-'} ${tr('home.km')}',
+                        salon.distance?.formatted ?? '-',
                         style: TextStyle(
                             fontSize: 12.sp, color: colors.neutral500),
                       ),

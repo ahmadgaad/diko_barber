@@ -1,7 +1,9 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:ronaq_barber/core/shared/domain/entities/distance.dart';
 import 'package:ronaq_barber/core/shared/domain/entities/package.dart';
 import 'package:ronaq_barber/core/shared/domain/entities/salon.dart';
 import 'package:ronaq_barber/core/shared/domain/entities/salon_service.dart';
+import 'package:ronaq_barber/core/shared/domain/entities/specialization.dart';
 import 'package:ronaq_barber/features/favorites/presentation/cubit/favorites_state.dart';
 
 class FavoritesCubit extends Cubit<FavoritesState> {
@@ -21,40 +23,43 @@ class FavoritesCubit extends Cubit<FavoritesState> {
   }
 
   List<Salon> _mockSalons() => [
-        const Salon(
+        Salon(
           id: 1,
           name: 'صالون القص الملكي',
           image: 'https://picsum.photos/seed/salon1/200/200',
           averageRating: 4.9,
           ratingsCount: 0,
-          distance: 1.2,
-          categories: ['شعر', 'لحية'],
+          distance: const Distance(value: 1200, unit: 'متر'),
+          specialization: const Specialization(id: 1, name: 'رجال'),
+          categories: const ['شعر', 'لحية'],
           isOpen: true,
           isFavorite: true,
           lat: 24.7136,
           lng: 46.6753,
         ),
-        const Salon(
+        Salon(
           id: 3,
           name: 'ركن الرجل الأنيق',
           image: 'https://picsum.photos/seed/salon3/200/200',
           averageRating: 4.7,
           ratingsCount: 0,
-          distance: 3.1,
-          categories: ['شعر', 'بشرة'],
+          distance: const Distance(value: 3, unit: 'كم'),
+          specialization: const Specialization(id: 1, name: 'رجال'),
+          categories: const ['شعر', 'بشرة'],
           isOpen: false,
           isFavorite: true,
           lat: 24.7080,
           lng: 46.6680,
         ),
-        const Salon(
+        Salon(
           id: 5,
           name: 'أكاديمية الحلاقة الحديثة',
           image: 'https://picsum.photos/seed/salon5/200/200',
           averageRating: 4.6,
           ratingsCount: 0,
-          distance: 5.4,
-          categories: ['تصفيف', 'لحية'],
+          distance: const Distance(value: 5, unit: 'كم'),
+          specialization: const Specialization(id: 1, name: 'رجال'),
+          categories: const ['تصفيف', 'لحية'],
           isOpen: true,
           isFavorite: true,
           lat: 24.7050,

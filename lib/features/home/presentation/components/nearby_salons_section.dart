@@ -24,8 +24,9 @@ class NearbySalonsSection extends StatelessWidget {
         SalonsLoading() => _SalonsShimmer(colors: colors),
         SalonsLoaded(:final salons) when salons.isEmpty =>
           const SizedBox.shrink(),
-        SalonsLoaded(:final salons) => _SalonsList(
+        SalonsLoaded(:final salons, :final isLoadingMore) => _SalonsList(
           salons: salons,
+          isLoadingMore: isLoadingMore,
           colors: colors,
         ),
         SalonsError() => const SizedBox.shrink(),
@@ -37,8 +38,13 @@ class NearbySalonsSection extends StatelessWidget {
 // ── Loaded list ───────────────────────────────────────────────────────────────
 
 class _SalonsList extends StatelessWidget {
-  const _SalonsList({required this.salons, required this.colors});
+  const _SalonsList({
+    required this.salons,
+    required this.isLoadingMore,
+    required this.colors,
+  });
   final List<Salon> salons;
+  final bool isLoadingMore;
   final AppColors colors;
 
   @override
@@ -55,21 +61,32 @@ class _SalonsList extends StatelessWidget {
           ),
         ),
         SizedBox(height: 12.h),
-        SingleChildScrollView(
-          scrollDirection: Axis.horizontal,
-          clipBehavior: Clip.none,
-          padding: EdgeInsets.symmetric(horizontal: 20.w),
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: salons.map((salon) {
-              return Padding(
-                padding: EdgeInsetsDirectional.only(end: 12.w),
-                child: GestureDetector(
-                  onTap: () => context.push('/salon/${salon.id}'),
-                  child: _SalonCard(salon: salon, colors: colors),
-                ),
-              );
-            }).toList(),
+        NotificationListener<ScrollNotification>(
+          onNotification: (notification) {
+            if (notification is ScrollEndNotification &&
+                notification.metrics.pixels >=
+                    notification.metrics.maxScrollExtent - 120) {
+              context.read<SalonsCubit>().loadMore();
+            }
+            return false;
+          },
+          child: SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            clipBehavior: Clip.none,
+            padding: EdgeInsets.symmetric(horizontal: 20.w),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                ...salons.map((salon) => Padding(
+                      padding: EdgeInsetsDirectional.only(end: 12.w),
+                      child: GestureDetector(
+                        onTap: () => context.push('/salon/${salon.id}'),
+                        child: _SalonCard(salon: salon, colors: colors),
+                      ),
+                    )),
+                if (isLoadingMore) _ShimmerCards(colors: colors),
+              ],
+            ),
           ),
         ),
         SizedBox(height: 14.h),
@@ -130,7 +147,7 @@ class _SalonCard extends StatelessWidget {
               ),
               SizedBox(width: 6.w),
               Text(
-                '${salon.distance?.toStringAsFixed(1) ?? '-'} ${tr('home.km')}',
+                salon.distance?.formatted ?? '-',
                 style: TextStyle(
                   fontSize: 12.sp,
                   fontWeight: FontWeight.w400,
@@ -284,7 +301,64 @@ class _CategoryChips extends StatelessWidget {
   }
 }
 
-// ── Shimmer ───────────────────────────────────────────────────────────────────
+// ── Load-more shimmer cards (appended to the horizontal row) ─────────────────
+
+class _ShimmerCards extends StatelessWidget {
+  const _ShimmerCards({required this.colors});
+  final AppColors colors;
+
+  @override
+  Widget build(BuildContext context) {
+    return Shimmer.fromColors(
+      baseColor: colors.neutral200,
+      highlightColor: colors.neutral100,
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: List.generate(2, (_) {
+          return Padding(
+            padding: EdgeInsetsDirectional.only(end: 12.w),
+            child: SizedBox(
+              width: 160.w,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Container(
+                    width: 160.w,
+                    height: 110.h,
+                    decoration: BoxDecoration(
+                      color: colors.neutral200,
+                      borderRadius: BorderRadius.circular(12.r),
+                    ),
+                  ),
+                  SizedBox(height: 8.h),
+                  Container(
+                    width: 100.w,
+                    height: 14.h,
+                    decoration: BoxDecoration(
+                      color: colors.neutral200,
+                      borderRadius: BorderRadius.circular(4.r),
+                    ),
+                  ),
+                  SizedBox(height: 6.h),
+                  Container(
+                    width: 80.w,
+                    height: 12.h,
+                    decoration: BoxDecoration(
+                      color: colors.neutral200,
+                      borderRadius: BorderRadius.circular(4.r),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          );
+        }),
+      ),
+    );
+  }
+}
+
+// ── Initial loading shimmer ───────────────────────────────────────────────────
 
 class _SalonsShimmer extends StatelessWidget {
   const _SalonsShimmer({required this.colors});

@@ -103,7 +103,7 @@ class SalonGridCard extends StatelessWidget {
                         ),
                         SizedBox(width: 4.w),
                         Text(
-                          '${salon.distance!.toStringAsFixed(1)} ${tr('home.km')}',
+                          salon.distance!.formatted,
                           style: TextStyle(
                             fontSize: 11.sp,
                             color: colors.neutral600,
