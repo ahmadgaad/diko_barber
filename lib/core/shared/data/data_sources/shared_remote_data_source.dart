@@ -20,6 +20,10 @@ abstract class SharedRemoteDataSource {
     Map<String, dynamic> queryParams,
   );
   Future<ApiResponse<dynamic>> getPackageDetails(int id);
+  Future<ApiResponse<dynamic>> getSalonDetails(
+    int id,
+    Map<String, dynamic> queryParams,
+  );
   Future<ApiResponse<dynamic>> toggleFavorite({
     required int id,
     required int type,
@@ -95,6 +99,16 @@ class SharedRemoteDataSourceImpl implements SharedRemoteDataSource {
   @override
   Future<ApiResponse<dynamic>> getPackageDetails(int id) =>
       _networkService.getData(endPoint: EndPoints.packageDetails(id));
+
+  @override
+  Future<ApiResponse<dynamic>> getSalonDetails(
+    int id,
+    Map<String, dynamic> queryParams,
+  ) =>
+      _networkService.getData(
+        endPoint: EndPoints.salonDetails(id),
+        queryParameters: queryParams,
+      );
 
   @override
   Future<ApiResponse<dynamic>> getFavorites(int type) =>

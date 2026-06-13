@@ -311,12 +311,18 @@
   "salon_details": {
     "tab_services": "Services",
     "tab_packages": "Packages",
+    "tab_coupons": "Coupons",
+    "tab_staff": "Team",
+    "tab_shifts": "Hours",
     "tab_gallery": "Gallery",
     "tab_reviews": "Reviews",
     "reviews": "reviews",
     "min": "min",
     "book_now": "Book Now",
-    "coupon_applied": "Coupon applied"
+    "coupon_applied": "Coupon applied",
+    "no_coupons": "No coupons available",
+    "no_staff": "No team members",
+    "no_shifts": "No working hours set"
   },
   "book_appointment": {
     "title": "Book Appointment",

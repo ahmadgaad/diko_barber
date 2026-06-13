@@ -355,103 +355,106 @@ class _SalonCardShimmer extends StatelessWidget {
     return Container(
       width: 280.w,
       decoration: BoxDecoration(
-        color: const Color(0xFF2A2A2A),
+        color: colors.neutral300,
         borderRadius: BorderRadius.circular(16.r),
       ),
       clipBehavior: Clip.antiAlias,
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          // Image area with overlay placeholders
-          SizedBox(
-            width: 280.w,
-            height: 140.h,
-            child: Stack(
-              children: [
-                // Image placeholder
-                Container(
-                  width: 280.w,
-                  height: 140.h,
-                  color: colors.neutral300,
-                ),
-                // Top-left: favorite circle
-                PositionedDirectional(
-                  top: 10.h,
-                  start: 10.w,
-                  child: Container(
-                    width: 28.r,
-                    height: 28.r,
-                    decoration: BoxDecoration(
-                      color: colors.neutral400,
-                      shape: BoxShape.circle,
+      child: Shimmer.fromColors(
+        baseColor: colors.neutral300,
+        highlightColor: colors.neutral200,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            // Image area with overlay placeholders
+            SizedBox(
+              width: 280.w,
+              height: 140.h,
+              child: Stack(
+                children: [
+                  // Image placeholder
+                  Container(
+                    width: 280.w,
+                    height: 140.h,
+                    color: colors.neutral300,
+                  ),
+                  // Top-left: favorite circle
+                  PositionedDirectional(
+                    top: 10.h,
+                    start: 10.w,
+                    child: Container(
+                      width: 28.r,
+                      height: 28.r,
+                      decoration: BoxDecoration(
+                        color: colors.neutral400,
+                        shape: BoxShape.circle,
+                      ),
                     ),
                   ),
-                ),
-                // Top-right: distance badge
-                PositionedDirectional(
-                  top: 10.h,
-                  end: 10.w,
-                  child: Container(
-                    width: 72.w,
-                    height: 24.h,
-                    decoration: BoxDecoration(
-                      color: colors.neutral400,
-                      borderRadius: BorderRadius.circular(999.r),
+                  // Top-right: distance badge
+                  PositionedDirectional(
+                    top: 10.h,
+                    end: 10.w,
+                    child: Container(
+                      width: 72.w,
+                      height: 24.h,
+                      decoration: BoxDecoration(
+                        color: colors.neutral400,
+                        borderRadius: BorderRadius.circular(999.r),
+                      ),
                     ),
                   ),
-                ),
-                // Bottom-left: rating pill
-                PositionedDirectional(
-                  bottom: 10.h,
-                  start: 10.w,
-                  child: Container(
-                    width: 44.w,
-                    height: 18.h,
-                    decoration: BoxDecoration(
-                      color: colors.neutral400,
-                      borderRadius: BorderRadius.circular(999.r),
+                  // Bottom-left: rating pill
+                  PositionedDirectional(
+                    bottom: 10.h,
+                    start: 10.w,
+                    child: Container(
+                      width: 44.w,
+                      height: 18.h,
+                      decoration: BoxDecoration(
+                        color: colors.neutral400,
+                        borderRadius: BorderRadius.circular(999.r),
+                      ),
                     ),
                   ),
-                ),
-                // Bottom-right: name bar
-                PositionedDirectional(
-                  bottom: 10.h,
-                  end: 10.w,
-                  child: Container(
-                    width: 110.w,
-                    height: 18.h,
-                    decoration: BoxDecoration(
-                      color: colors.neutral400,
-                      borderRadius: BorderRadius.circular(999.r),
+                  // Bottom-right: name bar
+                  PositionedDirectional(
+                    bottom: 10.h,
+                    end: 10.w,
+                    child: Container(
+                      width: 110.w,
+                      height: 18.h,
+                      decoration: BoxDecoration(
+                        color: colors.neutral400,
+                        borderRadius: BorderRadius.circular(999.r),
+                      ),
                     ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
-          ),
-          // Category bar
-          Container(
-            width: double.infinity,
-            padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 10.h),
-            color: const Color(0xFF2A2A2A),
-            child: Row(
-              children: List.generate(
-                4,
-                (_) => Padding(
-                  padding: EdgeInsetsDirectional.only(end: 6.w),
-                  child: Container(
-                    width: 56.w,
-                    height: 24.h,
-                    decoration: BoxDecoration(
-                      color: const Color(0xFF3D3D3D),
-                      borderRadius: BorderRadius.circular(999.r),
+            // Category bar — transparent strip so gaps show the static card frame
+            Container(
+              width: double.infinity,
+              padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 10.h),
+              child: Row(
+                children: List.generate(
+                  4,
+                  (_) => Padding(
+                    padding: EdgeInsetsDirectional.only(end: 6.w),
+                    child: Container(
+                      width: 56.w,
+                      height: 24.h,
+                      decoration: BoxDecoration(
+                        color: colors.neutral400,
+                        borderRadius: BorderRadius.circular(999.r),
+                      ),
                     ),
                   ),
                 ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -465,17 +468,13 @@ class _ShimmerCards extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Shimmer.fromColors(
-      baseColor: colors.neutral300,
-      highlightColor: colors.neutral200,
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: List.generate(
-          2,
-          (_) => Padding(
-            padding: EdgeInsetsDirectional.only(end: 12.w),
-            child: _SalonCardShimmer(colors: colors),
-          ),
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: List.generate(
+        2,
+        (_) => Padding(
+          padding: EdgeInsetsDirectional.only(end: 12.w),
+          child: _SalonCardShimmer(colors: colors),
         ),
       ),
     );
@@ -522,20 +521,16 @@ class _SalonsShimmer extends StatelessWidget {
           ),
         ),
         SizedBox(height: 12.h),
-        Shimmer.fromColors(
-          baseColor: colors.neutral300,
-          highlightColor: colors.neutral200,
-          child: SingleChildScrollView(
-            scrollDirection: Axis.horizontal,
-            physics: const NeverScrollableScrollPhysics(),
-            padding: EdgeInsets.symmetric(horizontal: 20.w),
-            child: Row(
-              children: List.generate(
-                3,
-                (_) => Padding(
-                  padding: EdgeInsetsDirectional.only(end: 12.w),
-                  child: _SalonCardShimmer(colors: colors),
-                ),
+        SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          physics: const NeverScrollableScrollPhysics(),
+          padding: EdgeInsets.symmetric(horizontal: 20.w),
+          child: Row(
+            children: List.generate(
+              3,
+              (_) => Padding(
+                padding: EdgeInsetsDirectional.only(end: 12.w),
+                child: _SalonCardShimmer(colors: colors),
               ),
             ),
           ),

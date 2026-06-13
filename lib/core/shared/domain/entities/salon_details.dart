@@ -1,6 +1,9 @@
+import 'package:ronaq_barber/core/shared/domain/entities/coupon.dart';
 import 'package:ronaq_barber/core/shared/domain/entities/package.dart';
 import 'package:ronaq_barber/core/shared/domain/entities/review.dart';
 import 'package:ronaq_barber/core/shared/domain/entities/salon_service.dart';
+import 'package:ronaq_barber/core/shared/domain/entities/salon_staff.dart';
+import 'package:ronaq_barber/core/shared/domain/entities/shift.dart';
 
 class SalonDetails {
   const SalonDetails({
@@ -19,6 +22,9 @@ class SalonDetails {
     required this.services,
     required this.packages,
     required this.reviews,
+    required this.coupons,
+    required this.staff,
+    required this.shifts,
     this.closingTime,
     this.isFavorite = false,
   });
@@ -40,4 +46,7 @@ class SalonDetails {
   final List<SalonService> services;
   final List<Package> packages;
   final List<Review> reviews;
+  final List<Coupon> coupons;
+  final List<SalonStaff> staff;
+  final List<Shift> shifts;
 }

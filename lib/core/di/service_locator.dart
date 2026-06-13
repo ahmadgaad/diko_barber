@@ -29,6 +29,7 @@ import 'package:ronaq_barber/core/theme/cubit/theme_cubit.dart';
 import 'package:ronaq_barber/features/profile/presentation/cubit/profile_cubit.dart';
 import 'package:ronaq_barber/core/shared/domain/use_cases/get_nearest_packages_page_use_case.dart';
 import 'package:ronaq_barber/core/shared/domain/use_cases/get_package_details_use_case.dart';
+import 'package:ronaq_barber/core/shared/domain/use_cases/get_salon_details_use_case.dart';
 import 'package:ronaq_barber/core/shared/domain/use_cases/get_favorites_use_case.dart';
 import 'package:ronaq_barber/core/shared/domain/use_cases/toggle_favorite_use_case.dart';
 import 'package:ronaq_barber/features/package_details/presentation/cubit/package_details_cubit.dart';
@@ -189,6 +190,9 @@ Future<void> setupServiceLocator() async {
   );
   sl.registerLazySingleton<GetPackageDetailsUseCase>(
     () => GetPackageDetailsUseCase(sl<SharedRepository>()),
+  );
+  sl.registerLazySingleton<GetSalonDetailsUseCase>(
+    () => GetSalonDetailsUseCase(sl<SharedRepository>()),
   );
   sl.registerLazySingleton<GetNearestPackagesPageUseCase>(
     () => GetNearestPackagesPageUseCase(sl<SharedRepository>()),
@@ -354,7 +358,11 @@ Future<void> setupServiceLocator() async {
   );
   sl.registerFactory<SearchCubit>(() => SearchCubit(sl<SharedPrefCacheClient>()));
   sl.registerFactory<SalonDetailsCubit>(
-    () => SalonDetailsCubit(sl<ToggleFavoriteUseCase>()),
+    () => SalonDetailsCubit(
+      sl<GetSalonDetailsUseCase>(),
+      sl<LocationService>(),
+      sl<ToggleFavoriteUseCase>(),
+    ),
   );
   sl.registerFactory<PackageDetailsCubit>(
     () => PackageDetailsCubit(sl<GetPackageDetailsUseCase>(), sl<ToggleFavoriteUseCase>()),

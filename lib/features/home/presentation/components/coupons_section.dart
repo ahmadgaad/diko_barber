@@ -83,14 +83,17 @@ class _CouponsList extends StatelessWidget {
 // tappable; tapping opens the full-detail bottom sheet.
 
 class CouponCard extends StatelessWidget {
-  const CouponCard({super.key, required this.coupon});
+  const CouponCard({super.key, required this.coupon, this.width});
   final Coupon coupon;
+
+  /// Card width. Defaults to the horizontal-carousel size used on home.
+  final double? width;
 
   @override
   Widget build(BuildContext context) {
     final colors = AppColors.of(context);
     final textDirection = Directionality.of(context);
-    final cardW = 280.w;
+    final cardW = width ?? 280.w;
     final cardH = 100.h;
     final stubW = 88.w;
     final notchR = 11.r;
@@ -520,10 +523,18 @@ class _CouponDetailSheet extends StatelessWidget {
                     ),
                   ),
                   SizedBox(height: 8.h),
-                  Container(
+                  Material(
+                    color: colors.neutral100,
+                    borderRadius: BorderRadius.circular(12.r),
+                    child: InkWell(
+                      onTap: () {
+                        Navigator.of(context).pop();
+                        rootContext.push('/salon/${coupon.salon.id}');
+                      },
+                      borderRadius: BorderRadius.circular(12.r),
+                      child: Container(
                     padding: EdgeInsets.all(14.r),
                     decoration: BoxDecoration(
-                      color: colors.neutral100,
                       borderRadius: BorderRadius.circular(12.r),
                       border: Border.all(color: colors.neutral200),
                     ),
@@ -606,7 +617,15 @@ class _CouponDetailSheet extends StatelessWidget {
                             ],
                           ),
                         ),
+                        SizedBox(width: 8.w),
+                        Icon(
+                          Icons.arrow_forward_ios_rounded,
+                          size: 14.r,
+                          color: colors.neutral400,
+                        ),
                       ],
+                    ),
+                      ),
                     ),
                   ),
 

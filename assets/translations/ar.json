@@ -311,12 +311,18 @@
   "salon_details": {
     "tab_services": "الخدمات",
     "tab_packages": "الباقات",
+    "tab_coupons": "الكوبونات",
+    "tab_staff": "الفريق",
+    "tab_shifts": "أوقات العمل",
     "tab_gallery": "المعرض",
     "tab_reviews": "التقييمات",
     "reviews": "تقييم",
     "min": "دقيقة",
     "book_now": "احجز الآن",
-    "coupon_applied": "تم تطبيق الكوبون"
+    "coupon_applied": "تم تطبيق الكوبون",
+    "no_coupons": "لا توجد كوبونات متاحة",
+    "no_staff": "لا يوجد فريق عمل",
+    "no_shifts": "لا توجد أوقات عمل محددة"
   },
   "book_appointment": {
     "title": "حجز موعد",
