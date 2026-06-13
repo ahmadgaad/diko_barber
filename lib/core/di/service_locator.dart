@@ -29,6 +29,8 @@ import 'package:ronaq_barber/core/theme/cubit/theme_cubit.dart';
 import 'package:ronaq_barber/features/profile/presentation/cubit/profile_cubit.dart';
 import 'package:ronaq_barber/core/shared/domain/use_cases/get_nearest_packages_page_use_case.dart';
 import 'package:ronaq_barber/core/shared/domain/use_cases/get_package_details_use_case.dart';
+import 'package:ronaq_barber/core/shared/domain/use_cases/get_favorites_use_case.dart';
+import 'package:ronaq_barber/core/shared/domain/use_cases/toggle_favorite_use_case.dart';
 import 'package:ronaq_barber/features/package_details/presentation/cubit/package_details_cubit.dart';
 import 'package:ronaq_barber/features/packages_list/presentation/cubit/packages_list_cubit.dart';
 import 'package:ronaq_barber/features/salon_details/presentation/cubit/salon_details_cubit.dart';
@@ -191,6 +193,12 @@ Future<void> setupServiceLocator() async {
   sl.registerLazySingleton<GetNearestPackagesPageUseCase>(
     () => GetNearestPackagesPageUseCase(sl<SharedRepository>()),
   );
+  sl.registerLazySingleton<ToggleFavoriteUseCase>(
+    () => ToggleFavoriteUseCase(sl<SharedRepository>()),
+  );
+  sl.registerLazySingleton<GetFavoritesUseCase>(
+    () => GetFavoritesUseCase(sl<SharedRepository>()),
+  );
   sl.registerLazySingleton<GetLocaleUseCase>(
     () => GetLocaleUseCase(sl<LocaleRepository>()),
   );
@@ -325,38 +333,47 @@ Future<void> setupServiceLocator() async {
     () => CategoriesCubit(sl<GetCategoriesUseCase>()),
   );
   sl.registerFactory<SalonsCubit>(
-    () => SalonsCubit(sl<GetNearestSalonsUseCase>(), sl<LocationService>(), sl<SharedPrefCacheClient>()),
+    () => SalonsCubit(sl<GetNearestSalonsUseCase>(), sl<LocationService>(), sl<SharedPrefCacheClient>(), sl<ToggleFavoriteUseCase>()),
   );
   sl.registerFactory<CouponsCubit>(
     () => CouponsCubit(sl<GetNearestCouponsUseCase>(), sl<LocationService>()),
   );
   sl.registerFactory<FeaturedServicesCubit>(
-    () => FeaturedServicesCubit(sl<GetNearestServicesUseCase>(), sl<LocationService>()),
+    () => FeaturedServicesCubit(sl<GetNearestServicesUseCase>(), sl<LocationService>(), sl<ToggleFavoriteUseCase>()),
   );
   sl.registerFactory<FeaturedPackagesCubit>(
-    () => FeaturedPackagesCubit(sl<GetNearestPackagesUseCase>(), sl<LocationService>()),
+    () => FeaturedPackagesCubit(sl<GetNearestPackagesUseCase>(), sl<LocationService>(), sl<ToggleFavoriteUseCase>()),
   );
   sl.registerFactory<ExploreCubit>(
     () => ExploreCubit(
       sl<GetCategoriesUseCase>(),
       sl<GetNearestSalonsUseCase>(),
       sl<LocationService>(),
+      sl<ToggleFavoriteUseCase>(),
     ),
   );
   sl.registerFactory<SearchCubit>(() => SearchCubit(sl<SharedPrefCacheClient>()));
-  sl.registerFactory<SalonDetailsCubit>(SalonDetailsCubit.new);
+  sl.registerFactory<SalonDetailsCubit>(
+    () => SalonDetailsCubit(sl<ToggleFavoriteUseCase>()),
+  );
   sl.registerFactory<PackageDetailsCubit>(
-    () => PackageDetailsCubit(sl<GetPackageDetailsUseCase>()),
+    () => PackageDetailsCubit(sl<GetPackageDetailsUseCase>(), sl<ToggleFavoriteUseCase>()),
   );
   sl.registerFactory<PackagesListCubit>(
     () => PackagesListCubit(
       sl<GetNearestPackagesPageUseCase>(),
       sl<LocationService>(),
       sl<GetCategoriesUseCase>(),
+      sl<ToggleFavoriteUseCase>(),
     ),
   );
   sl.registerFactory<BookingsCubit>(BookingsCubit.new);
-  sl.registerFactory<FavoritesCubit>(FavoritesCubit.new);
+  sl.registerFactory<FavoritesCubit>(
+    () => FavoritesCubit(
+      sl<GetFavoritesUseCase>(),
+      sl<ToggleFavoriteUseCase>(),
+    ),
+  );
   sl.registerFactory<ProfileCubit>(
     () => ProfileCubit(
       logoutUseCase: sl<LogoutUseCase>(),

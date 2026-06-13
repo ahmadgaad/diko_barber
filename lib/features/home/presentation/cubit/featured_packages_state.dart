@@ -11,6 +11,9 @@ class FeaturedPackagesLoading extends FeaturedPackagesState {
 class FeaturedPackagesLoaded extends FeaturedPackagesState {
   const FeaturedPackagesLoaded(this.packages);
   final List<NearestPackage> packages;
+
+  FeaturedPackagesLoaded copyWith({List<NearestPackage>? packages}) =>
+      FeaturedPackagesLoaded(packages ?? this.packages);
 }
 
 class FeaturedPackagesError extends FeaturedPackagesState {

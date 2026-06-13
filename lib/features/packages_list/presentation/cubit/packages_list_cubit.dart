@@ -5,10 +5,12 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ronaq_barber/core/networking/result.dart';
 import 'package:ronaq_barber/core/services/location_service.dart';
 import 'package:ronaq_barber/core/shared/domain/entities/category.dart';
+import 'package:ronaq_barber/core/shared/domain/entities/favorite_type.dart';
 import 'package:ronaq_barber/core/shared/domain/entities/nearest_package.dart';
 import 'package:ronaq_barber/core/shared/domain/entities/nearest_packages_params.dart';
 import 'package:ronaq_barber/core/shared/domain/use_cases/get_categories_use_case.dart';
 import 'package:ronaq_barber/core/shared/domain/use_cases/get_nearest_packages_page_use_case.dart';
+import 'package:ronaq_barber/core/shared/domain/use_cases/toggle_favorite_use_case.dart';
 import 'package:ronaq_barber/features/packages_list/presentation/cubit/packages_list_state.dart';
 
 class PackagesListCubit extends Cubit<PackagesListState> {
@@ -16,13 +18,19 @@ class PackagesListCubit extends Cubit<PackagesListState> {
     this._useCase,
     this._locationService,
     this._getCategoriesUseCase,
+    this._toggleFavoriteUseCase,
   ) : super(const PackagesListLoading()) {
     _init();
+    _eventSub = _toggleFavoriteUseCase.events.listen(_onFavoriteEvent);
   }
 
   final GetNearestPackagesPageUseCase _useCase;
   final LocationService _locationService;
   final GetCategoriesUseCase _getCategoriesUseCase;
+  final ToggleFavoriteUseCase _toggleFavoriteUseCase;
+
+  late final StreamSubscription<FavoriteToggleEvent> _eventSub;
+  final _pendingToggles = <int>{};
 
   double? _lat;
   double? _lng;
@@ -153,9 +161,50 @@ class PackagesListCubit extends Cubit<PackagesListState> {
     }
   }
 
+  Future<void> toggleFavorite(int packageId) async {
+    final current = state;
+    if (current is! PackagesListLoaded) return;
+
+    final pkg = current.packages.firstWhere((p) => p.id == packageId);
+    final newIsFavorite = !pkg.isFavorite;
+    _pendingToggles.add(packageId);
+    emit(current.copyWith(packages: _applyFavorite(current.packages, packageId, newIsFavorite)));
+
+    final result = await _toggleFavoriteUseCase(
+      id: packageId,
+      type: FavoriteType.package,
+      isFavorite: newIsFavorite,
+    );
+    _pendingToggles.remove(packageId);
+
+    if (result.isFailure && !isClosed) {
+      emit(current);
+    }
+  }
+
+  void _onFavoriteEvent(FavoriteToggleEvent event) {
+    if (event.type != FavoriteType.package) return;
+    if (_pendingToggles.contains(event.id)) return;
+    final current = state;
+    if (current is! PackagesListLoaded) return;
+    emit(current.copyWith(
+      packages: _applyFavorite(current.packages, event.id, event.isFavorite),
+    ));
+  }
+
+  List<NearestPackage> _applyFavorite(
+    List<NearestPackage> packages,
+    int id,
+    bool isFavorite,
+  ) =>
+      packages
+          .map((p) => p.id == id ? p.copyWith(isFavorite: isFavorite) : p)
+          .toList();
+
   @override
   Future<void> close() {
     _debounce?.cancel();
+    _eventSub.cancel();
     return super.close();
   }
 }

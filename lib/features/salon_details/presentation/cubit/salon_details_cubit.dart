@@ -1,12 +1,16 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:ronaq_barber/core/shared/domain/entities/favorite_type.dart';
 import 'package:ronaq_barber/core/shared/domain/entities/package.dart';
 import 'package:ronaq_barber/core/shared/domain/entities/review.dart';
 import 'package:ronaq_barber/core/shared/domain/entities/salon_details.dart';
 import 'package:ronaq_barber/core/shared/domain/entities/salon_service.dart';
+import 'package:ronaq_barber/core/shared/domain/use_cases/toggle_favorite_use_case.dart';
 import 'package:ronaq_barber/features/salon_details/presentation/cubit/salon_details_state.dart';
 
 class SalonDetailsCubit extends Cubit<SalonDetailsState> {
-  SalonDetailsCubit() : super(const SalonDetailsLoading());
+  SalonDetailsCubit(this._toggleFavoriteUseCase) : super(const SalonDetailsLoading());
+
+  final ToggleFavoriteUseCase _toggleFavoriteUseCase;
 
   void load(int salonId, {String? couponCode}) {
     emit(const SalonDetailsLoading());
@@ -16,10 +20,22 @@ class SalonDetailsCubit extends Cubit<SalonDetailsState> {
     });
   }
 
-  void toggleFavorite() {
+  Future<void> toggleFavorite() async {
     final current = state;
     if (current is! SalonDetailsLoaded) return;
-    emit(current.copyWith(isFavorite: !current.isFavorite));
+
+    final newIsFavorite = !current.isFavorite;
+    emit(current.copyWith(isFavorite: newIsFavorite));
+
+    final result = await _toggleFavoriteUseCase(
+      id: current.salon.id,
+      type: FavoriteType.salon,
+      isFavorite: newIsFavorite,
+    );
+
+    if (result.isFailure) {
+      emit(current);
+    }
   }
 
   SalonDetails _mockSalon(int id) {
@@ -130,8 +146,7 @@ class SalonDetailsCubit extends Cubit<SalonDetailsState> {
           userName: 'أحمد محمد',
           userAvatar: 'https://picsum.photos/seed/user1/80/80',
           rating: 5.0,
-          comment:
-              'خدمة ممتازة وفريق محترف جداً. سأعود بالتأكيد!',
+          comment: 'خدمة ممتازة وفريق محترف جداً. سأعود بالتأكيد!',
           createdAt: DateTime(2026, 5, 20),
         ),
         Review(
@@ -139,8 +154,7 @@ class SalonDetailsCubit extends Cubit<SalonDetailsState> {
           userName: 'محمود علي',
           userAvatar: 'https://picsum.photos/seed/user2/80/80',
           rating: 4.5,
-          comment:
-              'المكان نظيف وأنيق، والحلاق متميز في عمله. أنصح به بشدة.',
+          comment: 'المكان نظيف وأنيق، والحلاق متميز في عمله. أنصح به بشدة.',
           createdAt: DateTime(2026, 5, 15),
         ),
         Review(
@@ -148,8 +162,7 @@ class SalonDetailsCubit extends Cubit<SalonDetailsState> {
           userName: 'عمر خالد',
           userAvatar: 'https://picsum.photos/seed/user3/80/80',
           rating: 5.0,
-          comment:
-              'أفضل صالون جربته على الإطلاق. القصة بالضبط اللي طلبتها!',
+          comment: 'أفضل صالون جربته على الإطلاق. القصة بالضبط اللي طلبتها!',
           createdAt: DateTime(2026, 5, 10),
         ),
         Review(
@@ -157,8 +170,7 @@ class SalonDetailsCubit extends Cubit<SalonDetailsState> {
           userName: 'كريم إبراهيم',
           userAvatar: 'https://picsum.photos/seed/user4/80/80',
           rating: 4.0,
-          comment:
-              'جودة عالية وأسعار معقولة بالنسبة للخدمة المقدمة.',
+          comment: 'جودة عالية وأسعار معقولة بالنسبة للخدمة المقدمة.',
           createdAt: DateTime(2026, 4, 28),
         ),
       ],

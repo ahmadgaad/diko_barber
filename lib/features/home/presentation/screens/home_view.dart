@@ -244,7 +244,7 @@ class _HomeViewState extends State<HomeView>
                   const NearbySalonsSection(),
                   const CouponsSection(),
                   const FeaturedPackagesSection(),
-                  const FeaturedServicesSection(),
+                const FeaturedServicesSection(),
                   SizedBox(height: 40.h),
                 ],
               ),

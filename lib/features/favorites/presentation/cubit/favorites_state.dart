@@ -1,6 +1,6 @@
-import 'package:ronaq_barber/core/shared/domain/entities/package.dart';
+import 'package:ronaq_barber/core/shared/domain/entities/nearest_package.dart';
+import 'package:ronaq_barber/core/shared/domain/entities/nearest_service.dart';
 import 'package:ronaq_barber/core/shared/domain/entities/salon.dart';
-import 'package:ronaq_barber/core/shared/domain/entities/salon_service.dart';
 
 sealed class FavoritesState {
   const FavoritesState();
@@ -18,8 +18,19 @@ class FavoritesLoaded extends FavoritesState {
   });
 
   final List<Salon> salons;
-  final List<Package> packages;
-  final List<SalonService> services;
+  final List<NearestPackage> packages;
+  final List<NearestService> services;
+
+  FavoritesLoaded copyWith({
+    List<Salon>? salons,
+    List<NearestPackage>? packages,
+    List<NearestService>? services,
+  }) =>
+      FavoritesLoaded(
+        salons: salons ?? this.salons,
+        packages: packages ?? this.packages,
+        services: services ?? this.services,
+      );
 }
 
 class FavoritesError extends FavoritesState {

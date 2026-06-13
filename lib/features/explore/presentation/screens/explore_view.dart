@@ -107,6 +107,8 @@ class _ExploreViewState extends State<ExploreView> {
                     context.read<ExploreCubit>().highlightSalon(salon.id);
                     context.push('/salon/${salon.id}');
                   },
+                  onFavoriteTap: () =>
+                      context.read<ExploreCubit>().toggleFavorite(salon.id),
                 );
               },
             ),

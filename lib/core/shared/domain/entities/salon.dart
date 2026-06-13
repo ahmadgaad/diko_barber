@@ -34,7 +34,7 @@ class Salon {
   final Distance? distance;
   final bool? withinRadius;
 
-  Salon copyWith({Distance? distance}) {
+  Salon copyWith({Distance? distance, bool? isFavorite}) {
     return Salon(
       id: id,
       name: name,
@@ -43,7 +43,7 @@ class Salon {
       ratingsCount: ratingsCount,
       categories: categories,
       isOpen: isOpen,
-      isFavorite: isFavorite,
+      isFavorite: isFavorite ?? this.isFavorite,
       lat: lat,
       lng: lng,
       specialization: specialization,

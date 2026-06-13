@@ -169,11 +169,14 @@ class _SalonImage extends StatelessWidget {
             ),
           ),
         ),
-        // Top-left: favorite button
         PositionedDirectional(
           top: 10.h,
           start: 10.w,
-          child: _FavoriteButton(isFavorite: salon.isFavorite, colors: colors),
+          child: _FavoriteButton(
+            isFavorite: salon.isFavorite,
+            colors: colors,
+            onTap: () => context.read<SalonsCubit>().toggleFavorite(salon.id),
+          ),
         ),
         // Top-right: distance badge
         if (salon.distance != null)
@@ -255,23 +258,31 @@ class _DistanceBadge extends StatelessWidget {
 }
 
 class _FavoriteButton extends StatelessWidget {
-  const _FavoriteButton({required this.isFavorite, required this.colors});
+  const _FavoriteButton({
+    required this.isFavorite,
+    required this.colors,
+    required this.onTap,
+  });
   final bool isFavorite;
   final AppColors colors;
+  final VoidCallback onTap;
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: 28.r,
-      height: 28.r,
-      decoration: BoxDecoration(
-        color: Colors.black.withValues(alpha: 0.45),
-        shape: BoxShape.circle,
-      ),
-      child: Icon(
-        isFavorite ? Icons.favorite_rounded : Icons.favorite_border_rounded,
-        color: isFavorite ? splashOrange : Colors.white,
-        size: 16.r,
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        width: 28.r,
+        height: 28.r,
+        decoration: BoxDecoration(
+          color: Colors.black.withValues(alpha: 0.45),
+          shape: BoxShape.circle,
+        ),
+        child: Icon(
+          isFavorite ? Icons.favorite_rounded : Icons.favorite_border_rounded,
+          color: isFavorite ? Colors.red : Colors.white,
+          size: 16.r,
+        ),
       ),
     );
   }

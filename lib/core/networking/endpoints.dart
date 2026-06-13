@@ -32,6 +32,8 @@ abstract final class EndPoints {
   static String salonSlots(int id) => 'user/salons/$id/slots';
   static const String validateCoupon = 'user/coupons/validate';
   static const String createBooking = 'user/bookings';
+  static const String toggleFavorite = 'user/toggle-favorite';
+  static const String favorites = 'user/favorites';
 
   // Salon Auth
   static const String salonRegister = 'salon-auth/register';

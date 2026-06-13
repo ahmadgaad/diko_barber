@@ -4,9 +4,12 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ronaq_barber/core/networking/result.dart';
 import 'package:ronaq_barber/core/services/location_service.dart';
 import 'package:ronaq_barber/core/shared/domain/entities/category.dart';
+import 'package:ronaq_barber/core/shared/domain/entities/favorite_type.dart';
 import 'package:ronaq_barber/core/shared/domain/entities/nearest_salons_params.dart';
+import 'package:ronaq_barber/core/shared/domain/entities/salon.dart';
 import 'package:ronaq_barber/core/shared/domain/use_cases/get_categories_use_case.dart';
 import 'package:ronaq_barber/core/shared/domain/use_cases/get_nearest_salons_use_case.dart';
+import 'package:ronaq_barber/core/shared/domain/use_cases/toggle_favorite_use_case.dart';
 
 import 'explore_state.dart';
 
@@ -15,13 +18,19 @@ class ExploreCubit extends Cubit<ExploreState> {
     this._getCategoriesUseCase,
     this._getNearestSalonsUseCase,
     this._locationService,
+    this._toggleFavoriteUseCase,
   ) : super(const ExploreLoading()) {
     _load();
+    _eventSub = _toggleFavoriteUseCase.events.listen(_onFavoriteEvent);
   }
 
   final GetCategoriesUseCase _getCategoriesUseCase;
   final GetNearestSalonsUseCase _getNearestSalonsUseCase;
   final LocationService _locationService;
+  final ToggleFavoriteUseCase _toggleFavoriteUseCase;
+
+  late final StreamSubscription<FavoriteToggleEvent> _eventSub;
+  final _pendingToggles = <int>{};
 
   Timer? _debounce;
   List<Category> _categories = [];
@@ -107,6 +116,42 @@ class ExploreCubit extends Cubit<ExploreState> {
     _fetchSalons();
   }
 
+  Future<void> toggleFavorite(int salonId) async {
+    final current = state;
+    if (current is! ExploreLoaded) return;
+
+    final salon = current.salons.firstWhere((s) => s.id == salonId);
+    final newIsFavorite = !salon.isFavorite;
+    _pendingToggles.add(salonId);
+    emit(current.copyWith(salons: _applyFavorite(current.salons, salonId, newIsFavorite)));
+
+    final result = await _toggleFavoriteUseCase(
+      id: salonId,
+      type: FavoriteType.salon,
+      isFavorite: newIsFavorite,
+    );
+    _pendingToggles.remove(salonId);
+
+    if (result.isFailure && !isClosed) {
+      emit(current);
+    }
+  }
+
+  void _onFavoriteEvent(FavoriteToggleEvent event) {
+    if (event.type != FavoriteType.salon) return;
+    if (_pendingToggles.contains(event.id)) return;
+    final current = state;
+    if (current is! ExploreLoaded) return;
+    emit(current.copyWith(
+      salons: _applyFavorite(current.salons, event.id, event.isFavorite),
+    ));
+  }
+
+  List<Salon> _applyFavorite(List<Salon> salons, int id, bool isFavorite) =>
+      salons
+          .map((s) => s.id == id ? s.copyWith(isFavorite: isFavorite) : s)
+          .toList();
+
   void highlightSalon(int? id) {
     final current = state;
     if (current is! ExploreLoaded) return;
@@ -184,6 +229,7 @@ class ExploreCubit extends Cubit<ExploreState> {
   @override
   Future<void> close() {
     _debounce?.cancel();
+    _eventSub.cancel();
     return super.close();
   }
 }

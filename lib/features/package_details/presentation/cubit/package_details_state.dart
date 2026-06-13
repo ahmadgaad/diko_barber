@@ -11,6 +11,9 @@ class PackageDetailsLoading extends PackageDetailsState {
 class PackageDetailsLoaded extends PackageDetailsState {
   const PackageDetailsLoaded({required this.package});
   final PackageDetails package;
+
+  PackageDetailsLoaded copyWith({PackageDetails? package}) =>
+      PackageDetailsLoaded(package: package ?? this.package);
 }
 
 class PackageDetailsError extends PackageDetailsState {

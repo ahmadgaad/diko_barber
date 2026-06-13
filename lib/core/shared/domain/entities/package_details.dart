@@ -50,6 +50,7 @@ class PackageDetails {
     this.savings,
     this.distance,
     this.withinRadius,
+    this.isFavorite = false,
   });
 
   final int id;
@@ -67,8 +68,28 @@ class PackageDetails {
   final num? savings;
   final Distance? distance;
   final bool? withinRadius;
+  final bool isFavorite;
 
   num get effectivePrice => discountedPrice ?? price;
   bool get hasDiscount =>
       discountedPrice != null && discountedPrice! < price;
+
+  PackageDetails copyWith({bool? isFavorite}) => PackageDetails(
+        id: id,
+        name: name,
+        description: description,
+        image: image,
+        price: price,
+        durationMinutes: durationMinutes,
+        salon: salon,
+        services: services,
+        discountedPrice: discountedPrice,
+        discount: discount,
+        specialization: specialization,
+        servicesTotalPrice: servicesTotalPrice,
+        savings: savings,
+        distance: distance,
+        withinRadius: withinRadius,
+        isFavorite: isFavorite ?? this.isFavorite,
+      );
 }

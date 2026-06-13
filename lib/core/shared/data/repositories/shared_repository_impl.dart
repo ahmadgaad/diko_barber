@@ -26,6 +26,8 @@ import 'package:ronaq_barber/core/shared/domain/entities/nearest_service.dart';
 import 'package:ronaq_barber/core/shared/domain/entities/nearest_services_params.dart';
 import 'package:ronaq_barber/core/shared/domain/entities/neighborhood.dart';
 import 'package:ronaq_barber/core/shared/domain/entities/salons_page.dart';
+import 'package:ronaq_barber/core/shared/domain/entities/favorite_type.dart';
+import 'package:ronaq_barber/core/shared/domain/entities/favorites_tab_result.dart';
 import 'package:ronaq_barber/core/shared/domain/repositories/shared_repository.dart';
 
 class SharedRepositoryImpl implements SharedRepository {
@@ -309,6 +311,59 @@ class SharedRepositoryImpl implements SharedRepository {
       );
     } catch (e, st) {
       log('getPackageDetails failed', error: e, stackTrace: st, name: 'SharedRepository');
+      return Failure(ApiErrorModel(message: 'حدث خطأ غير معروف'));
+    }
+  }
+
+  @override
+  Future<Result<ApiErrorModel, FavoritesTabResult>> getFavorites(
+    FavoriteType type,
+  ) async {
+    try {
+      final response = await _remoteDataSource.getFavorites(type.value);
+      if (response.isError || response.data == null) {
+        return Failure(ApiErrorModel(message: response.message ?? 'حدث خطأ غير معروف'));
+      }
+      final list = (response.data as List).whereType<Map<String, dynamic>>();
+      return switch (type) {
+        FavoriteType.salon => Success(
+            SalonFavoritesResult(list.map(SalonModel.fromJson).toList()),
+          ),
+        FavoriteType.package => Success(
+            PackageFavoritesResult(
+                list.map(NearestPackageModel.fromJson).toList()),
+          ),
+        FavoriteType.service => Success(
+            ServiceFavoritesResult(
+                list.map(NearestServiceModel.fromJson).toList()),
+          ),
+      };
+    } catch (e, st) {
+      log('getFavorites failed', error: e, stackTrace: st, name: 'SharedRepository');
+      return Failure(ApiErrorModel(message: 'حدث خطأ غير معروف'));
+    }
+  }
+
+  @override
+  Future<Result<ApiErrorModel, void>> toggleFavorite({
+    required int id,
+    required FavoriteType type,
+  }) async {
+    try {
+      final response = await _remoteDataSource.toggleFavorite(
+        id: id,
+        type: type.value,
+      );
+
+      if (response.isError) {
+        return Failure(
+          ApiErrorModel(message: response.message ?? 'حدث خطأ غير معروف'),
+        );
+      }
+
+      return const Success(null);
+    } catch (e, st) {
+      log('toggleFavorite failed', error: e, stackTrace: st, name: 'SharedRepository');
       return Failure(ApiErrorModel(message: 'حدث خطأ غير معروف'));
     }
   }

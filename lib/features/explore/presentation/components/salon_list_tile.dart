@@ -6,10 +6,16 @@ import 'package:ronaq_barber/core/shared/domain/entities/salon.dart';
 import 'package:ronaq_barber/core/theme/app_colors.dart';
 
 class SalonListTile extends StatelessWidget {
-  const SalonListTile({super.key, required this.salon, this.onTap});
+  const SalonListTile({
+    super.key,
+    required this.salon,
+    this.onTap,
+    this.onFavoriteTap,
+  });
 
   final Salon salon;
   final VoidCallback? onTap;
+  final VoidCallback? onFavoriteTap;
 
   @override
   Widget build(BuildContext context) {
@@ -45,14 +51,18 @@ class SalonListTile extends StatelessWidget {
                           ),
                         ),
                       ),
-                      Icon(
-                        salon.isFavorite
-                            ? Icons.favorite_rounded
-                            : Icons.favorite_border_rounded,
-                        color: salon.isFavorite
-                            ? splashOrange
-                            : colors.neutral400,
-                        size: 20.r,
+                      GestureDetector(
+                        onTap: onFavoriteTap,
+                        behavior: HitTestBehavior.opaque,
+                        child: Icon(
+                          salon.isFavorite
+                              ? Icons.favorite_rounded
+                              : Icons.favorite_border_rounded,
+                          color: salon.isFavorite
+                              ? splashOrange
+                              : colors.neutral400,
+                          size: 20.r,
+                        ),
                       ),
                     ],
                   ),

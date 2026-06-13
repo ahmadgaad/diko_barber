@@ -42,6 +42,7 @@ class NearestService {
     this.requiresConsultation = false,
     this.distance,
     this.withinRadius,
+    this.isFavorite = false,
   });
 
   final int id;
@@ -57,7 +58,25 @@ class NearestService {
   final bool requiresConsultation;
   final Distance? distance;
   final bool? withinRadius;
+  final bool isFavorite;
 
   num get effectivePrice => discountedPrice ?? price;
   bool get hasDiscount => discountedPrice != null && discountedPrice! < price;
+
+  NearestService copyWith({bool? isFavorite}) => NearestService(
+        id: id,
+        name: name,
+        image: image,
+        price: price,
+        durationMinutes: durationMinutes,
+        salon: salon,
+        categoryId: categoryId,
+        categoryName: categoryName,
+        discountedPrice: discountedPrice,
+        discount: discount,
+        requiresConsultation: requiresConsultation,
+        distance: distance,
+        withinRadius: withinRadius,
+        isFavorite: isFavorite ?? this.isFavorite,
+      );
 }

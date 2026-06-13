@@ -700,7 +700,7 @@ class _GridImage extends StatelessWidget {
         PositionedDirectional(
           top: 8.h,
           end: 8.w,
-          child: _FavButton(size: 26.r, iconSize: 14.r),
+          child: _FavButton(package: package, size: 26.r, iconSize: 14.r),
         ),
       ],
     );
@@ -841,6 +841,11 @@ class _ListCard extends StatelessWidget {
                   start: 6.w,
                   child: _DiscountBadge(package: package),
                 ),
+              PositionedDirectional(
+                top: 6.h,
+                end: 6.w,
+                child: _FavButton(package: package, size: 24.r, iconSize: 13.r),
+              ),
             ],
           ),
           // Info
@@ -970,21 +975,35 @@ class _DiscountBadge extends StatelessWidget {
 }
 
 class _FavButton extends StatelessWidget {
-  const _FavButton({required this.size, required this.iconSize});
+  const _FavButton({
+    required this.package,
+    required this.size,
+    required this.iconSize,
+  });
+  final NearestPackage package;
   final double size;
   final double iconSize;
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: size,
-      height: size,
-      decoration: BoxDecoration(
-        color: Colors.black.withValues(alpha: 0.4),
-        shape: BoxShape.circle,
+    return GestureDetector(
+      onTap: () =>
+          context.read<PackagesListCubit>().toggleFavorite(package.id),
+      child: Container(
+        width: size,
+        height: size,
+        decoration: BoxDecoration(
+          color: Colors.black.withValues(alpha: 0.4),
+          shape: BoxShape.circle,
+        ),
+        child: Icon(
+          package.isFavorite
+              ? Icons.favorite_rounded
+              : Icons.favorite_border_rounded,
+          color: package.isFavorite ? Colors.red : Colors.white,
+          size: iconSize,
+        ),
       ),
-      child: Icon(Icons.favorite_border_rounded,
-          color: Colors.white, size: iconSize),
     );
   }
 }

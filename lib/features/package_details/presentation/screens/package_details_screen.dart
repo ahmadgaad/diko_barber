@@ -146,7 +146,7 @@ class _PackageAppBar extends StatelessWidget {
         Padding(
           padding: EdgeInsetsDirectional.only(end: 8.w),
           child: GestureDetector(
-            onTap: () {},
+            onTap: () => context.read<PackageDetailsCubit>().toggleFavorite(),
             child: Container(
               width: 36.r,
               height: 36.r,
@@ -155,8 +155,10 @@ class _PackageAppBar extends StatelessWidget {
                 shape: BoxShape.circle,
               ),
               child: Icon(
-                Icons.favorite_border_rounded,
-                color: Colors.white,
+                package.isFavorite
+                    ? Icons.favorite_rounded
+                    : Icons.favorite_border_rounded,
+                color: package.isFavorite ? Colors.red : Colors.white,
                 size: 20.r,
               ),
             ),

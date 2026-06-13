@@ -11,11 +11,13 @@ class SalonGridCard extends StatelessWidget {
     required this.salon,
     required this.isHighlighted,
     this.onTap,
+    this.onFavoriteTap,
   });
 
   final Salon salon;
   final bool isHighlighted;
   final VoidCallback? onTap;
+  final VoidCallback? onFavoriteTap;
 
   @override
   Widget build(BuildContext context) {
@@ -64,14 +66,18 @@ class SalonGridCard extends StatelessWidget {
                           ),
                         ),
                       ),
-                      Icon(
-                        salon.isFavorite
-                            ? Icons.favorite_rounded
-                            : Icons.favorite_border_rounded,
-                        color: salon.isFavorite
-                            ? splashOrange
-                            : colors.neutral400,
-                        size: 16.r,
+                      GestureDetector(
+                        onTap: onFavoriteTap,
+                        behavior: HitTestBehavior.opaque,
+                        child: Icon(
+                          salon.isFavorite
+                              ? Icons.favorite_rounded
+                              : Icons.favorite_border_rounded,
+                          color: salon.isFavorite
+                              ? splashOrange
+                              : colors.neutral400,
+                          size: 16.r,
+                        ),
                       ),
                     ],
                   ),

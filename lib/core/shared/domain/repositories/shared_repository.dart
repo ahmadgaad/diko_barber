@@ -1,5 +1,6 @@
 import 'package:ronaq_barber/core/networking/api_error_model.dart';
 import 'package:ronaq_barber/core/networking/result.dart';
+import '../entities/favorite_type.dart';
 
 import '../entities/banner.dart';
 import '../entities/category.dart';
@@ -7,12 +8,13 @@ import '../entities/city.dart';
 import '../entities/coupon.dart';
 import '../entities/nearest_coupons_params.dart';
 import '../entities/nearest_package.dart';
+import '../entities/nearest_packages_page.dart';
 import '../entities/nearest_packages_params.dart';
 import '../entities/nearest_salons_params.dart';
 import '../entities/nearest_service.dart';
 import '../entities/nearest_services_params.dart';
 import '../entities/neighborhood.dart';
-import '../entities/nearest_packages_page.dart';
+import '../entities/favorites_tab_result.dart';
 import '../entities/package_details.dart';
 import '../entities/salons_page.dart';
 
@@ -41,4 +43,9 @@ abstract class SharedRepository {
     NearestServicesParams params,
   );
   Future<Result<ApiErrorModel, PackageDetails>> getPackageDetails(int id);
+  Future<Result<ApiErrorModel, void>> toggleFavorite({
+    required int id,
+    required FavoriteType type,
+  });
+  Future<Result<ApiErrorModel, FavoritesTabResult>> getFavorites(FavoriteType type);
 }

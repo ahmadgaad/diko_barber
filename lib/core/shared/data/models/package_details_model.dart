@@ -19,6 +19,7 @@ class PackageDetailsModel extends PackageDetails {
     super.savings,
     super.distance,
     super.withinRadius,
+    super.isFavorite,
   });
 
   factory PackageDetailsModel.fromJson(Map<String, dynamic> json) {
@@ -79,6 +80,7 @@ class PackageDetailsModel extends PackageDetails {
               unit: distanceJson['unit'] as String,
             ),
       withinRadius: json['within_radius'] as bool?,
+      isFavorite: json['is_favorite'] as bool? ?? false,
     );
   }
 

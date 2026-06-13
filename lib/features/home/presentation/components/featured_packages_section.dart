@@ -133,21 +133,27 @@ class _PackageImage extends StatelessWidget {
             start: 10.w,
             child: _DiscountBadge(package: package),
           ),
-        // Fav button — aligned to the same top position as discount badge
         PositionedDirectional(
           top: 10.h,
           end: 10.w,
-          child: Container(
-            width: 28.r,
-            height: 28.r,
-            decoration: BoxDecoration(
-              color: Colors.black.withValues(alpha: 0.45),
-              shape: BoxShape.circle,
-            ),
-            child: Icon(
-              Icons.favorite_border_rounded,
-              color: Colors.white,
-              size: 15.r,
+          child: GestureDetector(
+            onTap: () => context
+                .read<FeaturedPackagesCubit>()
+                .toggleFavorite(package.id),
+            child: Container(
+              width: 28.r,
+              height: 28.r,
+              decoration: BoxDecoration(
+                color: Colors.black.withValues(alpha: 0.45),
+                shape: BoxShape.circle,
+              ),
+              child: Icon(
+                package.isFavorite
+                    ? Icons.favorite_rounded
+                    : Icons.favorite_border_rounded,
+                color: package.isFavorite ? Colors.red : Colors.white,
+                size: 15.r,
+              ),
             ),
           ),
         ),

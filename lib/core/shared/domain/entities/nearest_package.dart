@@ -49,6 +49,7 @@ class NearestPackage {
     this.savings,
     this.distance,
     this.withinRadius,
+    this.isFavorite = false,
   });
 
   final int id;
@@ -65,7 +66,26 @@ class NearestPackage {
   final num? savings;
   final Distance? distance;
   final bool? withinRadius;
+  final bool isFavorite;
 
   num get effectivePrice => discountedPrice ?? price;
   bool get hasDiscount => discountedPrice != null && discountedPrice! < price;
+
+  NearestPackage copyWith({bool? isFavorite}) => NearestPackage(
+        id: id,
+        name: name,
+        description: description,
+        image: image,
+        price: price,
+        durationMinutes: durationMinutes,
+        salon: salon,
+        discountedPrice: discountedPrice,
+        discount: discount,
+        specialization: specialization,
+        servicesTotalPrice: servicesTotalPrice,
+        savings: savings,
+        distance: distance,
+        withinRadius: withinRadius,
+        isFavorite: isFavorite ?? this.isFavorite,
+      );
 }

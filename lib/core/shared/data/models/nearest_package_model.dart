@@ -17,6 +17,7 @@ class NearestPackageModel extends NearestPackage {
     super.savings,
     super.distance,
     super.withinRadius,
+    super.isFavorite,
   });
 
   factory NearestPackageModel.fromJson(Map<String, dynamic> json) {
@@ -70,6 +71,7 @@ class NearestPackageModel extends NearestPackage {
               unit: distanceJson['unit'] as String,
             ),
       withinRadius: json['within_radius'] as bool?,
+      isFavorite: json['is_favorite'] as bool? ?? false,
     );
   }
 

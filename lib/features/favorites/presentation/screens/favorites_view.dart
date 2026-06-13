@@ -4,9 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
-import 'package:ronaq_barber/core/shared/domain/entities/package.dart';
+import 'package:ronaq_barber/core/shared/domain/entities/favorite_type.dart';
+import 'package:ronaq_barber/core/shared/domain/entities/nearest_package.dart';
+import 'package:ronaq_barber/core/shared/domain/entities/nearest_service.dart';
 import 'package:ronaq_barber/core/shared/domain/entities/salon.dart';
-import 'package:ronaq_barber/core/shared/domain/entities/salon_service.dart';
 import 'package:ronaq_barber/core/theme/app_colors.dart';
 import 'package:ronaq_barber/features/favorites/presentation/cubit/favorites_cubit.dart';
 import 'package:ronaq_barber/features/favorites/presentation/cubit/favorites_state.dart';
@@ -57,7 +58,23 @@ class _FavoritesViewState extends State<FavoritesView>
         Expanded(
           child: BlocBuilder<FavoritesCubit, FavoritesState>(
             builder: (context, state) => switch (state) {
-              FavoritesLoading() => _FavoritesShimmer(colors: colors),
+              FavoritesLoading() => TabBarView(
+                  controller: _tabController,
+                  children: [
+                    _FavoritesShimmer(
+                      colors: colors,
+                      itemBuilder: (c) => _SalonShimmerTile(colors: c),
+                    ),
+                    _FavoritesShimmer(
+                      colors: colors,
+                      itemBuilder: (c) => _PackageShimmerTile(colors: c),
+                    ),
+                    _FavoritesShimmer(
+                      colors: colors,
+                      itemBuilder: (c) => _ServiceShimmerTile(colors: c),
+                    ),
+                  ],
+                ),
               FavoritesError() => _ErrorState(colors: colors),
               FavoritesLoaded() => TabBarView(
                   controller: _tabController,
@@ -143,6 +160,9 @@ class _SalonsTab extends StatelessWidget {
         salon: salons[i],
         colors: colors,
         onTap: () => context.push('/salon/${salons[i].id}'),
+        onFavoriteTap: () => context
+            .read<FavoritesCubit>()
+            .toggleFavorite(salons[i].id, FavoriteType.salon),
       ),
     );
   }
@@ -153,11 +173,13 @@ class _SalonTile extends StatelessWidget {
     required this.salon,
     required this.colors,
     required this.onTap,
+    required this.onFavoriteTap,
   });
 
   final Salon salon;
   final AppColors colors;
   final VoidCallback onTap;
+  final VoidCallback onFavoriteTap;
 
   @override
   Widget build(BuildContext context) {
@@ -268,7 +290,10 @@ class _SalonTile extends StatelessWidget {
               ),
             ),
             SizedBox(width: 8.w),
-            Icon(Icons.favorite_rounded, color: splashOrange, size: 22.r),
+            GestureDetector(
+              onTap: onFavoriteTap,
+              child: Icon(Icons.favorite_rounded, color: splashOrange, size: 22.r),
+            ),
           ],
         ),
       ),
@@ -281,7 +306,7 @@ class _SalonTile extends StatelessWidget {
 class _PackagesTab extends StatelessWidget {
   const _PackagesTab({required this.packages, required this.colors});
 
-  final List<Package> packages;
+  final List<NearestPackage> packages;
   final AppColors colors;
 
   @override
@@ -298,28 +323,43 @@ class _PackagesTab extends StatelessWidget {
       physics: const BouncingScrollPhysics(),
       itemCount: packages.length,
       separatorBuilder: (_, _) => SizedBox(height: 10.h),
-      itemBuilder: (context, i) =>
-          _PackageTile(package: packages[i], colors: colors),
+      itemBuilder: (context, i) => _PackageTile(
+        package: packages[i],
+        colors: colors,
+        onTap: () => context.push('/package/${packages[i].id}'),
+        onFavoriteTap: () => context
+            .read<FavoritesCubit>()
+            .toggleFavorite(packages[i].id, FavoriteType.package),
+      ),
     );
   }
 }
 
 class _PackageTile extends StatelessWidget {
-  const _PackageTile({required this.package, required this.colors});
+  const _PackageTile({
+    required this.package,
+    required this.colors,
+    required this.onTap,
+    required this.onFavoriteTap,
+  });
 
-  final Package package;
+  final NearestPackage package;
   final AppColors colors;
+  final VoidCallback onTap;
+  final VoidCallback onFavoriteTap;
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        color: colors.neutral100,
-        borderRadius: BorderRadius.circular(16.r),
-        border: Border.all(color: colors.neutral200),
-      ),
-      clipBehavior: Clip.antiAlias,
-      child: Stack(
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        decoration: BoxDecoration(
+          color: colors.neutral100,
+          borderRadius: BorderRadius.circular(16.r),
+          border: Border.all(color: colors.neutral200),
+        ),
+        clipBehavior: Clip.antiAlias,
+        child: Stack(
         children: [
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -400,26 +440,31 @@ class _PackageTile extends StatelessWidget {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(
-                            package.description,
-                            style: TextStyle(
-                                fontSize: 12.sp,
-                                color: colors.neutral600,
-                                height: 1.4),
-                          ),
+                          if (package.description.isNotEmpty)
+                            Text(
+                              package.description,
+                              maxLines: 2,
+                              overflow: TextOverflow.ellipsis,
+                              style: TextStyle(
+                                  fontSize: 12.sp,
+                                  color: colors.neutral600,
+                                  height: 1.4),
+                            ),
                           SizedBox(height: 4.h),
                           Row(
                             children: [
-                              Icon(Icons.star_rounded,
-                                  size: 13.r,
-                                  color: const Color(0xFFFFC107)),
-                              SizedBox(width: 3.w),
-                              Text(
-                                package.rating.toStringAsFixed(1),
-                                style: TextStyle(
-                                    fontSize: 11.sp,
-                                    fontWeight: FontWeight.w500,
-                                    color: colors.neutral700),
+                              Icon(Icons.store_outlined,
+                                  size: 12.r, color: colors.neutral400),
+                              SizedBox(width: 4.w),
+                              Expanded(
+                                child: Text(
+                                  package.salon.name,
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: TextStyle(
+                                      fontSize: 11.sp,
+                                      color: colors.neutral500),
+                                ),
                               ),
                             ],
                           ),
@@ -450,22 +495,25 @@ class _PackageTile extends StatelessWidget {
               ),
             ],
           ),
-          // Favorite heart top-right
           PositionedDirectional(
             top: 10.h,
             end: 10.w,
-            child: Container(
-              width: 30.r,
-              height: 30.r,
-              decoration: BoxDecoration(
-                color: Colors.black.withValues(alpha: 0.4),
-                shape: BoxShape.circle,
+            child: GestureDetector(
+              onTap: onFavoriteTap,
+              child: Container(
+                width: 30.r,
+                height: 30.r,
+                decoration: BoxDecoration(
+                  color: Colors.black.withValues(alpha: 0.4),
+                  shape: BoxShape.circle,
+                ),
+                child: Icon(Icons.favorite_rounded,
+                    color: splashOrange, size: 16.r),
               ),
-              child: Icon(Icons.favorite_rounded,
-                  color: splashOrange, size: 16.r),
             ),
           ),
         ],
+        ),
       ),
     );
   }
@@ -476,7 +524,7 @@ class _PackageTile extends StatelessWidget {
 class _ServicesTab extends StatelessWidget {
   const _ServicesTab({required this.services, required this.colors});
 
-  final List<SalonService> services;
+  final List<NearestService> services;
   final AppColors colors;
 
   @override
@@ -493,17 +541,27 @@ class _ServicesTab extends StatelessWidget {
       physics: const BouncingScrollPhysics(),
       itemCount: services.length,
       separatorBuilder: (_, _) => SizedBox(height: 10.h),
-      itemBuilder: (context, i) =>
-          _ServiceTile(service: services[i], colors: colors),
+      itemBuilder: (context, i) => _ServiceTile(
+        service: services[i],
+        colors: colors,
+        onFavoriteTap: () => context
+            .read<FavoritesCubit>()
+            .toggleFavorite(services[i].id, FavoriteType.service),
+      ),
     );
   }
 }
 
 class _ServiceTile extends StatelessWidget {
-  const _ServiceTile({required this.service, required this.colors});
+  const _ServiceTile({
+    required this.service,
+    required this.colors,
+    required this.onFavoriteTap,
+  });
 
-  final SalonService service;
+  final NearestService service;
   final AppColors colors;
+  final VoidCallback onFavoriteTap;
 
   @override
   Widget build(BuildContext context) {
@@ -548,16 +606,16 @@ class _ServiceTile extends StatelessWidget {
                     color: colors.neutral900,
                   ),
                 ),
-                SizedBox(height: 4.h),
-                Text(
-                  service.description,
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
-                  style: TextStyle(
-                      fontSize: 12.sp,
-                      color: colors.neutral500,
-                      height: 1.4),
-                ),
+                if (service.categoryName != null) ...[
+                  SizedBox(height: 4.h),
+                  Text(
+                    service.categoryName!,
+                    style: TextStyle(
+                        fontSize: 12.sp,
+                        color: colors.neutral500,
+                        height: 1.4),
+                  ),
+                ],
                 SizedBox(height: 8.h),
                 Row(
                   children: [
@@ -570,13 +628,17 @@ class _ServiceTile extends StatelessWidget {
                           fontSize: 11.sp, color: colors.neutral500),
                     ),
                     SizedBox(width: 8.w),
-                    Icon(Icons.star_rounded,
-                        size: 13.r, color: const Color(0xFFFFC107)),
+                    Icon(Icons.store_outlined,
+                        size: 13.r, color: colors.neutral400),
                     SizedBox(width: 3.w),
-                    Text(
-                      service.rating.toStringAsFixed(1),
-                      style: TextStyle(
-                          fontSize: 11.sp, color: colors.neutral700),
+                    Expanded(
+                      child: Text(
+                        service.salon.name,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
+                            fontSize: 11.sp, color: colors.neutral700),
+                      ),
                     ),
                   ],
                 ),
@@ -586,38 +648,46 @@ class _ServiceTile extends StatelessWidget {
           SizedBox(width: 8.w),
           Column(
             crossAxisAlignment: CrossAxisAlignment.end,
-            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(
-                '${service.price.toInt()} ${tr('home.currency')}',
-                style: TextStyle(
-                  fontSize: 14.sp,
-                  fontWeight: FontWeight.w700,
-                  color: splashOrange,
-                ),
-              ),
-              SizedBox(height: 8.h),
               GestureDetector(
-                onTap: () {},
-                child: Container(
-                  padding:
-                      EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.h),
-                  decoration: BoxDecoration(
-                    color: splashOrange,
-                    borderRadius: BorderRadius.circular(999.r),
-                  ),
-                  child: Text(
-                    tr('home.book_now'),
+                onTap: onFavoriteTap,
+                child: Icon(Icons.favorite_rounded,
+                    color: splashOrange, size: 20.r),
+              ),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  Text(
+                    '${service.price.toInt()} ${tr('home.currency')}',
                     style: TextStyle(
-                      fontSize: 11.sp,
-                      fontWeight: FontWeight.w600,
-                      color: Colors.white,
+                      fontSize: 14.sp,
+                      fontWeight: FontWeight.w700,
+                      color: splashOrange,
                     ),
                   ),
-                ),
+                  SizedBox(height: 6.h),
+                  GestureDetector(
+                    onTap: () {},
+                    child: Container(
+                      padding: EdgeInsets.symmetric(
+                          horizontal: 12.w, vertical: 6.h),
+                      decoration: BoxDecoration(
+                        color: splashOrange,
+                        borderRadius: BorderRadius.circular(999.r),
+                      ),
+                      child: Text(
+                        tr('home.book_now'),
+                        style: TextStyle(
+                          fontSize: 11.sp,
+                          fontWeight: FontWeight.w600,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
               ),
-              SizedBox(height: 8.h),
-              Icon(Icons.favorite_rounded, color: splashOrange, size: 20.r),
             ],
           ),
         ],
@@ -692,29 +762,195 @@ class _ErrorState extends StatelessWidget {
 // ── Shimmer ───────────────────────────────────────────────────────────────────
 
 class _FavoritesShimmer extends StatelessWidget {
-  const _FavoritesShimmer({required this.colors});
+  const _FavoritesShimmer({required this.colors, required this.itemBuilder});
   final AppColors colors;
+  final Widget Function(AppColors colors) itemBuilder;
 
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: EdgeInsets.all(16.w),
-      child: Shimmer.fromColors(
-        baseColor: colors.neutral200,
-        highlightColor: colors.neutral100,
-        child: Column(
-          children: List.generate(3, (_) {
-            return Padding(
-              padding: EdgeInsets.only(bottom: 10.h),
-              child: Container(
-                height: 96.h,
-                decoration: BoxDecoration(
-                  color: colors.neutral200,
-                  borderRadius: BorderRadius.circular(16.r),
-                ),
+      child: Column(
+        children: List.generate(
+          4,
+          (_) => Padding(
+            padding: EdgeInsets.only(bottom: 10.h),
+            child: itemBuilder(colors),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+/// Shimmers only the inner placeholder boxes, keeping the card frame static.
+Widget _shimmerContent(AppColors colors, {required Widget child}) {
+  return Shimmer.fromColors(
+    baseColor: colors.neutral200,
+    highlightColor: colors.neutral100,
+    child: child,
+  );
+}
+
+Widget _shimmerBox(
+  AppColors colors,
+  double width,
+  double height, {
+  required double radius,
+}) {
+  return Container(
+    width: width,
+    height: height,
+    decoration: BoxDecoration(
+      color: colors.neutral200,
+      borderRadius: BorderRadius.circular(radius),
+    ),
+  );
+}
+
+class _SalonShimmerTile extends StatelessWidget {
+  const _SalonShimmerTile({required this.colors});
+  final AppColors colors;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: EdgeInsets.all(12.w),
+      decoration: BoxDecoration(
+        color: colors.neutral100,
+        borderRadius: BorderRadius.circular(16.r),
+        border: Border.all(color: colors.neutral200),
+      ),
+      child: _shimmerContent(
+        colors,
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            _shimmerBox(colors, 72.r, 72.r, radius: 12.r),
+            SizedBox(width: 12.w),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  _shimmerBox(colors, 140.w, 15.h, radius: 4.r),
+                  SizedBox(height: 8.h),
+                  _shimmerBox(colors, 110.w, 12.h, radius: 4.r),
+                  SizedBox(height: 10.h),
+                  Row(
+                    children: [
+                      _shimmerBox(colors, 48.w, 18.h, radius: 999.r),
+                      SizedBox(width: 4.w),
+                      _shimmerBox(colors, 48.w, 18.h, radius: 999.r),
+                      SizedBox(width: 4.w),
+                      _shimmerBox(colors, 48.w, 18.h, radius: 999.r),
+                    ],
+                  ),
+                ],
               ),
-            );
-          }),
+            ),
+            SizedBox(width: 8.w),
+            _shimmerBox(colors, 22.r, 22.r, radius: 11.r),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _ServiceShimmerTile extends StatelessWidget {
+  const _ServiceShimmerTile({required this.colors});
+  final AppColors colors;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: EdgeInsets.all(12.w),
+      decoration: BoxDecoration(
+        color: colors.neutral100,
+        borderRadius: BorderRadius.circular(14.r),
+        border: Border.all(color: colors.neutral200),
+      ),
+      child: _shimmerContent(
+        colors,
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            _shimmerBox(colors, 72.r, 72.r, radius: 10.r),
+            SizedBox(width: 12.w),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  _shimmerBox(colors, double.infinity, 14.h, radius: 4.r),
+                  SizedBox(height: 8.h),
+                  _shimmerBox(colors, 120.w, 12.h, radius: 4.r),
+                  SizedBox(height: 12.h),
+                  _shimmerBox(colors, 90.w, 11.h, radius: 4.r),
+                ],
+              ),
+            ),
+            SizedBox(width: 8.w),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.end,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                _shimmerBox(colors, 20.r, 20.r, radius: 10.r),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    _shimmerBox(colors, 48.w, 14.h, radius: 4.r),
+                    SizedBox(height: 8.h),
+                    _shimmerBox(colors, 64.w, 26.h, radius: 999.r),
+                  ],
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _PackageShimmerTile extends StatelessWidget {
+  const _PackageShimmerTile({required this.colors});
+  final AppColors colors;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+        color: colors.neutral100,
+        borderRadius: BorderRadius.circular(16.r),
+        border: Border.all(color: colors.neutral200),
+      ),
+      clipBehavior: Clip.antiAlias,
+      child: _shimmerContent(
+        colors,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            _shimmerBox(colors, double.infinity, 130.h, radius: 0),
+            Padding(
+              padding: EdgeInsets.all(12.w),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        _shimmerBox(colors, double.infinity, 12.h, radius: 4.r),
+                        SizedBox(height: 6.h),
+                        _shimmerBox(colors, 100.w, 11.h, radius: 4.r),
+                      ],
+                    ),
+                  ),
+                  SizedBox(width: 12.w),
+                  _shimmerBox(colors, 80.w, 32.h, radius: 999.r),
+                ],
+              ),
+            ),
+          ],
         ),
       ),
     );

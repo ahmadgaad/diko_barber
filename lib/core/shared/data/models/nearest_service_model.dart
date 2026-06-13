@@ -16,6 +16,7 @@ class NearestServiceModel extends NearestService {
     super.requiresConsultation,
     super.distance,
     super.withinRadius,
+    super.isFavorite,
   });
 
   factory NearestServiceModel.fromJson(Map<String, dynamic> json) {
@@ -62,6 +63,7 @@ class NearestServiceModel extends NearestService {
               unit: distanceJson['unit'] as String,
             ),
       withinRadius: json['within_radius'] as bool?,
+      isFavorite: json['is_favorite'] as bool? ?? false,
     );
   }
 
