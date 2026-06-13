@@ -190,6 +190,7 @@
     "package_wedding": "Groom Package (Wedding)",
     "package_wedding_desc": "Full grooming for your special day.",
     "currency": "EGP",
+    "min": "min",
     "nearby_salons": "Nearby Salons",
     "weekly_coupons": "Weekly Coupons",
     "featured_packages": "Featured Packages",
@@ -217,6 +218,26 @@
     "remaining_uses": "Remaining uses",
     "uses_left": "{count} uses left",
     "max_discount": "Max discount"
+  },
+  "packages_list": {
+    "search_hint": "Search packages…",
+    "filter_title": "Filter & Sort",
+    "filter_clear": "Clear all",
+    "filter_apply": "Apply",
+    "sort_by": "Sort by",
+    "sort_nearest": "Nearest",
+    "sort_highest_rated": "Highest Rated",
+    "categories": "Categories"
+  },
+  "package_details": {
+    "included_services": "Included Services",
+    "price": "Price",
+    "savings": "You save",
+    "duration": "Duration",
+    "services_value": "Services value",
+    "total": "Total",
+    "retry": "Try again",
+    "consultation": "Consultation"
   },
   "explore": {
     "search_hint": "Search salons…",

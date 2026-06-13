@@ -14,9 +14,12 @@ import 'package:ronaq_barber/core/shared/domain/entities/city.dart';
 import 'package:ronaq_barber/core/shared/data/models/coupon_model.dart';
 import 'package:ronaq_barber/core/shared/data/models/nearest_package_model.dart';
 import 'package:ronaq_barber/core/shared/data/models/nearest_service_model.dart';
+import 'package:ronaq_barber/core/shared/data/models/package_details_model.dart';
 import 'package:ronaq_barber/core/shared/domain/entities/coupon.dart';
 import 'package:ronaq_barber/core/shared/domain/entities/nearest_coupons_params.dart';
 import 'package:ronaq_barber/core/shared/domain/entities/nearest_package.dart';
+import 'package:ronaq_barber/core/shared/domain/entities/nearest_packages_page.dart';
+import 'package:ronaq_barber/core/shared/domain/entities/package_details.dart';
 import 'package:ronaq_barber/core/shared/domain/entities/nearest_packages_params.dart';
 import 'package:ronaq_barber/core/shared/domain/entities/nearest_salons_params.dart';
 import 'package:ronaq_barber/core/shared/domain/entities/nearest_service.dart';
@@ -208,14 +211,8 @@ class SharedRepositoryImpl implements SharedRepository {
     NearestPackagesParams params,
   ) async {
     try {
-      final query = <String, dynamic>{
-        'page': params.page.toString(),
-        'per_page': params.perPage.toString(),
-      };
-      if (params.lat != null) query['lat'] = params.lat.toString();
-      if (params.long != null) query['long'] = params.long.toString();
-
-      final response = await _remoteDataSource.getNearestPackages(query);
+      final response = await _remoteDataSource
+          .getNearestPackages(_packagesQuery(params));
 
       if (response.isError || response.data == null) {
         return Failure(
@@ -265,5 +262,74 @@ class SharedRepositoryImpl implements SharedRepository {
       log('getNearestServices failed', error: e, stackTrace: st, name: 'SharedRepository');
       return Failure(ApiErrorModel(message: 'حدث خطأ غير معروف'));
     }
+  }
+
+  @override
+  Future<Result<ApiErrorModel, NearestPackagesPage>> getNearestPackagesPage(
+    NearestPackagesParams params,
+  ) async {
+    try {
+      final response = await _remoteDataSource
+          .getNearestPackages(_packagesQuery(params));
+
+      if (response.isError || response.data == null) {
+        return Failure(
+          ApiErrorModel(message: response.message ?? 'حدث خطأ غير معروف'),
+        );
+      }
+
+      final packages = (response.data as List)
+          .whereType<Map<String, dynamic>>()
+          .map(NearestPackageModel.fromJson)
+          .toList();
+
+      return Success(NearestPackagesPage(
+        packages: packages,
+        hasMore: response.pagination?.hasNextPage ?? false,
+      ));
+    } catch (e, st) {
+      log('getNearestPackagesPage failed', error: e, stackTrace: st, name: 'SharedRepository');
+      return Failure(ApiErrorModel(message: 'حدث خطأ غير معروف'));
+    }
+  }
+
+  @override
+  Future<Result<ApiErrorModel, PackageDetails>> getPackageDetails(int id) async {
+    try {
+      final response = await _remoteDataSource.getPackageDetails(id);
+
+      if (response.isError || response.data == null) {
+        return Failure(
+          ApiErrorModel(message: response.message ?? 'حدث خطأ غير معروف'),
+        );
+      }
+
+      return Success(
+        PackageDetailsModel.fromJson(response.data as Map<String, dynamic>),
+      );
+    } catch (e, st) {
+      log('getPackageDetails failed', error: e, stackTrace: st, name: 'SharedRepository');
+      return Failure(ApiErrorModel(message: 'حدث خطأ غير معروف'));
+    }
+  }
+
+  Map<String, dynamic> _packagesQuery(NearestPackagesParams params) {
+    final query = <String, dynamic>{
+      'page': params.page.toString(),
+      'per_page': params.perPage.toString(),
+      'is_home': params.isHome ? '1' : '0',
+    };
+    if (params.lat != null) query['lat'] = params.lat.toString();
+    if (params.long != null) query['long'] = params.long.toString();
+    if (params.search != null && params.search!.isNotEmpty) {
+      query['search'] = params.search;
+    }
+    for (final id in params.categoryIds) {
+      query['category_ids[]'] = id.toString();
+    }
+    for (final s in params.sortBy) {
+      query['sort_by[]'] = s;
+    }
+    return query;
   }
 }

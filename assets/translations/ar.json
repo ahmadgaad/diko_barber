@@ -190,6 +190,7 @@
     "package_wedding": "باقة العريس (زفاف)",
     "package_wedding_desc": "عناية كاملة ليومك المميز.",
     "currency": "ج.م",
+    "min": "د",
     "nearby_salons": "صالونات قريبة",
     "weekly_coupons": "كوبونات الأسبوع",
     "featured_packages": "باقات مميزة",
@@ -217,6 +218,26 @@
     "remaining_uses": "الاستخدامات المتبقية",
     "uses_left": "{count} استخدام متبقي",
     "max_discount": "الحد الأقصى للخصم"
+  },
+  "packages_list": {
+    "search_hint": "ابحث عن باقة…",
+    "filter_title": "تصفية وترتيب",
+    "filter_clear": "مسح الكل",
+    "filter_apply": "تطبيق",
+    "sort_by": "الترتيب حسب",
+    "sort_nearest": "الأقرب",
+    "sort_highest_rated": "الأعلى تقييماً",
+    "categories": "الفئات"
+  },
+  "package_details": {
+    "included_services": "الخدمات المشمولة",
+    "price": "السعر",
+    "savings": "توفر",
+    "duration": "المدة",
+    "services_value": "قيمة الخدمات",
+    "total": "الإجمالي",
+    "retry": "حاول مجدداً",
+    "consultation": "استشارة"
   },
   "explore": {
     "search_hint": "ابحث عن صالونات…",

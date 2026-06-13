@@ -27,6 +27,10 @@ import 'package:ronaq_barber/features/booking/presentation/cubit/bookings_cubit.
 import 'package:ronaq_barber/features/favorites/presentation/cubit/favorites_cubit.dart';
 import 'package:ronaq_barber/core/theme/cubit/theme_cubit.dart';
 import 'package:ronaq_barber/features/profile/presentation/cubit/profile_cubit.dart';
+import 'package:ronaq_barber/core/shared/domain/use_cases/get_nearest_packages_page_use_case.dart';
+import 'package:ronaq_barber/core/shared/domain/use_cases/get_package_details_use_case.dart';
+import 'package:ronaq_barber/features/package_details/presentation/cubit/package_details_cubit.dart';
+import 'package:ronaq_barber/features/packages_list/presentation/cubit/packages_list_cubit.dart';
 import 'package:ronaq_barber/features/salon_details/presentation/cubit/salon_details_cubit.dart';
 import 'package:ronaq_barber/features/auth/data/data_sources/auth_remote_data_source.dart';
 import 'package:ronaq_barber/features/salon_auth/data/data_sources/salon_auth_remote_data_source.dart';
@@ -180,6 +184,12 @@ Future<void> setupServiceLocator() async {
   );
   sl.registerLazySingleton<GetNearestServicesUseCase>(
     () => GetNearestServicesUseCase(sl<SharedRepository>()),
+  );
+  sl.registerLazySingleton<GetPackageDetailsUseCase>(
+    () => GetPackageDetailsUseCase(sl<SharedRepository>()),
+  );
+  sl.registerLazySingleton<GetNearestPackagesPageUseCase>(
+    () => GetNearestPackagesPageUseCase(sl<SharedRepository>()),
   );
   sl.registerLazySingleton<GetLocaleUseCase>(
     () => GetLocaleUseCase(sl<LocaleRepository>()),
@@ -335,6 +345,16 @@ Future<void> setupServiceLocator() async {
   );
   sl.registerFactory<SearchCubit>(() => SearchCubit(sl<SharedPrefCacheClient>()));
   sl.registerFactory<SalonDetailsCubit>(SalonDetailsCubit.new);
+  sl.registerFactory<PackageDetailsCubit>(
+    () => PackageDetailsCubit(sl<GetPackageDetailsUseCase>()),
+  );
+  sl.registerFactory<PackagesListCubit>(
+    () => PackagesListCubit(
+      sl<GetNearestPackagesPageUseCase>(),
+      sl<LocationService>(),
+      sl<GetCategoriesUseCase>(),
+    ),
+  );
   sl.registerFactory<BookingsCubit>(BookingsCubit.new);
   sl.registerFactory<FavoritesCubit>(FavoritesCubit.new);
   sl.registerFactory<ProfileCubit>(

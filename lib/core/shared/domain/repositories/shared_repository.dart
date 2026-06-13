@@ -12,6 +12,8 @@ import '../entities/nearest_salons_params.dart';
 import '../entities/nearest_service.dart';
 import '../entities/nearest_services_params.dart';
 import '../entities/neighborhood.dart';
+import '../entities/nearest_packages_page.dart';
+import '../entities/package_details.dart';
 import '../entities/salons_page.dart';
 
 abstract class SharedRepository {
@@ -32,7 +34,11 @@ abstract class SharedRepository {
   Future<Result<ApiErrorModel, List<NearestPackage>>> getNearestPackages(
     NearestPackagesParams params,
   );
+  Future<Result<ApiErrorModel, NearestPackagesPage>> getNearestPackagesPage(
+    NearestPackagesParams params,
+  );
   Future<Result<ApiErrorModel, List<NearestService>>> getNearestServices(
     NearestServicesParams params,
   );
+  Future<Result<ApiErrorModel, PackageDetails>> getPackageDetails(int id);
 }

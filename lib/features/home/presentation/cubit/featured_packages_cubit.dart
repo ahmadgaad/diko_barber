@@ -28,6 +28,7 @@ class FeaturedPackagesCubit extends Cubit<FeaturedPackagesState> {
         NearestPackagesParams(
           lat: position?.latitude,
           long: position?.longitude,
+          isHome: true,
         ),
       );
 

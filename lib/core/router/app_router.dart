@@ -3,6 +3,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ronaq_barber/core/observers/app_router_observer.dart';
 import 'package:ronaq_barber/features/book_appointment/presentation/book_appointment_args.dart';
 import 'package:ronaq_barber/features/book_appointment/presentation/screens/book_appointment_screen.dart';
+import 'package:ronaq_barber/features/package_details/presentation/screens/package_details_screen.dart';
+import 'package:ronaq_barber/features/packages_list/presentation/screens/packages_list_screen.dart';
 import 'package:ronaq_barber/features/explore/presentation/cubit/explore_cubit.dart';
 import 'package:ronaq_barber/features/explore/presentation/screens/explore_map_screen.dart';
 import 'package:ronaq_barber/features/auth/presentation/screens/forgot_password_screen.dart';
@@ -106,6 +108,16 @@ final appRouter = GoRouter(
       path: AppRoutes.bookAppointment,
       builder: (context, state) =>
           BookAppointmentScreen(args: state.extra as BookAppointmentArgs),
+    ),
+    GoRoute(
+      path: AppRoutes.packageDetails,
+      builder: (context, state) => PackageDetailsScreen(
+        packageId: int.parse(state.pathParameters['id']!),
+      ),
+    ),
+    GoRoute(
+      path: AppRoutes.packagesList,
+      builder: (context, state) => const PackagesListScreen(),
     ),
   ],
 );

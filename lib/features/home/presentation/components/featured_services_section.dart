@@ -43,7 +43,8 @@ class _ServicesList extends StatelessWidget {
       children: [
         Padding(
           padding: EdgeInsets.symmetric(horizontal: 20.w),
-          child: SectionHeader(titleKey: 'home.featured_services', colors: colors),
+          child:
+              SectionHeader(titleKey: 'home.featured_services', colors: colors),
         ),
         SizedBox(height: 12.h),
         SingleChildScrollView(
@@ -54,7 +55,7 @@ class _ServicesList extends StatelessWidget {
             children: services.map((service) {
               return Padding(
                 padding: EdgeInsetsDirectional.only(end: 12.w),
-                child: _ServiceCard(service: service),
+                child: _ServiceCard(service: service, colors: colors),
               );
             }).toList(),
           ),
@@ -64,109 +65,297 @@ class _ServicesList extends StatelessWidget {
   }
 }
 
+// ── Card ──────────────────────────────────────────────────────────────────────
+
 class _ServiceCard extends StatelessWidget {
-  const _ServiceCard({required this.service});
+  const _ServiceCard({required this.service, required this.colors});
   final NearestService service;
+  final AppColors colors;
 
   @override
   Widget build(BuildContext context) {
-    final colors = AppColors.of(context);
-    final hasDiscount = service.hasDiscount;
-
-    return SizedBox(
-      width: 140.w,
-      height: 180.h,
-      child: ClipRRect(
+    return Container(
+      width: 200.w,
+      decoration: BoxDecoration(
+        color: colors.neutral50,
         borderRadius: BorderRadius.circular(16.r),
-        child: Stack(
-          fit: StackFit.expand,
-          children: [
-            // Background image
-            CachedNetworkImage(
-              imageUrl: service.image,
-              fit: BoxFit.cover,
-              placeholder: (_, _) => Container(color: colors.neutral200),
-              errorWidget: (_, _, _) => Container(
-                color: colors.neutral200,
-                child: Icon(Icons.content_cut_outlined,
-                    color: colors.neutral400, size: 36.r),
-              ),
+        border: Border.all(color: colors.neutral200),
+      ),
+      clipBehavior: Clip.antiAlias,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          _ServiceImage(service: service, colors: colors),
+          Padding(
+            padding: EdgeInsets.all(12.r),
+            child: _ServiceInfo(service: service, colors: colors),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _ServiceImage extends StatelessWidget {
+  const _ServiceImage({required this.service, required this.colors});
+  final NearestService service;
+  final AppColors colors;
+
+  @override
+  Widget build(BuildContext context) {
+    return Stack(
+      children: [
+        CachedNetworkImage(
+          imageUrl: service.image,
+          width: 200.w,
+          height: 130.h,
+          fit: BoxFit.cover,
+          placeholder: (_, _) =>
+              Container(width: 200.w, height: 130.h, color: colors.neutral200),
+          errorWidget: (_, _, _) => Container(
+            width: 200.w,
+            height: 130.h,
+            color: colors.neutral200,
+            alignment: Alignment.center,
+            child: Icon(Icons.content_cut_outlined,
+                color: colors.neutral400, size: 36.r),
+          ),
+        ),
+        if (service.hasDiscount)
+          PositionedDirectional(
+            top: 10.h,
+            start: 10.w,
+            child: _DiscountBadge(service: service),
+          ),
+        PositionedDirectional(
+          top: 10.h,
+          end: 10.w,
+          child: Container(
+            width: 28.r,
+            height: 28.r,
+            decoration: BoxDecoration(
+              color: Colors.black.withValues(alpha: 0.45),
+              shape: BoxShape.circle,
             ),
-            // Dark gradient overlay
-            const DecoratedBox(
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                  stops: [0.3, 1.0],
-                  colors: [Colors.transparent, Color(0xE6000000)],
-                ),
-              ),
+            child: Icon(
+              Icons.favorite_border_rounded,
+              color: Colors.white,
+              size: 15.r,
             ),
-            // Content at bottom
-            Positioned(
-              left: 10.w,
-              right: 10.w,
-              bottom: 10.h,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text(
-                    service.name,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: TextStyle(
-                      fontSize: 13.sp,
-                      fontWeight: FontWeight.w700,
-                      color: Colors.white,
-                    ),
-                  ),
-                  SizedBox(height: 4.h),
-                  Row(
-                    children: [
-                      Container(
-                        padding: EdgeInsets.symmetric(
-                            horizontal: 6.w, vertical: 2.h),
-                        decoration: BoxDecoration(
-                          color: splashOrange,
-                          borderRadius: BorderRadius.circular(999.r),
-                        ),
-                        child: Text(
-                          '${service.effectivePrice.toStringAsFixed(0)} ${tr('home.currency')}',
-                          style: TextStyle(
-                            fontSize: 10.sp,
-                            fontWeight: FontWeight.w700,
-                            color: Colors.white,
-                          ),
-                        ),
-                      ),
-                      if (hasDiscount) ...[
-                        SizedBox(width: 4.w),
-                        Text(
-                          service.price.toStringAsFixed(0),
-                          style: TextStyle(
-                            fontSize: 10.sp,
-                            fontWeight: FontWeight.w400,
-                            color: Colors.white54,
-                            decoration: TextDecoration.lineThrough,
-                            decorationColor: Colors.white54,
-                          ),
-                        ),
-                      ],
-                    ],
-                  ),
-                ],
-              ),
-            ),
-          ],
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class _DiscountBadge extends StatelessWidget {
+  const _DiscountBadge({required this.service});
+  final NearestService service;
+
+  String get _label {
+    final d = service.discount;
+    if (d == null) return '';
+    if (d.type == 'percentage') return '-${d.value.toStringAsFixed(0)}%';
+    return '-${d.value.toStringAsFixed(0)}';
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
+      decoration: BoxDecoration(
+        color: const Color(0xFFE53935),
+        borderRadius: BorderRadius.circular(999.r),
+      ),
+      child: Text(
+        _label,
+        style: TextStyle(
+          fontSize: 11.sp,
+          fontWeight: FontWeight.w700,
+          color: Colors.white,
         ),
       ),
     );
   }
 }
 
+class _ServiceInfo extends StatelessWidget {
+  const _ServiceInfo({required this.service, required this.colors});
+  final NearestService service;
+  final AppColors colors;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        // Name + duration in one row
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Expanded(
+              child: Text(
+                service.name,
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(
+                  fontSize: 13.sp,
+                  fontWeight: FontWeight.w700,
+                  color: colors.neutral900,
+                  height: 1.3,
+                ),
+              ),
+            ),
+            SizedBox(width: 6.w),
+            Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(Icons.access_time_rounded,
+                    size: 12.r, color: colors.neutral500),
+                SizedBox(width: 3.w),
+                Text(
+                  '${service.durationMinutes} ${tr('home.min')}',
+                  style: TextStyle(
+                    fontSize: 11.sp,
+                    fontWeight: FontWeight.w400,
+                    color: colors.neutral500,
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+        SizedBox(height: 4.h),
+        // Salon name
+        Row(
+          children: [
+            Icon(Icons.storefront_outlined,
+                size: 12.r, color: colors.neutral500),
+            SizedBox(width: 4.w),
+            Expanded(
+              child: Text(
+                service.salon.name,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(
+                  fontSize: 11.sp,
+                  fontWeight: FontWeight.w400,
+                  color: colors.neutral500,
+                ),
+              ),
+            ),
+          ],
+        ),
+        SizedBox(height: 10.h),
+        // Prices in one row
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Text(
+              '${service.effectivePrice.toStringAsFixed(0)} ${tr('home.currency')}',
+              style: TextStyle(
+                fontSize: 14.sp,
+                fontWeight: FontWeight.w800,
+                color: splashOrange,
+              ),
+            ),
+            if (service.hasDiscount) ...[
+              SizedBox(width: 6.w),
+              Text(
+                '${service.price.toStringAsFixed(0)} ${tr('home.currency')}',
+                style: TextStyle(
+                  fontSize: 11.sp,
+                  fontWeight: FontWeight.w400,
+                  color: colors.neutral400,
+                  decoration: TextDecoration.lineThrough,
+                  decorationColor: colors.neutral400,
+                ),
+              ),
+            ],
+          ],
+        ),
+      ],
+    );
+  }
+}
+
 // ── Shimmer ───────────────────────────────────────────────────────────────────
+
+class _ServiceCardShimmer extends StatelessWidget {
+  const _ServiceCardShimmer({required this.colors});
+  final AppColors colors;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: 200.w,
+      decoration: BoxDecoration(
+        color: colors.neutral50,
+        borderRadius: BorderRadius.circular(16.r),
+        border: Border.all(color: colors.neutral200),
+      ),
+      clipBehavior: Clip.antiAlias,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Container(width: 200.w, height: 130.h, color: colors.neutral200),
+          Padding(
+            padding: EdgeInsets.all(12.r),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Container(
+                  width: 140.w,
+                  height: 13.h,
+                  decoration: BoxDecoration(
+                    color: colors.neutral200,
+                    borderRadius: BorderRadius.circular(4.r),
+                  ),
+                ),
+                SizedBox(height: 4.h),
+                Container(
+                  width: 90.w,
+                  height: 11.h,
+                  decoration: BoxDecoration(
+                    color: colors.neutral200,
+                    borderRadius: BorderRadius.circular(4.r),
+                  ),
+                ),
+                SizedBox(height: 10.h),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Container(
+                      width: 55.w,
+                      height: 11.h,
+                      decoration: BoxDecoration(
+                        color: colors.neutral200,
+                        borderRadius: BorderRadius.circular(4.r),
+                      ),
+                    ),
+                    Container(
+                      width: 50.w,
+                      height: 13.h,
+                      decoration: BoxDecoration(
+                        color: colors.neutral200,
+                        borderRadius: BorderRadius.circular(4.r),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
 
 class _ServicesShimmer extends StatelessWidget {
   const _ServicesShimmer({required this.colors});
@@ -174,12 +363,12 @@ class _ServicesShimmer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.all(16.w),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Shimmer.fromColors(
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Padding(
+          padding: EdgeInsets.symmetric(horizontal: 20.w),
+          child: Shimmer.fromColors(
             baseColor: colors.neutral200,
             highlightColor: colors.neutral100,
             child: Row(
@@ -204,32 +393,28 @@ class _ServicesShimmer extends StatelessWidget {
               ],
             ),
           ),
-          SizedBox(height: 12.h),
-          Shimmer.fromColors(
-            baseColor: colors.neutral200,
-            highlightColor: colors.neutral100,
-            child: SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              physics: const NeverScrollableScrollPhysics(),
-              child: Row(
-                children: List.generate(4, (i) {
-                  return Padding(
-                    padding: EdgeInsetsDirectional.only(end: 12.w),
-                    child: Container(
-                      width: 140.w,
-                      height: 180.h,
-                      decoration: BoxDecoration(
-                        color: colors.neutral200,
-                        borderRadius: BorderRadius.circular(16.r),
-                      ),
-                    ),
-                  );
-                }),
+        ),
+        SizedBox(height: 12.h),
+        Shimmer.fromColors(
+          baseColor: colors.neutral200,
+          highlightColor: colors.neutral100,
+          child: SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            physics: const NeverScrollableScrollPhysics(),
+            padding: EdgeInsets.symmetric(horizontal: 20.w),
+            child: Row(
+              children: List.generate(
+                3,
+                (_) => Padding(
+                  padding: EdgeInsetsDirectional.only(end: 12.w),
+                  child: _ServiceCardShimmer(colors: colors),
+                ),
               ),
             ),
           ),
-        ],
-      ),
+        ),
+        SizedBox(height: 14.h),
+      ],
     );
   }
 }
