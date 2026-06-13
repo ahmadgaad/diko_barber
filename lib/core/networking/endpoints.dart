@@ -29,6 +29,7 @@ abstract final class EndPoints {
   static String packageDetails(int id) => 'user/package/$id';
   static String salonDetails(int id) => 'user/salon/$id';
   static String salonGallery(int id) => 'user/salon/$id/gallery';
+  static String salonRatings(int id) => 'user/salon/$id/ratings';
   static String salonServices(int id) => 'user/salons/$id/services';
   static String salonStaff(int id) => 'user/salons/$id/staff';
   static String salonSlots(int id) => 'user/salons/$id/slots';

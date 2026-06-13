@@ -1,8 +1,8 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ronaq_barber/core/shared/domain/entities/favorite_type.dart';
-import 'package:ronaq_barber/core/shared/domain/use_cases/get_package_details_use_case.dart';
 import 'package:ronaq_barber/core/shared/domain/use_cases/toggle_favorite_use_case.dart';
-import 'package:ronaq_barber/features/package_details/presentation/cubit/package_details_state.dart';
+import 'package:ronaq_barber/features/packages/domain/use_cases/get_package_details_use_case.dart';
+import 'package:ronaq_barber/features/packages/presentation/cubit/package_details_state.dart';
 
 class PackageDetailsCubit extends Cubit<PackageDetailsState> {
   PackageDetailsCubit(this._getPackageDetails, this._toggleFavoriteUseCase)
@@ -11,7 +11,14 @@ class PackageDetailsCubit extends Cubit<PackageDetailsState> {
   final GetPackageDetailsUseCase _getPackageDetails;
   final ToggleFavoriteUseCase _toggleFavoriteUseCase;
 
+  int? _lastId;
+
+  Future<void> reload() async {
+    if (_lastId != null) load(_lastId!);
+  }
+
   Future<void> load(int id) async {
+    _lastId = id;
     emit(const PackageDetailsLoading());
     final result = await _getPackageDetails(id);
     if (isClosed) return;

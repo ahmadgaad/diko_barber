@@ -3,6 +3,7 @@ import 'package:equatable/equatable.dart';
 class Review extends Equatable {
   const Review({
     required this.id,
+    required this.userId,
     required this.userName,
     required this.userAvatar,
     required this.rating,
@@ -11,15 +12,17 @@ class Review extends Equatable {
   });
 
   final int id;
+  final int userId;
   final String userName;
   final String userAvatar;
-  final double rating;
+  final int rating;
   final String comment;
-  final DateTime createdAt;
+  final String createdAt;
 
   @override
   List<Object?> get props => [
         id,
+        userId,
         userName,
         userAvatar,
         rating,

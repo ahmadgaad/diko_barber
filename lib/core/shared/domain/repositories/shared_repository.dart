@@ -15,7 +15,6 @@ import '../entities/nearest_service.dart';
 import '../entities/nearest_services_params.dart';
 import '../entities/neighborhood.dart';
 import '../entities/favorites_tab_result.dart';
-import '../entities/package_details.dart';
 import '../entities/salons_page.dart';
 
 abstract class SharedRepository {
@@ -42,7 +41,6 @@ abstract class SharedRepository {
   Future<Result<ApiErrorModel, List<NearestService>>> getNearestServices(
     NearestServicesParams params,
   );
-  Future<Result<ApiErrorModel, PackageDetails>> getPackageDetails(int id);
   Future<Result<ApiErrorModel, void>> toggleFavorite({
     required int id,
     required FavoriteType type,

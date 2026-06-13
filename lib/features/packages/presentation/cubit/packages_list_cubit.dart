@@ -9,8 +9,8 @@ import 'package:ronaq_barber/core/shared/domain/entities/favorite_type.dart';
 import 'package:ronaq_barber/core/shared/domain/entities/nearest_package.dart';
 import 'package:ronaq_barber/core/shared/domain/entities/nearest_packages_params.dart';
 import 'package:ronaq_barber/core/shared/domain/use_cases/get_categories_use_case.dart';
-import 'package:ronaq_barber/core/shared/domain/use_cases/get_nearest_packages_page_use_case.dart';
 import 'package:ronaq_barber/core/shared/domain/use_cases/toggle_favorite_use_case.dart';
+import 'package:ronaq_barber/features/packages/domain/use_cases/get_packages_use_case.dart';
 import 'package:ronaq_barber/features/packages/presentation/cubit/packages_list_state.dart';
 
 class PackagesListCubit extends Cubit<PackagesListState> {
@@ -24,7 +24,7 @@ class PackagesListCubit extends Cubit<PackagesListState> {
     _eventSub = _toggleFavoriteUseCase.events.listen(_onFavoriteEvent);
   }
 
-  final GetNearestPackagesPageUseCase _useCase;
+  final GetPackagesUseCase _useCase;
   final LocationService _locationService;
   final GetCategoriesUseCase _getCategoriesUseCase;
   final ToggleFavoriteUseCase _toggleFavoriteUseCase;
@@ -168,7 +168,9 @@ class PackagesListCubit extends Cubit<PackagesListState> {
     final pkg = current.packages.firstWhere((p) => p.id == packageId);
     final newIsFavorite = !pkg.isFavorite;
     _pendingToggles.add(packageId);
-    emit(current.copyWith(packages: _applyFavorite(current.packages, packageId, newIsFavorite)));
+    emit(current.copyWith(
+      packages: _applyFavorite(current.packages, packageId, newIsFavorite),
+    ));
 
     final result = await _toggleFavoriteUseCase(
       id: packageId,

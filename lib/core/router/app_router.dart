@@ -4,7 +4,8 @@ import 'package:ronaq_barber/core/di/service_locator.dart';
 import 'package:ronaq_barber/core/observers/app_router_observer.dart';
 import 'package:ronaq_barber/features/book_appointment/presentation/book_appointment_args.dart';
 import 'package:ronaq_barber/features/book_appointment/presentation/screens/book_appointment_screen.dart';
-import 'package:ronaq_barber/features/package_details/presentation/screens/package_details_screen.dart';
+import 'package:ronaq_barber/features/packages/presentation/cubit/package_details_cubit.dart';
+import 'package:ronaq_barber/features/packages/presentation/screens/package_details_screen.dart';
 import 'package:ronaq_barber/features/packages/presentation/screens/packages_list_screen.dart';
 import 'package:ronaq_barber/features/explore/presentation/cubit/explore_cubit.dart';
 import 'package:ronaq_barber/features/explore/presentation/screens/explore_map_screen.dart';
@@ -15,6 +16,7 @@ import 'package:ronaq_barber/features/auth/presentation/screens/sign_up_screen.d
 import 'package:ronaq_barber/features/auth/presentation/screens/verify_otp_screen.dart';
 import 'package:ronaq_barber/features/auth/presentation/screens/verify_reset_password_screen.dart';
 import 'package:ronaq_barber/features/home/presentation/screens/home_screen.dart';
+import 'package:ronaq_barber/features/packages/presentation/cubit/packages_list_cubit.dart';
 import 'package:ronaq_barber/features/salon_details/presentation/cubit/salon_details_cubit.dart';
 import 'package:ronaq_barber/features/salon_details/presentation/screens/salon_details_args.dart';
 import 'package:ronaq_barber/features/salon_details/presentation/screens/salon_details_screen.dart';
@@ -118,13 +120,20 @@ final appRouter = GoRouter(
     ),
     GoRoute(
       path: AppRoutes.packageDetails,
-      builder: (context, state) => PackageDetailsScreen(
-        packageId: int.parse(state.pathParameters['id']!),
-      ),
+      builder: (context, state) {
+        final id = int.parse(state.pathParameters['id']!);
+        return BlocProvider(
+          create: (_) => sl<PackageDetailsCubit>()..load(id),
+          child: const PackageDetailsScreen(),
+        );
+      },
     ),
     GoRoute(
       path: AppRoutes.packagesList,
-      builder: (context, state) => const PackagesListScreen(),
+      builder: (context, state) => BlocProvider(
+        create: (_) => sl<PackagesListCubit>(),
+        child: const PackagesListScreen(),
+      ),
     ),
   ],
 );

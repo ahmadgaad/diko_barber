@@ -126,7 +126,7 @@ class _LoadedView extends StatelessWidget {
             StaffTab(staff: salon.staff, colors: colors),
             ShiftsTab(shifts: salon.shifts, colors: colors),
             GalleryTab(salonId: salon.id, colors: colors),
-            ReviewsTab(reviews: salon.reviews, colors: colors),
+            ReviewsTab(salonId: salon.id, colors: colors),
           ],
         ),
       ),

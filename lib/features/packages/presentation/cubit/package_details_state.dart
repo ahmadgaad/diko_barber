@@ -1,4 +1,4 @@
-import 'package:ronaq_barber/core/shared/domain/entities/package_details.dart';
+import 'package:ronaq_barber/features/packages/domain/entities/package_details.dart';
 
 sealed class PackageDetailsState {
   const PackageDetailsState();

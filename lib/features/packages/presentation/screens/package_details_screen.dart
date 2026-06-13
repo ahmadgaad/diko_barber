@@ -4,28 +4,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
-import 'package:ronaq_barber/core/di/service_locator.dart';
-import 'package:ronaq_barber/core/shared/domain/entities/package_details.dart';
 import 'package:ronaq_barber/core/theme/app_colors.dart';
-import 'package:ronaq_barber/features/package_details/presentation/cubit/package_details_cubit.dart';
-import 'package:ronaq_barber/features/package_details/presentation/cubit/package_details_state.dart';
+import 'package:ronaq_barber/features/packages/domain/entities/package_details.dart';
+import 'package:ronaq_barber/features/packages/presentation/cubit/package_details_cubit.dart';
+import 'package:ronaq_barber/features/packages/presentation/cubit/package_details_state.dart';
 import 'package:shimmer/shimmer.dart';
 
 class PackageDetailsScreen extends StatelessWidget {
-  const PackageDetailsScreen({super.key, required this.packageId});
-  final int packageId;
-
-  @override
-  Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (_) => sl<PackageDetailsCubit>()..load(packageId),
-      child: const _PackageDetailsView(),
-    );
-  }
-}
-
-class _PackageDetailsView extends StatelessWidget {
-  const _PackageDetailsView();
+  const PackageDetailsScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -99,7 +85,6 @@ class _PackageContent extends StatelessWidget {
             ),
           ],
         ),
-        // Bottom Book Now bar
         Positioned(
           left: 0,
           right: 0,
@@ -776,19 +761,16 @@ class _PackageShimmer extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // ── Hero image (SliverAppBar expandedHeight: 240h) ──────────────
             Container(
               width: double.infinity,
               height: 240.h,
               color: colors.neutral200,
             ),
-
             Padding(
               padding: EdgeInsets.fromLTRB(20.w, 20.h, 20.w, 0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // ── _PackageHeader: name + specialization chip ────────────
                   Row(
                     children: [
                       _box(160.w, 24.h, 6.r),
@@ -796,10 +778,7 @@ class _PackageShimmer extends StatelessWidget {
                       _box(56.w, 22.h, 999.r),
                     ],
                   ),
-
                   SizedBox(height: 16.h),
-
-                  // ── _SalonRow: image + name + location + chevron ──────────
                   Container(
                     padding: EdgeInsets.all(12.r),
                     decoration: BoxDecoration(
@@ -826,17 +805,11 @@ class _PackageShimmer extends StatelessWidget {
                       ],
                     ),
                   ),
-
                   SizedBox(height: 16.h),
-
-                  // ── _Description: two text lines ─────────────────────────
                   _box(double.infinity, 13.h, 4.r),
                   SizedBox(height: 5.h),
                   _box(220.w, 13.h, 4.r),
-
                   SizedBox(height: 16.h),
-
-                  // ── _PriceSummary card ────────────────────────────────────
                   Container(
                     padding: EdgeInsets.all(16.r),
                     decoration: BoxDecoration(
@@ -846,73 +819,38 @@ class _PackageShimmer extends StatelessWidget {
                     ),
                     child: Column(
                       children: [
-                        // price row
-                        Row(
-                          children: [
-                            _box(16.r, 16.r, 4.r),
-                            SizedBox(width: 8.w),
-                            _box(50.w, 12.h, 4.r),
-                            const Spacer(),
-                            _box(80.w, 16.h, 4.r),
-                          ],
-                        ),
-                        SizedBox(height: 14.h),
-                        _box(double.infinity, 1.h, 0),
-                        SizedBox(height: 14.h),
-                        // savings row
-                        Row(
-                          children: [
-                            _box(16.r, 16.r, 4.r),
-                            SizedBox(width: 8.w),
-                            _box(60.w, 12.h, 4.r),
-                            const Spacer(),
-                            _box(64.w, 13.h, 4.r),
-                          ],
-                        ),
-                        SizedBox(height: 14.h),
-                        _box(double.infinity, 1.h, 0),
-                        SizedBox(height: 14.h),
-                        // duration row
-                        Row(
-                          children: [
-                            _box(16.r, 16.r, 4.r),
-                            SizedBox(width: 8.w),
-                            _box(50.w, 12.h, 4.r),
-                            const Spacer(),
-                            _box(56.w, 13.h, 4.r),
-                          ],
-                        ),
-                        SizedBox(height: 14.h),
-                        _box(double.infinity, 1.h, 0),
-                        SizedBox(height: 14.h),
-                        // services value row
-                        Row(
-                          children: [
-                            _box(16.r, 16.r, 4.r),
-                            SizedBox(width: 8.w),
-                            _box(80.w, 12.h, 4.r),
-                            const Spacer(),
-                            _box(64.w, 13.h, 4.r),
-                          ],
-                        ),
+                        Row(children: [
+                          _box(16.r, 16.r, 4.r), SizedBox(width: 8.w),
+                          _box(50.w, 12.h, 4.r), const Spacer(),
+                          _box(80.w, 16.h, 4.r),
+                        ]),
+                        SizedBox(height: 14.h), _box(double.infinity, 1.h, 0), SizedBox(height: 14.h),
+                        Row(children: [
+                          _box(16.r, 16.r, 4.r), SizedBox(width: 8.w),
+                          _box(60.w, 12.h, 4.r), const Spacer(),
+                          _box(64.w, 13.h, 4.r),
+                        ]),
+                        SizedBox(height: 14.h), _box(double.infinity, 1.h, 0), SizedBox(height: 14.h),
+                        Row(children: [
+                          _box(16.r, 16.r, 4.r), SizedBox(width: 8.w),
+                          _box(50.w, 12.h, 4.r), const Spacer(),
+                          _box(56.w, 13.h, 4.r),
+                        ]),
+                        SizedBox(height: 14.h), _box(double.infinity, 1.h, 0), SizedBox(height: 14.h),
+                        Row(children: [
+                          _box(16.r, 16.r, 4.r), SizedBox(width: 8.w),
+                          _box(80.w, 12.h, 4.r), const Spacer(),
+                          _box(64.w, 13.h, 4.r),
+                        ]),
                       ],
                     ),
                   ),
-
                   SizedBox(height: 24.h),
-
-                  // ── _SectionTitle: accent bar + title ─────────────────────
-                  Row(
-                    children: [
-                      _box(4.w, 18.h, 999.r),
-                      SizedBox(width: 8.w),
-                      _box(140.w, 16.h, 4.r),
-                    ],
-                  ),
-
+                  Row(children: [
+                    _box(4.w, 18.h, 999.r), SizedBox(width: 8.w),
+                    _box(140.w, 16.h, 4.r),
+                  ]),
                   SizedBox(height: 12.h),
-
-                  // ── _ServiceItem × 3 ──────────────────────────────────────
                   ...List.generate(3, (_) => Padding(
                     padding: EdgeInsets.only(bottom: 12.h),
                     child: Container(
@@ -949,7 +887,6 @@ class _PackageShimmer extends StatelessWidget {
                       ),
                     ),
                   )),
-
                   SizedBox(height: 100.h),
                 ],
               ),
@@ -977,11 +914,7 @@ class _PackageError extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(
-              Icons.error_outline_rounded,
-              size: 48.r,
-              color: colors.neutral400,
-            ),
+            Icon(Icons.error_outline_rounded, size: 48.r, color: colors.neutral400),
             SizedBox(height: 12.h),
             Text(
               message,
@@ -990,11 +923,7 @@ class _PackageError extends StatelessWidget {
             ),
             SizedBox(height: 16.h),
             TextButton(
-              onPressed: () => context.read<PackageDetailsCubit>().load(
-                context
-                    .findAncestorWidgetOfExactType<PackageDetailsScreen>()!
-                    .packageId,
-              ),
+              onPressed: () => context.read<PackageDetailsCubit>().reload(),
               child: Text(tr('package_details.retry')),
             ),
           ],
