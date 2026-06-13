@@ -1,4 +1,6 @@
-class SalonStaff {
+import 'package:equatable/equatable.dart';
+
+class SalonStaff extends Equatable {
   const SalonStaff({
     required this.id,
     required this.name,
@@ -12,4 +14,7 @@ class SalonStaff {
   final String image;
   final double rating;
   final int ratingsCount;
+
+  @override
+  List<Object?> get props => [id, name, image, rating, ratingsCount];
 }

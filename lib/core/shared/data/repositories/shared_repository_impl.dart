@@ -15,13 +15,11 @@ import 'package:ronaq_barber/core/shared/data/models/coupon_model.dart';
 import 'package:ronaq_barber/core/shared/data/models/nearest_package_model.dart';
 import 'package:ronaq_barber/core/shared/data/models/nearest_service_model.dart';
 import 'package:ronaq_barber/core/shared/data/models/package_details_model.dart';
-import 'package:ronaq_barber/core/shared/data/models/salon_details_model.dart';
 import 'package:ronaq_barber/core/shared/domain/entities/coupon.dart';
 import 'package:ronaq_barber/core/shared/domain/entities/nearest_coupons_params.dart';
 import 'package:ronaq_barber/core/shared/domain/entities/nearest_package.dart';
 import 'package:ronaq_barber/core/shared/domain/entities/nearest_packages_page.dart';
 import 'package:ronaq_barber/core/shared/domain/entities/package_details.dart';
-import 'package:ronaq_barber/core/shared/domain/entities/salon_details.dart';
 import 'package:ronaq_barber/core/shared/domain/entities/nearest_packages_params.dart';
 import 'package:ronaq_barber/core/shared/domain/entities/nearest_salons_params.dart';
 import 'package:ronaq_barber/core/shared/domain/entities/nearest_service.dart';
@@ -313,34 +311,6 @@ class SharedRepositoryImpl implements SharedRepository {
       );
     } catch (e, st) {
       log('getPackageDetails failed', error: e, stackTrace: st, name: 'SharedRepository');
-      return Failure(ApiErrorModel(message: 'حدث خطأ غير معروف'));
-    }
-  }
-
-  @override
-  Future<Result<ApiErrorModel, SalonDetails>> getSalonDetails(
-    int id, {
-    double? lat,
-    double? long,
-  }) async {
-    try {
-      final query = <String, dynamic>{};
-      if (lat != null) query['lat'] = lat.toString();
-      if (long != null) query['long'] = long.toString();
-
-      final response = await _remoteDataSource.getSalonDetails(id, query);
-
-      if (response.isError || response.data == null) {
-        return Failure(
-          ApiErrorModel(message: response.message ?? 'حدث خطأ غير معروف'),
-        );
-      }
-
-      return Success(
-        SalonDetailsModel.fromJson(response.data as Map<String, dynamic>),
-      );
-    } catch (e, st) {
-      log('getSalonDetails failed', error: e, stackTrace: st, name: 'SharedRepository');
       return Failure(ApiErrorModel(message: 'حدث خطأ غير معروف'));
     }
   }

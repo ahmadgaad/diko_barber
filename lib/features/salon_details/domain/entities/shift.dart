@@ -1,4 +1,6 @@
-class Shift {
+import 'package:equatable/equatable.dart';
+
+class Shift extends Equatable {
   const Shift({
     required this.id,
     required this.dayWeek,
@@ -14,4 +16,7 @@ class Shift {
   final String from;
   final String to;
   final bool isActive;
+
+  @override
+  List<Object?> get props => [id, dayWeek, dayName, from, to, isActive];
 }

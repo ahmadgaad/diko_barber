@@ -29,7 +29,10 @@ import 'package:ronaq_barber/core/theme/cubit/theme_cubit.dart';
 import 'package:ronaq_barber/features/profile/presentation/cubit/profile_cubit.dart';
 import 'package:ronaq_barber/core/shared/domain/use_cases/get_nearest_packages_page_use_case.dart';
 import 'package:ronaq_barber/core/shared/domain/use_cases/get_package_details_use_case.dart';
-import 'package:ronaq_barber/core/shared/domain/use_cases/get_salon_details_use_case.dart';
+import 'package:ronaq_barber/features/salon_details/data/data_sources/salon_details_remote_data_source.dart';
+import 'package:ronaq_barber/features/salon_details/data/repositories/salon_details_repository_impl.dart';
+import 'package:ronaq_barber/features/salon_details/domain/repositories/salon_details_repository.dart';
+import 'package:ronaq_barber/features/salon_details/domain/use_cases/get_salon_details_use_case.dart';
 import 'package:ronaq_barber/core/shared/domain/use_cases/get_favorites_use_case.dart';
 import 'package:ronaq_barber/core/shared/domain/use_cases/toggle_favorite_use_case.dart';
 import 'package:ronaq_barber/features/package_details/presentation/cubit/package_details_cubit.dart';
@@ -153,6 +156,12 @@ Future<void> setupServiceLocator() async {
   sl.registerLazySingleton<SharedRepository>(
     () => SharedRepositoryImpl(sl<SharedRemoteDataSource>()),
   );
+  sl.registerLazySingleton<SalonDetailsRemoteDataSource>(
+    () => SalonDetailsRemoteDataSourceImpl(sl<INetworkService>()),
+  );
+  sl.registerLazySingleton<SalonDetailsRepository>(
+    () => SalonDetailsRepositoryImpl(sl<SalonDetailsRemoteDataSource>()),
+  );
   sl.registerLazySingleton<AuthRepository>(
     () => AuthRepositoryImpl(sl<AuthRemoteDataSource>()),
   );
@@ -192,7 +201,7 @@ Future<void> setupServiceLocator() async {
     () => GetPackageDetailsUseCase(sl<SharedRepository>()),
   );
   sl.registerLazySingleton<GetSalonDetailsUseCase>(
-    () => GetSalonDetailsUseCase(sl<SharedRepository>()),
+    () => GetSalonDetailsUseCase(sl<SalonDetailsRepository>()),
   );
   sl.registerLazySingleton<GetNearestPackagesPageUseCase>(
     () => GetNearestPackagesPageUseCase(sl<SharedRepository>()),

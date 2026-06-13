@@ -1,11 +1,13 @@
+import 'package:equatable/equatable.dart';
 import 'package:ronaq_barber/core/shared/domain/entities/coupon.dart';
-import 'package:ronaq_barber/core/shared/domain/entities/package.dart';
-import 'package:ronaq_barber/core/shared/domain/entities/review.dart';
-import 'package:ronaq_barber/core/shared/domain/entities/salon_service.dart';
-import 'package:ronaq_barber/core/shared/domain/entities/salon_staff.dart';
-import 'package:ronaq_barber/core/shared/domain/entities/shift.dart';
 
-class SalonDetails {
+import 'package.dart';
+import 'review.dart';
+import 'salon_service.dart';
+import 'salon_staff.dart';
+import 'shift.dart';
+
+class SalonDetails extends Equatable {
   const SalonDetails({
     required this.id,
     required this.name,
@@ -49,4 +51,29 @@ class SalonDetails {
   final List<Coupon> coupons;
   final List<SalonStaff> staff;
   final List<Shift> shifts;
+
+  @override
+  List<Object?> get props => [
+        id,
+        name,
+        logo,
+        coverImage,
+        description,
+        rating,
+        reviewCount,
+        distance,
+        categories,
+        isOpen,
+        closingTime,
+        isFavorite,
+        address,
+        gallery,
+        services,
+        packages,
+        reviews,
+        coupons,
+        staff,
+        shifts,
+      ];
 }
+

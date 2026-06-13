@@ -1,11 +1,12 @@
-class SalonService {
-  const SalonService({
+import 'package:equatable/equatable.dart';
+
+class Package extends Equatable {
+  const Package({
     required this.id,
     required this.name,
     required this.description,
     required this.image,
     required this.price,
-    required this.durationMinutes,
     required this.rating,
     this.isFavorite = false,
   });
@@ -15,7 +16,17 @@ class SalonService {
   final String description;
   final String image;
   final double price;
-  final int durationMinutes;
   final double rating;
   final bool isFavorite;
+
+  @override
+  List<Object?> get props => [
+        id,
+        name,
+        description,
+        image,
+        price,
+        rating,
+        isFavorite,
+      ];
 }

@@ -1,11 +1,11 @@
 import 'package:ronaq_barber/core/networking/api_error_model.dart';
 import 'package:ronaq_barber/core/networking/result.dart';
-import 'package:ronaq_barber/core/shared/domain/entities/salon_details.dart';
-import 'package:ronaq_barber/core/shared/domain/repositories/shared_repository.dart';
+import 'package:ronaq_barber/features/salon_details/domain/entities/salon_details.dart';
+import 'package:ronaq_barber/features/salon_details/domain/repositories/salon_details_repository.dart';
 
 class GetSalonDetailsUseCase {
   const GetSalonDetailsUseCase(this._repository);
-  final SharedRepository _repository;
+  final SalonDetailsRepository _repository;
 
   Future<Result<ApiErrorModel, SalonDetails>> call(
     int id, {

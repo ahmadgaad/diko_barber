@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:ronaq_barber/core/di/service_locator.dart';
 import 'package:ronaq_barber/core/observers/app_router_observer.dart';
 import 'package:ronaq_barber/features/book_appointment/presentation/book_appointment_args.dart';
 import 'package:ronaq_barber/features/book_appointment/presentation/screens/book_appointment_screen.dart';
@@ -14,6 +15,7 @@ import 'package:ronaq_barber/features/auth/presentation/screens/sign_up_screen.d
 import 'package:ronaq_barber/features/auth/presentation/screens/verify_otp_screen.dart';
 import 'package:ronaq_barber/features/auth/presentation/screens/verify_reset_password_screen.dart';
 import 'package:ronaq_barber/features/home/presentation/screens/home_screen.dart';
+import 'package:ronaq_barber/features/salon_details/presentation/cubit/salon_details_cubit.dart';
 import 'package:ronaq_barber/features/salon_details/presentation/screens/salon_details_args.dart';
 import 'package:ronaq_barber/features/salon_details/presentation/screens/salon_details_screen.dart';
 import 'package:ronaq_barber/features/search/presentation/screens/search_screen.dart';
@@ -55,10 +57,15 @@ final appRouter = GoRouter(
     ),
     GoRoute(
       path: AppRoutes.salonDetails,
-      builder: (context, state) => SalonDetailsScreen(
-        salonId: int.parse(state.pathParameters['id']!),
-        args: state.extra as SalonDetailsArgs?,
-      ),
+      builder: (context, state) {
+        final salonId = int.parse(state.pathParameters['id']!);
+        final args = state.extra as SalonDetailsArgs?;
+        return BlocProvider(
+          create: (_) => sl<SalonDetailsCubit>()
+            ..load(salonId, couponCode: args?.couponCode),
+          child: SalonDetailsScreen(initialTab: args?.initialTab ?? 0),
+        );
+      },
     ),
     GoRoute(
       path: AppRoutes.login,
