@@ -320,6 +320,8 @@
     "min": "min",
     "book_now": "Book Now",
     "coupon_applied": "Coupon applied",
+    "services_included": "{count} services included",
+    "no_gallery": "No gallery images",
     "no_coupons": "No coupons available",
     "no_staff": "No team members",
     "no_shifts": "No working hours set"

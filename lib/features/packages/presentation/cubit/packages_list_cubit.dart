@@ -11,7 +11,7 @@ import 'package:ronaq_barber/core/shared/domain/entities/nearest_packages_params
 import 'package:ronaq_barber/core/shared/domain/use_cases/get_categories_use_case.dart';
 import 'package:ronaq_barber/core/shared/domain/use_cases/get_nearest_packages_page_use_case.dart';
 import 'package:ronaq_barber/core/shared/domain/use_cases/toggle_favorite_use_case.dart';
-import 'package:ronaq_barber/features/packages_list/presentation/cubit/packages_list_state.dart';
+import 'package:ronaq_barber/features/packages/presentation/cubit/packages_list_state.dart';
 
 class PackagesListCubit extends Cubit<PackagesListState> {
   PackagesListCubit(

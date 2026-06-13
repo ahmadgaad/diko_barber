@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:ronaq_barber/core/theme/app_colors.dart';
 import 'package:ronaq_barber/features/salon_details/domain/entities/package.dart';
+import 'package:ronaq_barber/features/salon_details/domain/entities/salon_service.dart';
 import 'package:ronaq_barber/features/salon_details/presentation/cubit/salon_details_cubit.dart';
 
 class PackagesTab extends StatelessWidget {
@@ -35,7 +36,7 @@ class PackagesTab extends StatelessWidget {
   }
 }
 
-class _PackageTile extends StatelessWidget {
+class _PackageTile extends StatefulWidget {
   const _PackageTile({
     required this.package,
     required this.isSelected,
@@ -47,10 +48,26 @@ class _PackageTile extends StatelessWidget {
   final AppColors colors;
 
   @override
+  State<_PackageTile> createState() => _PackageTileState();
+}
+
+class _PackageTileState extends State<_PackageTile> {
+  bool _expanded = false;
+
+  void _toggleExpanded() {
+    if (widget.package.services.isEmpty) return;
+    setState(() => _expanded = !_expanded);
+  }
+
+  @override
   Widget build(BuildContext context) {
+    final package = widget.package;
+    final isSelected = widget.isSelected;
+    final colors = widget.colors;
+    final hasServices = package.services.isNotEmpty;
+
     return GestureDetector(
-      onTap: () =>
-          context.read<SalonDetailsCubit>().togglePackageSelection(package.id),
+      onTap: _toggleExpanded,
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 150),
         decoration: BoxDecoration(
@@ -61,11 +78,12 @@ class _PackageTile extends StatelessWidget {
             width: isSelected ? 1.5 : 1,
           ),
         ),
-        clipBehavior: Clip.antiAlias,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            SizedBox(
+            ClipRRect(
+              borderRadius: BorderRadius.vertical(top: Radius.circular(13.r)),
+              child: SizedBox(
               height: 120.h,
               width: double.infinity,
               child: Stack(
@@ -134,35 +152,41 @@ class _PackageTile extends StatelessWidget {
                       ],
                     ),
                   ),
-                  // Selection indicator — top-right corner
+                  // Selection indicator — top-right corner (own tap target)
                   PositionedDirectional(
                     top: 10.h,
                     end: 10.w,
-                    child: AnimatedContainer(
-                      duration: const Duration(milliseconds: 150),
-                      width: 24.r,
-                      height: 24.r,
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: isSelected
-                            ? splashOrange
-                            : Colors.black.withValues(alpha: 0.35),
-                        border: Border.all(
-                          color: isSelected ? splashOrange : Colors.white54,
-                          width: 1.5,
+                    child: GestureDetector(
+                      onTap: () => context
+                          .read<SalonDetailsCubit>()
+                          .togglePackageSelection(package.id),
+                      child: AnimatedContainer(
+                        duration: const Duration(milliseconds: 150),
+                        width: 24.r,
+                        height: 24.r,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: isSelected
+                              ? splashOrange
+                              : Colors.black.withValues(alpha: 0.35),
+                          border: Border.all(
+                            color: isSelected ? splashOrange : Colors.white54,
+                            width: 1.5,
+                          ),
                         ),
+                        child: isSelected
+                            ? Icon(
+                                Icons.check_rounded,
+                                size: 14.r,
+                                color: Colors.white,
+                              )
+                            : null,
                       ),
-                      child: isSelected
-                          ? Icon(
-                              Icons.check_rounded,
-                              size: 14.r,
-                              color: Colors.white,
-                            )
-                          : null,
                     ),
                   ),
                 ],
               ),
+            ),
             ),
             Padding(
               padding: EdgeInsets.all(12.w),
@@ -196,12 +220,145 @@ class _PackageTile extends StatelessWidget {
                       ),
                     ],
                   ),
+                  // Expand toggle + included services
+                  if (hasServices) ...[
+                    SizedBox(height: 8.h),
+                    _ExpandToggle(
+                      count: package.services.length,
+                      expanded: _expanded,
+                      colors: colors,
+                    ),
+                    AnimatedSize(
+                      duration: const Duration(milliseconds: 200),
+                      alignment: Alignment.topCenter,
+                      curve: Curves.easeInOut,
+                      child: _expanded
+                          ? _IncludedServices(
+                              services: package.services,
+                              colors: colors,
+                            )
+                          : const SizedBox(width: double.infinity),
+                    ),
+                  ],
                 ],
               ),
             ),
           ],
         ),
       ),
+    );
+  }
+}
+
+class _ExpandToggle extends StatelessWidget {
+  const _ExpandToggle({
+    required this.count,
+    required this.expanded,
+    required this.colors,
+  });
+
+  final int count;
+  final bool expanded;
+  final AppColors colors;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        Icon(Icons.layers_outlined, size: 14.r, color: splashOrange),
+        SizedBox(width: 6.w),
+        Text(
+          tr('salon_details.services_included', namedArgs: {'count': '$count'}),
+          style: TextStyle(
+            fontSize: 12.sp,
+            fontWeight: FontWeight.w600,
+            color: splashOrange,
+          ),
+        ),
+        const Spacer(),
+        AnimatedRotation(
+          turns: expanded ? 0.5 : 0,
+          duration: const Duration(milliseconds: 200),
+          child: Icon(
+            Icons.keyboard_arrow_down_rounded,
+            size: 20.r,
+            color: splashOrange,
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class _IncludedServices extends StatelessWidget {
+  const _IncludedServices({required this.services, required this.colors});
+
+  final List<SalonService> services;
+  final AppColors colors;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        SizedBox(height: 10.h),
+        Divider(height: 1, color: colors.neutral200),
+        SizedBox(height: 10.h),
+        ...services.map(
+          (s) => Padding(
+            padding: EdgeInsets.only(bottom: 8.h),
+            child: Row(
+              children: [
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(8.r),
+                  child: CachedNetworkImage(
+                    imageUrl: s.image,
+                    width: 36.r,
+                    height: 36.r,
+                    fit: BoxFit.cover,
+                    placeholder: (_, _) => Container(
+                      width: 36.r,
+                      height: 36.r,
+                      color: colors.neutral200,
+                    ),
+                    errorWidget: (_, _, _) => Container(
+                      width: 36.r,
+                      height: 36.r,
+                      color: colors.neutral200,
+                      alignment: Alignment.center,
+                      child: Icon(
+                        Icons.content_cut_rounded,
+                        color: colors.neutral400,
+                        size: 18.r,
+                      ),
+                    ),
+                  ),
+                ),
+                SizedBox(width: 10.w),
+                Expanded(
+                  child: Text(
+                    s.name,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(
+                      fontSize: 12.sp,
+                      fontWeight: FontWeight.w600,
+                      color: colors.neutral900,
+                    ),
+                  ),
+                ),
+                SizedBox(width: 8.w),
+                Icon(Icons.timer_outlined, size: 12.r, color: colors.neutral500),
+                SizedBox(width: 3.w),
+                Text(
+                  '${s.durationMinutes} ${tr('salon_details.min')}',
+                  style: TextStyle(fontSize: 11.sp, color: colors.neutral500),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ],
     );
   }
 }

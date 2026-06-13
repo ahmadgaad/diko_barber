@@ -33,10 +33,12 @@ import 'package:ronaq_barber/features/salon_details/data/data_sources/salon_deta
 import 'package:ronaq_barber/features/salon_details/data/repositories/salon_details_repository_impl.dart';
 import 'package:ronaq_barber/features/salon_details/domain/repositories/salon_details_repository.dart';
 import 'package:ronaq_barber/features/salon_details/domain/use_cases/get_salon_details_use_case.dart';
+import 'package:ronaq_barber/features/salon_details/domain/use_cases/get_salon_gallery_use_case.dart';
+import 'package:ronaq_barber/features/salon_details/presentation/cubit/salon_gallery_cubit.dart';
 import 'package:ronaq_barber/core/shared/domain/use_cases/get_favorites_use_case.dart';
 import 'package:ronaq_barber/core/shared/domain/use_cases/toggle_favorite_use_case.dart';
 import 'package:ronaq_barber/features/package_details/presentation/cubit/package_details_cubit.dart';
-import 'package:ronaq_barber/features/packages_list/presentation/cubit/packages_list_cubit.dart';
+import 'package:ronaq_barber/features/packages/presentation/cubit/packages_list_cubit.dart';
 import 'package:ronaq_barber/features/salon_details/presentation/cubit/salon_details_cubit.dart';
 import 'package:ronaq_barber/features/auth/data/data_sources/auth_remote_data_source.dart';
 import 'package:ronaq_barber/features/salon_auth/data/data_sources/salon_auth_remote_data_source.dart';
@@ -202,6 +204,9 @@ Future<void> setupServiceLocator() async {
   );
   sl.registerLazySingleton<GetSalonDetailsUseCase>(
     () => GetSalonDetailsUseCase(sl<SalonDetailsRepository>()),
+  );
+  sl.registerLazySingleton<GetSalonGalleryUseCase>(
+    () => GetSalonGalleryUseCase(sl<SalonDetailsRepository>()),
   );
   sl.registerLazySingleton<GetNearestPackagesPageUseCase>(
     () => GetNearestPackagesPageUseCase(sl<SharedRepository>()),
@@ -372,6 +377,9 @@ Future<void> setupServiceLocator() async {
       sl<LocationService>(),
       sl<ToggleFavoriteUseCase>(),
     ),
+  );
+  sl.registerFactory<SalonGalleryCubit>(
+    () => SalonGalleryCubit(sl<GetSalonGalleryUseCase>()),
   );
   sl.registerFactory<PackageDetailsCubit>(
     () => PackageDetailsCubit(sl<GetPackageDetailsUseCase>(), sl<ToggleFavoriteUseCase>()),

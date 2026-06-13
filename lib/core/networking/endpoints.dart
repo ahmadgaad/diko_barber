@@ -28,6 +28,7 @@ abstract final class EndPoints {
   static const String nearestServices = 'user/nearest-services';
   static String packageDetails(int id) => 'user/package/$id';
   static String salonDetails(int id) => 'user/salon/$id';
+  static String salonGallery(int id) => 'user/salon/$id/gallery';
   static String salonServices(int id) => 'user/salons/$id/services';
   static String salonStaff(int id) => 'user/salons/$id/staff';
   static String salonSlots(int id) => 'user/salons/$id/slots';

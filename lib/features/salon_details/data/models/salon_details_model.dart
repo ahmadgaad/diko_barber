@@ -143,6 +143,9 @@ class SalonDetailsModel extends SalonDetails {
   }
 
   static Package _parsePackage(Map<String, dynamic> p) {
+    final servicesJson =
+        (p['services'] as List?)?.whereType<Map<String, dynamic>>() ??
+            const [];
     return Package(
       id: p['id'] as int,
       name: p['name'] as String? ?? '',
@@ -150,6 +153,7 @@ class SalonDetailsModel extends SalonDetails {
       image: p['image'] as String? ?? '',
       price: _toDouble(p['discounted_price'] ?? p['price']) ?? 0,
       rating: 0,
+      services: servicesJson.map(_parseService).toList(),
       isFavorite: p['is_favorite'] as bool? ?? false,
     );
   }

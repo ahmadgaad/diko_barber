@@ -8,8 +8,8 @@ import 'package:ronaq_barber/core/di/service_locator.dart';
 import 'package:ronaq_barber/core/shared/domain/entities/category.dart';
 import 'package:ronaq_barber/core/shared/domain/entities/nearest_package.dart';
 import 'package:ronaq_barber/core/theme/app_colors.dart';
-import 'package:ronaq_barber/features/packages_list/presentation/cubit/packages_list_cubit.dart';
-import 'package:ronaq_barber/features/packages_list/presentation/cubit/packages_list_state.dart';
+import 'package:ronaq_barber/features/packages/presentation/cubit/packages_list_cubit.dart';
+import 'package:ronaq_barber/features/packages/presentation/cubit/packages_list_state.dart';
 import 'package:shimmer/shimmer.dart';
 
 enum _LayoutMode { grid, list }

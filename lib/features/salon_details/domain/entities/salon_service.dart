@@ -23,13 +23,13 @@ class SalonService extends Equatable {
 
   @override
   List<Object?> get props => [
-        id,
-        name,
-        description,
-        image,
-        price,
-        durationMinutes,
-        rating,
-        isFavorite,
-      ];
+    id,
+    name,
+    description,
+    image,
+    price,
+    durationMinutes,
+    rating,
+    isFavorite,
+  ];
 }

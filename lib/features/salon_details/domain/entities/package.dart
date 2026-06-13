@@ -1,5 +1,7 @@
 import 'package:equatable/equatable.dart';
 
+import 'salon_service.dart';
+
 class Package extends Equatable {
   const Package({
     required this.id,
@@ -8,6 +10,7 @@ class Package extends Equatable {
     required this.image,
     required this.price,
     required this.rating,
+    this.services = const [],
     this.isFavorite = false,
   });
 
@@ -17,6 +20,7 @@ class Package extends Equatable {
   final String image;
   final double price;
   final double rating;
+  final List<SalonService> services;
   final bool isFavorite;
 
   @override
@@ -27,6 +31,7 @@ class Package extends Equatable {
         image,
         price,
         rating,
+        services,
         isFavorite,
       ];
 }

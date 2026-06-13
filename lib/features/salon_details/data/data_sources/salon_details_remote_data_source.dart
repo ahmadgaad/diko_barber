@@ -7,6 +7,11 @@ abstract class SalonDetailsRemoteDataSource {
     int id,
     Map<String, dynamic> queryParams,
   );
+
+  Future<ApiResponse<dynamic>> getSalonGallery(
+    int id,
+    Map<String, dynamic> queryParams,
+  );
 }
 
 class SalonDetailsRemoteDataSourceImpl implements SalonDetailsRemoteDataSource {
@@ -21,6 +26,16 @@ class SalonDetailsRemoteDataSourceImpl implements SalonDetailsRemoteDataSource {
   ) =>
       _networkService.getData(
         endPoint: EndPoints.salonDetails(id),
+        queryParameters: queryParams,
+      );
+
+  @override
+  Future<ApiResponse<dynamic>> getSalonGallery(
+    int id,
+    Map<String, dynamic> queryParams,
+  ) =>
+      _networkService.getData(
+        endPoint: EndPoints.salonGallery(id),
         queryParameters: queryParams,
       );
 }
