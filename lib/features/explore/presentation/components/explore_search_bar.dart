@@ -1,95 +1,87 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:ronaq_barber/core/resources/svg_resources.dart';
 import 'package:ronaq_barber/core/theme/app_colors.dart';
-import 'package:ronaq_barber/features/explore/presentation/cubit/explore_cubit.dart';
-import 'package:ronaq_barber/features/explore/presentation/cubit/explore_state.dart';
 
-class ExploreSearchBar extends StatefulWidget {
-  const ExploreSearchBar({super.key});
+class ExploreSearchBar extends StatelessWidget {
+  const ExploreSearchBar({
+    super.key,
+    required this.controller,
+    required this.focusNode,
+    required this.onChanged,
+    required this.onClear,
+  });
 
-  @override
-  State<ExploreSearchBar> createState() => _ExploreSearchBarState();
-}
-
-class _ExploreSearchBarState extends State<ExploreSearchBar> {
-  late final TextEditingController _controller;
-
-  @override
-  void initState() {
-    super.initState();
-    // Restore the active query when returning to this tab — the cubit
-    // outlives the view, the text field does not.
-    final state = context.read<ExploreCubit>().state;
-    _controller = TextEditingController(
-      text: state is ExploreLoaded ? state.query : '',
-    );
-  }
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
-  }
+  final TextEditingController controller;
+  final FocusNode focusNode;
+  final ValueChanged<String> onChanged;
+  final VoidCallback onClear;
 
   @override
   Widget build(BuildContext context) {
     final colors = AppColors.of(context);
-    return TextField(
-      controller: _controller,
-      onChanged: (value) {
-        context.read<ExploreCubit>().search(value);
-        // Rebuild only to toggle the clear button.
-        setState(() {});
-      },
-      textInputAction: TextInputAction.search,
-      style: TextStyle(
-        fontSize: 14.sp,
-        fontWeight: FontWeight.w500,
-        color: colors.neutral900,
+    return Container(
+      height: 46.h,
+      decoration: BoxDecoration(
+        color: colors.neutral100,
+        borderRadius: BorderRadius.circular(14.r),
+        border: Border.all(color: colors.neutral200),
       ),
-      decoration: InputDecoration(
-        hintText: tr('explore.search_hint'),
-        hintStyle: TextStyle(
-          fontSize: 14.sp,
-          fontWeight: FontWeight.w400,
-          color: colors.neutral400,
-        ),
-        prefixIcon: Icon(
-          Icons.search_rounded,
-          color: colors.neutral400,
-          size: 22.r,
-        ),
-        suffixIcon: _controller.text.isEmpty
-            ? null
-            : IconButton(
-                icon: Icon(
-                  Icons.close_rounded,
-                  color: colors.neutral400,
-                  size: 18.r,
-                ),
-                onPressed: () {
-                  _controller.clear();
-                  context.read<ExploreCubit>().search('');
-                  setState(() {});
-                },
+      child: Row(
+        children: [
+          SizedBox(width: 12.w),
+          SvgPicture.asset(
+            SvgResources.search,
+            width: 18.r,
+            height: 18.r,
+            colorFilter: ColorFilter.mode(colors.neutral400, BlendMode.srcIn),
+          ),
+          SizedBox(width: 8.w),
+          Expanded(
+            child: TextField(
+              onTapOutside: (_) => focusNode.unfocus(),
+              controller: controller,
+              focusNode: focusNode,
+              onChanged: onChanged,
+              textInputAction: TextInputAction.search,
+              style: TextStyle(fontSize: 14.sp, color: colors.neutral900),
+              decoration: InputDecoration(
+                border: InputBorder.none,
+                isDense: true,
+                contentPadding: EdgeInsets.zero,
+                hintText: tr('explore.search_hint'),
+                hintStyle: TextStyle(fontSize: 14.sp, color: colors.neutral400),
               ),
-        filled: true,
-        fillColor: colors.neutral100,
-        contentPadding: EdgeInsets.symmetric(vertical: 12.h),
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(14.r),
-          borderSide: BorderSide.none,
-        ),
-        enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(14.r),
-          borderSide: BorderSide(color: colors.neutral200),
-        ),
-        focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(14.r),
-          borderSide: const BorderSide(color: splashOrange, width: 1.5),
-        ),
+            ),
+          ),
+          ValueListenableBuilder(
+            valueListenable: controller,
+            builder: (_, value, _) {
+              if (value.text.isEmpty) return const SizedBox.shrink();
+              return GestureDetector(
+                onTap: onClear,
+                child: Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 10.w),
+                  child: Container(
+                    width: 18.r,
+                    height: 18.r,
+                    decoration: BoxDecoration(
+                      color: colors.neutral300,
+                      shape: BoxShape.circle,
+                    ),
+                    child: Icon(
+                      Icons.close_rounded,
+                      size: 11.r,
+                      color: colors.neutral700,
+                    ),
+                  ),
+                ),
+              );
+            },
+          ),
+        ],
       ),
     );
   }

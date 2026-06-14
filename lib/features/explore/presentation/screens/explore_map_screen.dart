@@ -1,14 +1,14 @@
-import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:ronaq_barber/core/theme/app_colors.dart';
-import 'package:ronaq_barber/features/explore/presentation/components/category_filter_chips.dart';
+import 'package:ronaq_barber/features/explore/presentation/components/explore_back_button.dart';
 import 'package:ronaq_barber/features/explore/presentation/components/explore_empty_state.dart';
+import 'package:ronaq_barber/features/explore/presentation/components/explore_map_sheet_header.dart';
 import 'package:ronaq_barber/features/explore/presentation/components/explore_shimmer.dart';
-import 'package:ronaq_barber/features/explore/presentation/components/salon_grid_card.dart';
 import 'package:ronaq_barber/features/explore/presentation/components/map_preview_card.dart';
+import 'package:ronaq_barber/features/explore/presentation/components/salon_grid_card.dart';
 import 'package:ronaq_barber/features/explore/presentation/components/salon_map_view.dart';
 import 'package:ronaq_barber/features/explore/presentation/cubit/explore_cubit.dart';
 import 'package:ronaq_barber/features/explore/presentation/cubit/explore_state.dart';
@@ -71,7 +71,7 @@ class _ExploreMapScreenState extends State<ExploreMapScreen> {
                       )
                     : Container(color: colors.neutral200),
               ),
-              _BackButton(colors: colors),
+              const ExploreBackButton(),
               DraggableScrollableSheet(
                 controller: _sheetController,
                 initialChildSize: 0.4,
@@ -98,7 +98,9 @@ class _ExploreMapScreenState extends State<ExploreMapScreen> {
                     child: CustomScrollView(
                       controller: scrollController,
                       slivers: [
-                        SliverToBoxAdapter(child: _SheetHeader(state: state)),
+                        SliverToBoxAdapter(
+                          child: ExploreMapSheetHeader(state: state),
+                        ),
                         switch (state) {
                           ExploreLoading() => SliverToBoxAdapter(
                             child: Padding(
@@ -169,102 +171,3 @@ class _ExploreMapScreenState extends State<ExploreMapScreen> {
   }
 }
 
-class _BackButton extends StatelessWidget {
-  const _BackButton({required this.colors});
-  final AppColors colors;
-
-  @override
-  Widget build(BuildContext context) {
-    return PositionedDirectional(
-      top: MediaQuery.paddingOf(context).top + 8.h,
-      start: 16.w,
-      child: Material(
-        color: colors.neutral50,
-        shape: const CircleBorder(),
-        elevation: 4,
-        child: InkWell(
-          customBorder: const CircleBorder(),
-          onTap: () => context.pop(),
-          child: Padding(
-            padding: EdgeInsets.all(10.r),
-            child: Icon(
-              Icons.arrow_back_rounded,
-              size: 22.r,
-              color: colors.neutral900,
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class _SheetHeader extends StatelessWidget {
-  const _SheetHeader({required this.state});
-  final ExploreState state;
-
-  @override
-  Widget build(BuildContext context) {
-    final colors = AppColors.of(context);
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Center(
-          child: Container(
-            margin: EdgeInsets.symmetric(vertical: 10.h),
-            width: 40.w,
-            height: 4.h,
-            decoration: BoxDecoration(
-              color: colors.neutral300,
-              borderRadius: BorderRadius.circular(999.r),
-            ),
-          ),
-        ),
-        Padding(
-          padding: EdgeInsets.fromLTRB(16.w, 0, 16.w, 10.h),
-          child: Row(
-            children: [
-              Text(
-                tr('nav.explore'),
-                style: TextStyle(
-                  fontSize: 18.sp,
-                  fontWeight: FontWeight.w700,
-                  color: colors.neutral900,
-                ),
-              ),
-              if (state case ExploreLoaded(:final salons)) ...[
-                SizedBox(width: 8.w),
-                Container(
-                  padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 2.h),
-                  decoration: BoxDecoration(
-                    color: splashOrange.withValues(alpha: 0.12),
-                    borderRadius: BorderRadius.circular(999.r),
-                  ),
-                  child: Text(
-                    '${salons.length}',
-                    style: TextStyle(
-                      fontSize: 12.sp,
-                      fontWeight: FontWeight.w600,
-                      color: splashOrange,
-                    ),
-                  ),
-                ),
-              ],
-            ],
-          ),
-        ),
-        if (state case ExploreLoaded(
-          :final categories,
-          :final selectedCategory,
-        ))
-          Padding(
-            padding: EdgeInsets.only(left: 16.w, right: 16.w, bottom: 12.h),
-            child: CategoryFilterChips(
-              categories: categories,
-              selectedCategory: selectedCategory,
-            ),
-          ),
-      ],
-    );
-  }
-}

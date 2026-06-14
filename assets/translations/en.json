@@ -1,5 +1,8 @@
 {
   "app_name": "Diko Barber",
+  "app": {
+    "back_to_exit": "Press back again to exit"
+  },
   "onboarding": {
     "language_toggle": "العربية",
     "screen_1": {

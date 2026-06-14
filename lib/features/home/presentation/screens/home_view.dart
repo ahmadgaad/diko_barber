@@ -1,6 +1,8 @@
 import 'dart:io';
 
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
@@ -9,6 +11,7 @@ import 'package:ronaq_barber/core/router/app_routes.dart';
 import 'package:ronaq_barber/core/shared/domain/entities/category.dart';
 import 'package:ronaq_barber/core/theme/app_colors.dart';
 import 'package:ronaq_barber/core/widgets/app_bottom_nav_bar.dart';
+import 'package:ronaq_barber/core/widgets/app_snack_bar.dart';
 import 'package:ronaq_barber/features/booking/presentation/screens/booking_view.dart';
 import 'package:ronaq_barber/features/explore/presentation/cubit/explore_cubit.dart';
 import 'package:ronaq_barber/features/explore/presentation/screens/explore_view.dart';
@@ -53,6 +56,7 @@ class HomeView extends StatefulWidget {
 class _HomeViewState extends State<HomeView>
     with SingleTickerProviderStateMixin {
   HomeTab _currentTab = HomeTab.home;
+  DateTime? _lastBackPress;
 
   // 0.0 = fully visible, 1.0 = fully hidden.
   // Driven directly by scroll delta (no tween) so it tracks the finger,
@@ -110,64 +114,87 @@ class _HomeViewState extends State<HomeView>
     final isExplore = _currentTab == HomeTab.explore;
     return HomeScope(
       onSwitchTab: _switchTab,
-      child: Scaffold(
-        backgroundColor: colors.neutral50,
-        body: Stack(
-          children: [
-            _buildBackground(colors),
-            NotificationListener<ScrollNotification>(
-              onNotification: (notification) {
-                if (_currentTab == HomeTab.explore) return false;
-                // Ignore horizontal scrolls (carousels, etc.) — only the
-                // main vertical scroll should drive the nav bar.
-                if (notification.metrics.axis != Axis.vertical) return false;
+      child: PopScope(
+        canPop: false,
+        onPopInvokedWithResult: (_, _) {
+          if (_currentTab != HomeTab.home) {
+            _switchTab(HomeTab.home);
+            return;
+          }
+          final now = DateTime.now();
+          if (_lastBackPress != null &&
+              now.difference(_lastBackPress!) <
+                  const Duration(seconds: 2)) {
+            SystemNavigator.pop();
+            return;
+          }
+          _lastBackPress = now;
+          AppSnackBar.show(
+            context,
+            message: tr('app.back_to_exit'),
+            type: SnackBarType.info,
+          );
+        },
+        child: Scaffold(
+          resizeToAvoidBottomInset: false,
+          backgroundColor: colors.neutral50,
+          body: Stack(
+            children: [
+              _buildBackground(colors),
+              NotificationListener<ScrollNotification>(
+                onNotification: (notification) {
+                  if (_currentTab == HomeTab.explore) return false;
+                  // Ignore horizontal scrolls (carousels, etc.) — only the
+                  // main vertical scroll should drive the nav bar.
+                  if (notification.metrics.axis != Axis.vertical) return false;
 
-                if (notification is ScrollUpdateNotification) {
-                  final delta = notification.scrollDelta ?? 0;
-                  if (notification.metrics.extentBefore <= 0) {
-                    _navController.value = 0.0;
-                  } else {
-                    _navController.value =
-                        (_navController.value + delta / _navBarHeight).clamp(
-                          0.0,
-                          1.0,
-                        );
+                  if (notification is ScrollUpdateNotification) {
+                    final delta = notification.scrollDelta ?? 0;
+                    if (notification.metrics.extentBefore <= 0) {
+                      _navController.value = 0.0;
+                    } else {
+                      _navController.value =
+                          (_navController.value + delta / _navBarHeight).clamp(
+                            0.0,
+                            1.0,
+                          );
+                    }
+                  } else if (notification is ScrollEndNotification) {
+                    final atTop = notification.metrics.extentBefore <= 0;
+                    final snapTo = (!atTop && _navController.value >= 0.5)
+                        ? 1.0
+                        : 0.0;
+                    _navController.animateTo(snapTo, curve: Curves.easeOut);
                   }
-                } else if (notification is ScrollEndNotification) {
-                  final atTop = notification.metrics.extentBefore <= 0;
-                  final snapTo = (!atTop && _navController.value >= 0.5)
-                      ? 1.0
-                      : 0.0;
-                  _navController.animateTo(snapTo, curve: Curves.easeOut);
-                }
-                return false;
-              },
-              child: Positioned.fill(
-                child: isExplore
-                    ? _buildTabContent()
-                    : SafeArea(bottom: false, child: _buildTabContent()),
-              ),
-            ),
-            Positioned(
-              left: 0,
-              right: 0,
-              bottom: 0,
-              child: AnimatedBuilder(
-                animation: _navController,
-                builder: (context, child) => FractionalTranslation(
-                  translation: Offset(0, _navController.value),
-                  child: child,
+                  return false;
+                },
+                child: Positioned.fill(
+                  child: isExplore
+                      ? _buildTabContent()
+                      : SafeArea(bottom: false, child: _buildTabContent()),
                 ),
-                child: SafeArea(
-                  top: false,
-                  child: AppBottomNavBar(
-                    currentTab: _currentTab,
-                    onTabSelected: (tab) => _switchTab(tab),
+              ),
+              Positioned(
+                left: 0,
+                right: 0,
+                bottom: 0,
+                child: AnimatedBuilder(
+                  animation: _navController,
+                  builder: (context, child) => FractionalTranslation(
+                    translation: Offset(0, _navController.value),
+                    child: child,
+                  ),
+                  child: SafeArea(
+                    top: false,
+                    child: AppBottomNavBar(
+                      currentTab: _currentTab,
+                      onTabSelected: (tab) => _switchTab(tab),
+                    ),
                   ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
@@ -244,7 +271,7 @@ class _HomeViewState extends State<HomeView>
                   const NearbySalonsSection(),
                   const CouponsSection(),
                   const FeaturedPackagesSection(),
-                const FeaturedServicesSection(),
+                  const FeaturedServicesSection(),
                   SizedBox(height: 40.h),
                 ],
               ),

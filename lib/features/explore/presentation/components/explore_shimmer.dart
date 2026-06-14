@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:ronaq_barber/core/theme/app_colors.dart';
-import 'package:shimmer/shimmer.dart';
 
 class ExploreShimmer extends StatelessWidget {
   const ExploreShimmer({
@@ -21,31 +20,27 @@ class ExploreShimmer extends StatelessWidget {
   Widget build(BuildContext context) {
     final colors = AppColors.of(context);
 
-    return Shimmer.fromColors(
-      baseColor: colors.neutral200,
-      highlightColor: colors.neutral100,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          if (showCategoryChips) ...[
-            _ChipRow(colors: colors),
-            SizedBox(height: 12.h),
-          ],
-          GridView.builder(
-            shrinkWrap: true,
-            padding: EdgeInsets.zero,
-            physics: const NeverScrollableScrollPhysics(),
-            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 2,
-              crossAxisSpacing: 12.w,
-              mainAxisSpacing: 12.h,
-              childAspectRatio: 0.78,
-            ),
-            itemCount: itemCount,
-            itemBuilder: (_, _) => _ShimmerGridCard(colors: colors),
-          ),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        if (showCategoryChips) ...[
+          _ChipRow(colors: colors),
+          SizedBox(height: 12.h),
         ],
-      ),
+        GridView.builder(
+          shrinkWrap: true,
+          padding: EdgeInsets.zero,
+          physics: const NeverScrollableScrollPhysics(),
+          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 2,
+            crossAxisSpacing: 12.w,
+            mainAxisSpacing: 12.h,
+            childAspectRatio: 0.825,
+          ),
+          itemCount: itemCount,
+          itemBuilder: (_, _) => _ShimmerGridCard(colors: colors),
+        ),
+      ],
     );
   }
 }
@@ -80,13 +75,13 @@ class _ShimmerGridCard extends StatelessWidget {
   final AppColors colors;
 
   Widget _box(double? w, double h, double radius) => Container(
-        width: w,
-        height: h,
-        decoration: BoxDecoration(
-          color: colors.neutral200,
-          borderRadius: BorderRadius.circular(radius),
-        ),
-      );
+    width: w,
+    height: h,
+    decoration: BoxDecoration(
+      color: colors.neutral200,
+      borderRadius: BorderRadius.circular(radius),
+    ),
+  );
 
   @override
   Widget build(BuildContext context) {
@@ -118,12 +113,22 @@ class _ShimmerGridCard extends StatelessWidget {
                     _box(16.r, 16.r, 4.r),
                   ],
                 ),
+                SizedBox(height: 4.h),
+                // Star icon + rating text + dot + distance text
+                Row(
+                  children: [
+                    _box(12.r, 12.r, 999.r),
+                    SizedBox(width: 2.w),
+                    _box(22.w, 11.h, 4.r),
+                    SizedBox(width: 4.w),
+                    _box(4.w, 4.h, 999.r),
+                    SizedBox(width: 4.w),
+                    _box(30.w, 11.h, 4.r),
+                  ],
+                ),
                 SizedBox(height: 6.h),
-                // Rating + distance row
-                _box(80.w, 11.h, 4.r),
-                SizedBox(height: 8.h),
                 // Open/closed status pill
-                _box(48.w, 20.h, 999.r),
+                _box(48.w, 16.h + 6.h, 999.r),
               ],
             ),
           ),

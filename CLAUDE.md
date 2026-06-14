@@ -218,6 +218,13 @@ Then provide a brief summary of:
   ])
   ```
 
+## 31) No private widget classes inside screen/view files (mandatory)
+- Never define private widget classes (`_SomeName extends StatelessWidget/StatefulWidget`) inside a screen or view file.
+- Every widget class — public or private — must live in its own file under the feature's `presentation/components/` folder.
+- Name the file after the widget in `snake_case` (e.g., `ExploreSheetHeader` → `explore_sheet_header.dart`).
+- Use relative imports within the same feature's components folder.
+- This keeps screen files focused on layout and state wiring only, not widget implementation.
+
 ## 30) Git and Pull Request output (mandatory after task completion)
 
 After I confirm that the task is complete and approved, you must provide:

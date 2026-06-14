@@ -1,5 +1,8 @@
 {
   "app_name": "ديكو باربر",
+  "app": {
+    "back_to_exit": "اضغط مرة أخرى للخروج"
+  },
   "onboarding": {
     "language_toggle": "English",
     "screen_1": {
