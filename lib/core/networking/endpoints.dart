@@ -37,6 +37,7 @@ abstract final class EndPoints {
   static const String createBooking = 'user/bookings';
   static const String toggleFavorite = 'user/toggle-favorite';
   static const String favorites = 'user/favorites';
+  static const String couponServicesAndPackages = 'user/coupon/services-and-packages';
 
   // Salon Auth
   static const String salonRegister = 'salon-auth/register';

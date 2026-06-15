@@ -3,21 +3,18 @@ import 'dart:math' as math;
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:easy_localization/easy_localization.dart' hide TextDirection;
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
+import 'package:shimmer/shimmer.dart';
 import 'package:zain/core/router/app_routes.dart';
 import 'package:zain/core/shared/domain/entities/coupon.dart';
 import 'package:zain/core/theme/app_colors.dart';
 import 'package:zain/core/widgets/app_gradient_button.dart';
-import 'package:zain/core/widgets/app_snack_bar.dart';
-import 'package:zain/features/book_appointment/presentation/book_appointment_args.dart';
+import 'package:zain/features/claim_coupon/presentation/claim_coupon_args.dart';
 import 'package:zain/features/home/presentation/components/section_header.dart';
-import 'package:zain/features/salon_details/presentation/screens/salon_details_args.dart';
 import 'package:zain/features/home/presentation/cubit/coupons_cubit.dart';
 import 'package:zain/features/home/presentation/cubit/coupons_state.dart';
-import 'package:shimmer/shimmer.dart';
 
 class CouponsSection extends StatelessWidget {
   const CouponsSection({super.key});
@@ -234,11 +231,7 @@ class _TicketBody extends StatelessWidget {
                 ),
               ),
               SizedBox(width: 6.w),
-              Icon(
-                Icons.info_outline_rounded,
-                size: 15.r,
-                color: splashOrange,
-              ),
+              Icon(Icons.info_outline_rounded, size: 15.r, color: splashOrange),
             ],
           ),
           SizedBox(height: 4.h),
@@ -246,10 +239,7 @@ class _TicketBody extends StatelessWidget {
             coupon.appliesTo.name,
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
-            style: TextStyle(
-              fontSize: 11.sp,
-              color: colors.neutral500,
-            ),
+            style: TextStyle(fontSize: 11.sp, color: colors.neutral500),
           ),
           const Spacer(),
           Row(
@@ -278,36 +268,19 @@ class _TicketBody extends StatelessWidget {
 
 // ── Detail bottom sheet ───────────────────────────────────────────────────────
 
-// Routes Claim Now based on what the coupon applies to:
-//   1 = ALL              → salon details (general)
-//   2 = SERVICES         → book appointment
-//   3 = PACKAGES         → salon details, packages tab pre-selected
-//   4 = SERVICES_AND_PACKAGES → book appointment
-void _navigateForAppliesTo({
+void _navigateToClaim({
   required BuildContext context,
   required Coupon coupon,
 }) {
-  final appliesToId = coupon.appliesTo.id;
-
-  if (appliesToId == 2 || appliesToId == 4) {
-    context.push(
-      AppRoutes.bookAppointment,
-      extra: BookAppointmentArgs(
-        salonId: coupon.salon.id,
-        salonName: coupon.salon.name,
-        couponCode: coupon.code,
-      ),
-    );
-  } else {
-    // 1 = ALL → services tab (0); 3 = PACKAGES → packages tab (1)
-    context.push(
-      '/salon/${coupon.salon.id}',
-      extra: SalonDetailsArgs(
-        couponCode: coupon.code,
-        initialTab: appliesToId == 3 ? 1 : 0,
-      ),
-    );
-  }
+  context.push(
+    AppRoutes.claimCoupon,
+    extra: ClaimCouponArgs(
+      couponId: coupon.id,
+      couponCode: coupon.code,
+      couponName: coupon.name,
+      salonName: coupon.salon.name,
+    ),
+  );
 }
 
 void _showCouponDetailSheet(BuildContext context, Coupon coupon) {
@@ -433,86 +406,6 @@ class _CouponDetailSheet extends StatelessWidget {
 
                   SizedBox(height: 20.h),
 
-                  // ── Coupon code ────────────────────────────────────────────
-                  Text(
-                    tr('home.coupon_code'),
-                    style: TextStyle(
-                      fontSize: 13.sp,
-                      fontWeight: FontWeight.w600,
-                      color: colors.neutral500,
-                    ),
-                  ),
-                  SizedBox(height: 8.h),
-                  Container(
-                    padding: EdgeInsets.symmetric(
-                      horizontal: 16.w,
-                      vertical: 14.h,
-                    ),
-                    decoration: BoxDecoration(
-                      color: colors.neutral100,
-                      borderRadius: BorderRadius.circular(12.r),
-                      border: Border.all(color: colors.neutral200),
-                    ),
-                    child: Row(
-                      children: [
-                        Expanded(
-                          child: Text(
-                            coupon.code,
-                            style: TextStyle(
-                              fontSize: 18.sp,
-                              fontWeight: FontWeight.w800,
-                              color: colors.neutral900,
-                              letterSpacing: 3,
-                            ),
-                          ),
-                        ),
-                        GestureDetector(
-                          onTap: () async {
-                            await Clipboard.setData(
-                              ClipboardData(text: coupon.code),
-                            );
-                            if (!rootContext.mounted) return;
-                            AppSnackBar.show(
-                              rootContext,
-                              message: tr('home.code_copied'),
-                              type: SnackBarType.success,
-                            );
-                          },
-                          child: Container(
-                            padding: EdgeInsets.symmetric(
-                              horizontal: 12.w,
-                              vertical: 6.h,
-                            ),
-                            decoration: BoxDecoration(
-                              color: splashOrange.withValues(alpha: 0.10),
-                              borderRadius: BorderRadius.circular(8.r),
-                            ),
-                            child: Row(
-                              children: [
-                                Icon(
-                                  Icons.copy_rounded,
-                                  size: 14.r,
-                                  color: splashOrange,
-                                ),
-                                SizedBox(width: 5.w),
-                                Text(
-                                  tr('home.copy'),
-                                  style: TextStyle(
-                                    fontSize: 12.sp,
-                                    fontWeight: FontWeight.w700,
-                                    color: splashOrange,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-
-                  SizedBox(height: 20.h),
-
                   // ── Salon ──────────────────────────────────────────────────
                   Text(
                     tr('home.salon'),
@@ -533,98 +426,98 @@ class _CouponDetailSheet extends StatelessWidget {
                       },
                       borderRadius: BorderRadius.circular(12.r),
                       child: Container(
-                    padding: EdgeInsets.all(14.r),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(12.r),
-                      border: Border.all(color: colors.neutral200),
-                    ),
-                    child: Row(
-                      children: [
-                        ClipOval(
-                          child: CachedNetworkImage(
-                            imageUrl: coupon.salon.image,
-                            width: 44.r,
-                            height: 44.r,
-                            fit: BoxFit.cover,
-                            errorWidget: (_, _, _) => Container(
-                              width: 44.r,
-                              height: 44.r,
-                              color: colors.neutral200,
-                              child: Icon(
-                                Icons.store_outlined,
-                                color: colors.neutral400,
-                                size: 22.r,
-                              ),
-                            ),
-                            placeholder: (_, _) => Container(
-                              width: 44.r,
-                              height: 44.r,
-                              color: colors.neutral200,
-                            ),
-                          ),
+                        padding: EdgeInsets.all(14.r),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(12.r),
+                          border: Border.all(color: colors.neutral200),
                         ),
-                        SizedBox(width: 12.w),
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                coupon.salon.name,
-                                style: TextStyle(
-                                  fontSize: 14.sp,
-                                  fontWeight: FontWeight.w700,
-                                  color: colors.neutral900,
+                        child: Row(
+                          children: [
+                            ClipOval(
+                              child: CachedNetworkImage(
+                                imageUrl: coupon.salon.image,
+                                width: 44.r,
+                                height: 44.r,
+                                fit: BoxFit.cover,
+                                errorWidget: (_, _, _) => Container(
+                                  width: 44.r,
+                                  height: 44.r,
+                                  color: colors.neutral200,
+                                  child: Icon(
+                                    Icons.store_outlined,
+                                    color: colors.neutral400,
+                                    size: 22.r,
+                                  ),
+                                ),
+                                placeholder: (_, _) => Container(
+                                  width: 44.r,
+                                  height: 44.r,
+                                  color: colors.neutral200,
                                 ),
                               ),
-                              if (coupon.salon.location != null ||
-                                  coupon.salon.distance != null) ...[
-                                SizedBox(height: 4.h),
-                                Row(
-                                  children: [
-                                    if (coupon.salon.location != null) ...[
-                                      Icon(
-                                        Icons.location_on_outlined,
-                                        size: 12.r,
-                                        color: colors.neutral400,
-                                      ),
-                                      SizedBox(width: 3.w),
-                                      Expanded(
-                                        child: Text(
-                                          coupon.salon.location!,
-                                          maxLines: 1,
-                                          overflow: TextOverflow.ellipsis,
-                                          style: TextStyle(
-                                            fontSize: 11.sp,
-                                            color: colors.neutral500,
+                            ),
+                            SizedBox(width: 12.w),
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    coupon.salon.name,
+                                    style: TextStyle(
+                                      fontSize: 14.sp,
+                                      fontWeight: FontWeight.w700,
+                                      color: colors.neutral900,
+                                    ),
+                                  ),
+                                  if (coupon.salon.location != null ||
+                                      coupon.salon.distance != null) ...[
+                                    SizedBox(height: 4.h),
+                                    Row(
+                                      children: [
+                                        if (coupon.salon.location != null) ...[
+                                          Icon(
+                                            Icons.location_on_outlined,
+                                            size: 12.r,
+                                            color: colors.neutral400,
                                           ),
-                                        ),
-                                      ),
-                                    ],
-                                    if (coupon.salon.distance != null) ...[
-                                      SizedBox(width: 8.w),
-                                      Text(
-                                        '${coupon.salon.distance!.value.toStringAsFixed(1)} ${coupon.salon.distance!.unit}',
-                                        style: TextStyle(
-                                          fontSize: 11.sp,
-                                          fontWeight: FontWeight.w500,
-                                          color: splashOrange,
-                                        ),
-                                      ),
-                                    ],
+                                          SizedBox(width: 3.w),
+                                          Expanded(
+                                            child: Text(
+                                              coupon.salon.location!,
+                                              maxLines: 1,
+                                              overflow: TextOverflow.ellipsis,
+                                              style: TextStyle(
+                                                fontSize: 11.sp,
+                                                color: colors.neutral500,
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                        if (coupon.salon.distance != null) ...[
+                                          SizedBox(width: 8.w),
+                                          Text(
+                                            '${coupon.salon.distance!.value.toStringAsFixed(1)} ${coupon.salon.distance!.unit}',
+                                            style: TextStyle(
+                                              fontSize: 11.sp,
+                                              fontWeight: FontWeight.w500,
+                                              color: splashOrange,
+                                            ),
+                                          ),
+                                        ],
+                                      ],
+                                    ),
                                   ],
-                                ),
-                              ],
-                            ],
-                          ),
+                                ],
+                              ),
+                            ),
+                            SizedBox(width: 8.w),
+                            Icon(
+                              Icons.arrow_forward_ios_rounded,
+                              size: 14.r,
+                              color: colors.neutral400,
+                            ),
+                          ],
                         ),
-                        SizedBox(width: 8.w),
-                        Icon(
-                          Icons.arrow_forward_ios_rounded,
-                          size: 14.r,
-                          color: colors.neutral400,
-                        ),
-                      ],
-                    ),
                       ),
                     ),
                   ),
@@ -699,7 +592,7 @@ class _CouponDetailSheet extends StatelessWidget {
                     label: tr('home.claim_now'),
                     onTap: () {
                       Navigator.of(context).pop();
-                      _navigateForAppliesTo(
+                      _navigateToClaim(
                         context: rootContext,
                         coupon: coupon,
                       );

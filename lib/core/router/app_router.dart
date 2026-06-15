@@ -4,6 +4,8 @@ import 'package:zain/core/di/service_locator.dart';
 import 'package:zain/core/observers/app_router_observer.dart';
 import 'package:zain/features/book_appointment/presentation/book_appointment_args.dart';
 import 'package:zain/features/book_appointment/presentation/screens/book_appointment_screen.dart';
+import 'package:zain/features/claim_coupon/presentation/claim_coupon_args.dart';
+import 'package:zain/features/claim_coupon/presentation/screens/claim_coupon_screen.dart';
 import 'package:zain/features/packages/presentation/cubit/package_details_cubit.dart';
 import 'package:zain/features/packages/presentation/screens/package_details_screen.dart';
 import 'package:zain/features/packages/presentation/screens/packages_list_screen.dart';
@@ -117,6 +119,11 @@ final appRouter = GoRouter(
       path: AppRoutes.bookAppointment,
       builder: (context, state) =>
           BookAppointmentScreen(args: state.extra as BookAppointmentArgs),
+    ),
+    GoRoute(
+      path: AppRoutes.claimCoupon,
+      builder: (context, state) =>
+          ClaimCouponScreen(args: state.extra as ClaimCouponArgs),
     ),
     GoRoute(
       path: AppRoutes.packageDetails,

@@ -55,6 +55,11 @@ import 'package:zain/features/salon_auth/domain/use_cases/salon_resend_otp_use_c
 import 'package:zain/features/salon_auth/domain/use_cases/salon_verify_otp_use_case.dart';
 import 'package:zain/features/salon_auth/presentation/cubit/salon_register_cubit.dart';
 import 'package:zain/features/salon_auth/presentation/cubit/salon_verify_otp_cubit.dart';
+import 'package:zain/features/claim_coupon/data/data_sources/claim_coupon_remote_data_source.dart';
+import 'package:zain/features/claim_coupon/data/repositories/claim_coupon_repository_impl.dart';
+import 'package:zain/features/claim_coupon/domain/repositories/claim_coupon_repository.dart';
+import 'package:zain/features/claim_coupon/domain/use_cases/get_coupon_eligible_items_use_case.dart';
+import 'package:zain/features/claim_coupon/presentation/cubit/claim_coupon_cubit.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get_it/get_it.dart';
@@ -360,6 +365,20 @@ Future<void> setupServiceLocator() async {
       email: email,
     ),
   );
+  // Claim Coupon
+  sl.registerLazySingleton<ClaimCouponRemoteDataSource>(
+    () => ClaimCouponRemoteDataSourceImpl(sl<INetworkService>()),
+  );
+  sl.registerLazySingleton<ClaimCouponRepository>(
+    () => ClaimCouponRepositoryImpl(sl<ClaimCouponRemoteDataSource>()),
+  );
+  sl.registerLazySingleton<GetCouponEligibleItemsUseCase>(
+    () => GetCouponEligibleItemsUseCase(sl<ClaimCouponRepository>()),
+  );
+  sl.registerFactory<ClaimCouponCubit>(
+    () => ClaimCouponCubit(sl<GetCouponEligibleItemsUseCase>()),
+  );
+
   sl.registerFactory<HomeCubit>(
     () => HomeCubit(sl<SecureStorageCacheClient>(), sl<SharedPrefCacheClient>()),
   );

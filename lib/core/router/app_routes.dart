@@ -17,6 +17,8 @@ abstract final class AppRoutes {
   static const packageDetails = '/package/:id';
   static const packagesList = '/packages';
 
+  static const claimCoupon = '/claim-coupon';
+
   // Salon Auth
   static const salonSignup = '/salon-signup';
   static const salonVerifyOtp = '/salon-verify-otp';

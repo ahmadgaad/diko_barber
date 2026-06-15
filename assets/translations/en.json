@@ -3,6 +3,16 @@
   "app": {
     "back_to_exit": "Press back again to exit"
   },
+  "claim_coupon": {
+    "title": "Claim Coupon",
+    "select_item": "Select a service or package",
+    "services": "Services",
+    "packages": "Packages",
+    "no_items": "No eligible services or packages found for this coupon.",
+    "next": "Next",
+    "next_with_count": "Next ({count} selected)",
+    "save": "Save {amount}"
+  },
   "auth_gate": {
     "title": "Join Diko Barber",
     "body": "Sign in or create a free account to use this feature",
