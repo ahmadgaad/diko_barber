@@ -2,7 +2,7 @@ import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:ronaq_barber/core/theme/app_colors.dart';
+import 'package:zain/core/theme/app_colors.dart';
 
 /// Pre-rendered branded map pins: a colored circle with a storefront glyph
 /// and a pointer tail. Generated once and reused for every marker.

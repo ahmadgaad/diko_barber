@@ -1,6 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:ronaq_barber/core/networking/result.dart';
-import 'package:ronaq_barber/core/shared/domain/use_cases/get_categories_use_case.dart';
+import 'package:zain/core/networking/result.dart';
+import 'package:zain/core/shared/domain/use_cases/get_categories_use_case.dart';
 
 import 'categories_state.dart';
 

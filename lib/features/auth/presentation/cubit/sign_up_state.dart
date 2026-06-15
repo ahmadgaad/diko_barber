@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
-import 'package:ronaq_barber/core/shared/domain/entities/city.dart';
-import 'package:ronaq_barber/core/shared/domain/entities/neighborhood.dart';
+import 'package:zain/core/shared/domain/entities/city.dart';
+import 'package:zain/core/shared/domain/entities/neighborhood.dart';
 
 sealed class SignUpState extends Equatable {
   const SignUpState();

@@ -1,4 +1,4 @@
-import 'package:ronaq_barber/features/auth/domain/entities/auth_response.dart';
+import 'package:zain/features/auth/domain/entities/auth_response.dart';
 
 import 'user_model.dart';
 

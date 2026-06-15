@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
-import 'package:ronaq_barber/core/widgets/app_error_view.dart';
-import 'package:ronaq_barber/core/widgets/app_shimmer.dart';
+import 'package:zain/core/widgets/app_error_view.dart';
+import 'package:zain/core/widgets/app_shimmer.dart';
 
 import '../components/onboarding_page_content.dart';
 import '../cubit/onboarding_cubit.dart';
@@ -32,7 +32,11 @@ class _OnboardingViewState extends State<OnboardingView> {
     super.dispose();
   }
 
-  void _onHorizontalSwipe(DragEndDetails details, int currentPage, int totalPages) {
+  void _onHorizontalSwipe(
+    DragEndDetails details,
+    int currentPage,
+    int totalPages,
+  ) {
     final velocity = details.primaryVelocity ?? 0;
     if (velocity.abs() < 300) return;
 
@@ -101,90 +105,114 @@ class _OnboardingViewState extends State<OnboardingView> {
       onHorizontalDragEnd: (details) =>
           _onHorizontalSwipe(details, currentPage, totalPages),
       child: Stack(
-      children: [
-        // Images — physics disabled; swipe is handled by the outer GestureDetector.
-        PageView.builder(
-          controller: _pageController,
-          onPageChanged: cubit.onPageChanged,
-          physics: const NeverScrollableScrollPhysics(),
-          itemCount: totalPages,
-          itemBuilder: (_, index) => Image.network(
-            items[index].imageUrl,
-            fit: BoxFit.cover,
-            width: double.infinity,
-            height: double.infinity,
-            loadingBuilder: (_, child, progress) => progress == null
-                ? child
-                : const ColoredBox(color: Colors.black),
-            errorBuilder: (context, error, _) =>
-                const ColoredBox(color: Colors.black),
-          ),
-        ),
-
-        // Static dark tint
-        const Positioned.fill(child: ColoredBox(color: Color(0x52000000))),
-
-        // Static bottom gradient
-        Positioned(
-          bottom: 0,
-          left: 0,
-          right: 0,
-          height: 406.h,
-          child: const DecoratedBox(
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
-                colors: [Colors.transparent, Colors.black],
-              ),
+        children: [
+          // Images — physics disabled; swipe is handled by the outer GestureDetector.
+          PageView.builder(
+            controller: _pageController,
+            onPageChanged: cubit.onPageChanged,
+            physics: const NeverScrollableScrollPhysics(),
+            itemCount: totalPages,
+            itemBuilder: (_, index) => Image.network(
+              items[index].imageUrl,
+              fit: BoxFit.cover,
+              width: double.infinity,
+              height: double.infinity,
+              loadingBuilder: (_, child, progress) => progress == null
+                  ? child
+                  : const ColoredBox(color: Colors.black),
+              errorBuilder: (context, error, _) =>
+                  const ColoredBox(color: Colors.black),
             ),
           ),
-        ),
 
-        // Static language toggle
-        // Positioned(top: 70.h, right: 16.w, child: const LanguageToggleButton()),
+          // Static dark tint
+          const Positioned.fill(child: ColoredBox(color: Color(0x52000000))),
 
-        // Animated text content — fade + scale for a premium feel
-        Positioned(
-          top: 507.h,
-          left: 16.w,
-          right: 16.w,
-          child: AnimatedSwitcher(
-            duration: const Duration(milliseconds: 320),
-            transitionBuilder: (child, animation) {
-              final curved = CurvedAnimation(
-                parent: animation,
-                curve: Curves.easeInOut,
-              );
-              return FadeTransition(
-                opacity: curved,
-                child: ScaleTransition(
-                  scale: Tween<double>(begin: 0.94, end: 1.0).animate(curved),
-                  child: child,
+          // Static bottom gradient
+          Positioned(
+            bottom: 0,
+            left: 0,
+            right: 0,
+            height: 406.h,
+            child: const DecoratedBox(
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  colors: [Colors.transparent, Colors.black],
                 ),
-              );
-            },
-            child: KeyedSubtree(
-              key: ValueKey(currentPage),
-              child: OnboardingPageContent(
-                heading: item.name,
-                body: item.description,
-                primaryLabel: isLastPage
-                    ? tr('onboarding.sign_in')
-                    : tr('onboarding.next'),
-                secondaryLabel: isLastPage
-                    ? tr('onboarding.sign_up')
-                    : tr('onboarding.skip'),
-                onPrimary: isLastPage ? cubit.signIn : cubit.onNext,
-                onSecondary: isLastPage ? cubit.signUp : cubit.skip,
-                pageCount: totalPages,
-                currentPage: currentPage,
               ),
             ),
           ),
-        ),
-      ],
-    ),
+
+          // Static language toggle
+          // Positioned(top: 70.h, right: 16.w, child: const LanguageToggleButton()),
+
+          // Continue as guest — top-right escape hatch on last page only
+          if (isLastPage)
+            PositionedDirectional(
+              top: 58.h,
+              start: 16.w,
+              child: GestureDetector(
+                onTap: cubit.continueAsGuest,
+                behavior: HitTestBehavior.opaque,
+                child: Padding(
+                  padding: EdgeInsets.all(8.r),
+                  child: Text(
+                    tr('onboarding.continue_as_guest'),
+                    style: TextStyle(
+                      fontSize: 15.sp,
+                      fontWeight: FontWeight.w500,
+                      color: Colors.white,
+                      decoration: TextDecoration.underline,
+                      decorationColor: Colors.white,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+
+          // Animated text content — fade + scale for a premium feel
+          Positioned(
+            top: 507.h,
+            left: 16.w,
+            right: 16.w,
+            child: AnimatedSwitcher(
+              duration: const Duration(milliseconds: 320),
+              transitionBuilder: (child, animation) {
+                final curved = CurvedAnimation(
+                  parent: animation,
+                  curve: Curves.easeInOut,
+                );
+                return FadeTransition(
+                  opacity: curved,
+                  child: ScaleTransition(
+                    scale: Tween<double>(begin: 0.94, end: 1.0).animate(curved),
+                    child: child,
+                  ),
+                );
+              },
+              child: KeyedSubtree(
+                key: ValueKey(currentPage),
+                child: OnboardingPageContent(
+                  heading: item.name,
+                  body: item.description,
+                  primaryLabel: isLastPage
+                      ? tr('onboarding.sign_in')
+                      : tr('onboarding.next'),
+                  secondaryLabel: isLastPage
+                      ? tr('onboarding.sign_up')
+                      : tr('onboarding.skip'),
+                  onPrimary: isLastPage ? cubit.signIn : cubit.onNext,
+                  onSecondary: isLastPage ? cubit.signUp : cubit.skip,
+                  pageCount: totalPages,
+                  currentPage: currentPage,
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

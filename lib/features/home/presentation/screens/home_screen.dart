@@ -1,18 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:ronaq_barber/core/di/service_locator.dart';
-import 'package:ronaq_barber/features/booking/presentation/cubit/bookings_cubit.dart';
-import 'package:ronaq_barber/features/favorites/presentation/cubit/favorites_cubit.dart';
-import 'package:ronaq_barber/features/profile/presentation/cubit/profile_cubit.dart';
-import 'package:ronaq_barber/features/explore/presentation/cubit/explore_cubit.dart';
-import 'package:ronaq_barber/features/home/presentation/cubit/banners_cubit.dart';
-import 'package:ronaq_barber/features/home/presentation/cubit/categories_cubit.dart';
-import 'package:ronaq_barber/features/home/presentation/cubit/coupons_cubit.dart';
-import 'package:ronaq_barber/features/home/presentation/cubit/featured_packages_cubit.dart';
-import 'package:ronaq_barber/features/home/presentation/cubit/featured_services_cubit.dart';
-import 'package:ronaq_barber/features/home/presentation/cubit/home_cubit.dart';
-import 'package:ronaq_barber/features/home/presentation/cubit/salons_cubit.dart';
-import 'package:ronaq_barber/features/home/presentation/screens/home_view.dart';
+import 'package:zain/core/di/service_locator.dart';
+import 'package:zain/features/booking/presentation/cubit/bookings_cubit.dart';
+import 'package:zain/features/favorites/presentation/cubit/favorites_cubit.dart';
+import 'package:zain/features/profile/presentation/cubit/profile_cubit.dart';
+import 'package:zain/features/explore/presentation/cubit/explore_cubit.dart';
+import 'package:zain/features/home/presentation/cubit/banners_cubit.dart';
+import 'package:zain/features/home/presentation/cubit/categories_cubit.dart';
+import 'package:zain/features/home/presentation/cubit/coupons_cubit.dart';
+import 'package:zain/features/home/presentation/cubit/featured_packages_cubit.dart';
+import 'package:zain/features/home/presentation/cubit/featured_services_cubit.dart';
+import 'package:zain/features/home/presentation/cubit/home_cubit.dart';
+import 'package:zain/features/home/presentation/cubit/salons_cubit.dart';
+import 'package:zain/features/home/presentation/screens/home_view.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});

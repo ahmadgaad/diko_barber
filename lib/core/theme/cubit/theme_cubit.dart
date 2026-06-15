@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:ronaq_barber/core/cache/cache_keys.dart';
-import 'package:ronaq_barber/core/cache/shared_pref_cache_client.dart';
-import 'package:ronaq_barber/core/theme/cubit/theme_state.dart';
+import 'package:zain/core/cache/cache_keys.dart';
+import 'package:zain/core/cache/shared_pref_cache_client.dart';
+import 'package:zain/core/theme/cubit/theme_state.dart';
 
 class ThemeCubit extends Cubit<ThemeState> {
   ThemeCubit(this._cache) : super(const ThemeState(ThemeMode.light));

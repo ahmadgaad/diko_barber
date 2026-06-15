@@ -1,10 +1,10 @@
-import 'package:ronaq_barber/core/networking/api_error_model.dart';
-import 'package:ronaq_barber/core/networking/result.dart';
-import 'package:ronaq_barber/features/book_appointment/domain/entities/appointment_service.dart';
-import 'package:ronaq_barber/features/book_appointment/domain/entities/book_appointment_params.dart';
-import 'package:ronaq_barber/features/book_appointment/domain/entities/coupon_validation.dart';
-import 'package:ronaq_barber/features/book_appointment/domain/entities/staff_member.dart';
-import 'package:ronaq_barber/features/book_appointment/domain/entities/time_slot.dart';
+import 'package:zain/core/networking/api_error_model.dart';
+import 'package:zain/core/networking/result.dart';
+import 'package:zain/features/book_appointment/domain/entities/appointment_service.dart';
+import 'package:zain/features/book_appointment/domain/entities/book_appointment_params.dart';
+import 'package:zain/features/book_appointment/domain/entities/coupon_validation.dart';
+import 'package:zain/features/book_appointment/domain/entities/staff_member.dart';
+import 'package:zain/features/book_appointment/domain/entities/time_slot.dart';
 
 abstract class BookAppointmentRepository {
   Future<Result<ApiErrorModel, List<AppointmentService>>> getSalonServices(

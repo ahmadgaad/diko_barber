@@ -4,11 +4,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
-import 'package:ronaq_barber/core/shared/domain/entities/nearest_package.dart';
-import 'package:ronaq_barber/core/theme/app_colors.dart';
-import 'package:ronaq_barber/features/home/presentation/components/section_header.dart';
-import 'package:ronaq_barber/features/home/presentation/cubit/featured_packages_cubit.dart';
-import 'package:ronaq_barber/features/home/presentation/cubit/featured_packages_state.dart';
+import 'package:zain/core/shared/domain/entities/nearest_package.dart';
+import 'package:zain/core/theme/app_colors.dart';
+import 'package:zain/core/widgets/auth_gate.dart';
+import 'package:zain/features/home/presentation/components/section_header.dart';
+import 'package:zain/features/home/presentation/cubit/featured_packages_cubit.dart';
+import 'package:zain/features/home/presentation/cubit/featured_packages_state.dart';
 import 'package:shimmer/shimmer.dart';
 
 class FeaturedPackagesSection extends StatelessWidget {
@@ -137,9 +138,12 @@ class _PackageImage extends StatelessWidget {
           top: 10.h,
           end: 10.w,
           child: GestureDetector(
-            onTap: () => context
-                .read<FeaturedPackagesCubit>()
-                .toggleFavorite(package.id),
+            onTap: () => AuthGate.guard(
+              context,
+              () => context
+                  .read<FeaturedPackagesCubit>()
+                  .toggleFavorite(package.id),
+            ),
             child: Container(
               width: 28.r,
               height: 28.r,

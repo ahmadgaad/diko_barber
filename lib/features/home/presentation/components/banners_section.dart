@@ -5,10 +5,11 @@ import 'package:flutter/material.dart' hide Banner;
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
-import 'package:ronaq_barber/core/shared/domain/entities/banner.dart';
-import 'package:ronaq_barber/core/theme/app_colors.dart';
-import 'package:ronaq_barber/features/home/presentation/cubit/banners_cubit.dart';
-import 'package:ronaq_barber/features/home/presentation/cubit/banners_state.dart';
+import 'package:zain/core/shared/domain/entities/banner.dart';
+import 'package:zain/core/theme/app_colors.dart';
+import 'package:zain/core/widgets/auth_gate.dart';
+import 'package:zain/features/home/presentation/cubit/banners_cubit.dart';
+import 'package:zain/features/home/presentation/cubit/banners_state.dart';
 import 'package:shimmer/shimmer.dart';
 
 class BannersSection extends StatelessWidget {
@@ -42,18 +43,20 @@ class _BannersCarouselState extends State<_BannersCarousel> {
   int _currentIndex = 0;
 
   void _onBannerTap(BuildContext context, Banner banner) {
-    switch (banner.campaignType) {
-      case CampaignType.salon:
-        context.push('/salon/${banner.salonId}');
-      case CampaignType.service:
-        // TODO: navigate to service detail screen — /service/${banner.targetId}
-        context.push('/salon/${banner.salonId}');
-      case CampaignType.package:
-        // TODO: navigate to package detail screen — /package/${banner.targetId}
-        context.push('/salon/${banner.salonId}');
-      case CampaignType.unknown:
-        break;
-    }
+    AuthGate.guard(context, () {
+      switch (banner.campaignType) {
+        case CampaignType.salon:
+          context.push('/salon/${banner.salonId}');
+        case CampaignType.service:
+          // TODO: navigate to service detail screen — /service/${banner.targetId}
+          context.push('/salon/${banner.salonId}');
+        case CampaignType.package:
+          // TODO: navigate to package detail screen — /package/${banner.targetId}
+          context.push('/salon/${banner.salonId}');
+        case CampaignType.unknown:
+          break;
+      }
+    });
   }
 
   @override

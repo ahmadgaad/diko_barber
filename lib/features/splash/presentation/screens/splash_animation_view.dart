@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:ronaq_barber/core/resources/image_resources.dart';
-import 'package:ronaq_barber/core/resources/svg_resources.dart';
-import 'package:ronaq_barber/core/theme/app_colors.dart';
+import 'package:zain/core/resources/image_resources.dart';
+import 'package:zain/core/resources/svg_resources.dart';
+import 'package:zain/core/theme/app_colors.dart';
 
 import '../cubit/splash_cubit.dart';
 
@@ -202,7 +202,7 @@ class _SplashAnimationViewState extends State<SplashAnimationView>
                       child: Opacity(
                         opacity: _nameOpacity.value.clamp(0.0, 1.0),
                         child: Text(
-                          'رونق',
+                          'زين',
                           style: TextStyle(
                             fontFamily: 'IBMPlexSansArabic',
                             color: Colors.white,

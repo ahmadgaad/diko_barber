@@ -1,5 +1,5 @@
-import 'package:ronaq_barber/core/networking/api_error_model.dart';
-import 'package:ronaq_barber/core/networking/result.dart';
+import 'package:zain/core/networking/api_error_model.dart';
+import 'package:zain/core/networking/result.dart';
 import '../entities/favorite_type.dart';
 
 import '../entities/banner.dart';

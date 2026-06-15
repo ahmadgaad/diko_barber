@@ -7,7 +7,7 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleDisplayName</key>
-	<string>Ronaq Barber</string>
+	<string>Zain - زين</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
@@ -15,7 +15,7 @@
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleName</key>
-	<string>ronaq_barber</string>
+	<string>Zain</string>
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
@@ -40,7 +40,7 @@
 	<key>FacebookClientToken</key>
 	<string>YOUR_FACEBOOK_CLIENT_TOKEN</string>
 	<key>FacebookDisplayName</key>
-	<string>Ronaq Barber</string>
+	<string>Zain - زين</string>
 	<key>LSApplicationQueriesSchemes</key>
 	<array>
 		<string>fbapi</string>

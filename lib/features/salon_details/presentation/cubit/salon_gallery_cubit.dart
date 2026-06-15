@@ -1,7 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:ronaq_barber/features/salon_details/domain/entities/gallery_image.dart';
-import 'package:ronaq_barber/features/salon_details/domain/use_cases/get_salon_gallery_use_case.dart';
-import 'package:ronaq_barber/features/salon_details/presentation/cubit/salon_gallery_state.dart';
+import 'package:zain/features/salon_details/domain/entities/gallery_image.dart';
+import 'package:zain/features/salon_details/domain/use_cases/get_salon_gallery_use_case.dart';
+import 'package:zain/features/salon_details/presentation/cubit/salon_gallery_state.dart';
 
 class SalonGalleryCubit extends Cubit<SalonGalleryState> {
   SalonGalleryCubit(this._getSalonGallery)

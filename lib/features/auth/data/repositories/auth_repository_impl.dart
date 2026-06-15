@@ -1,10 +1,10 @@
-import 'package:ronaq_barber/core/networking/api_error_model.dart';
-import 'package:ronaq_barber/core/networking/result.dart';
-import 'package:ronaq_barber/features/auth/data/data_sources/auth_remote_data_source.dart';
-import 'package:ronaq_barber/features/auth/data/models/auth_response_model.dart';
-import 'package:ronaq_barber/features/auth/domain/entities/auth_response.dart';
-import 'package:ronaq_barber/features/auth/domain/entities/sign_up_params.dart';
-import 'package:ronaq_barber/features/auth/domain/repositories/auth_repository.dart';
+import 'package:zain/core/networking/api_error_model.dart';
+import 'package:zain/core/networking/result.dart';
+import 'package:zain/features/auth/data/data_sources/auth_remote_data_source.dart';
+import 'package:zain/features/auth/data/models/auth_response_model.dart';
+import 'package:zain/features/auth/domain/entities/auth_response.dart';
+import 'package:zain/features/auth/domain/entities/sign_up_params.dart';
+import 'package:zain/features/auth/domain/repositories/auth_repository.dart';
 
 class AuthRepositoryImpl implements AuthRepository {
   const AuthRepositoryImpl(this._remoteDataSource);

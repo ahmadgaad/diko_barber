@@ -1,15 +1,15 @@
 // ignore_for_file: unused_field
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:ronaq_barber/features/book_appointment/domain/entities/appointment_service.dart';
-import 'package:ronaq_barber/features/book_appointment/domain/entities/coupon_validation.dart';
-import 'package:ronaq_barber/features/book_appointment/domain/entities/staff_member.dart';
-import 'package:ronaq_barber/features/book_appointment/domain/entities/time_slot.dart';
-import 'package:ronaq_barber/features/book_appointment/domain/use_cases/create_booking_use_case.dart';
-import 'package:ronaq_barber/features/book_appointment/domain/use_cases/get_salon_services_use_case.dart';
-import 'package:ronaq_barber/features/book_appointment/domain/use_cases/get_staff_use_case.dart';
-import 'package:ronaq_barber/features/book_appointment/domain/use_cases/get_time_slots_use_case.dart';
-import 'package:ronaq_barber/features/book_appointment/domain/use_cases/validate_coupon_use_case.dart';
-import 'package:ronaq_barber/features/book_appointment/presentation/cubit/book_appointment_state.dart';
+import 'package:zain/features/book_appointment/domain/entities/appointment_service.dart';
+import 'package:zain/features/book_appointment/domain/entities/coupon_validation.dart';
+import 'package:zain/features/book_appointment/domain/entities/staff_member.dart';
+import 'package:zain/features/book_appointment/domain/entities/time_slot.dart';
+import 'package:zain/features/book_appointment/domain/use_cases/create_booking_use_case.dart';
+import 'package:zain/features/book_appointment/domain/use_cases/get_salon_services_use_case.dart';
+import 'package:zain/features/book_appointment/domain/use_cases/get_staff_use_case.dart';
+import 'package:zain/features/book_appointment/domain/use_cases/get_time_slots_use_case.dart';
+import 'package:zain/features/book_appointment/domain/use_cases/validate_coupon_use_case.dart';
+import 'package:zain/features/book_appointment/presentation/cubit/book_appointment_state.dart';
 
 class BookAppointmentCubit extends Cubit<BookAppointmentState> {
   BookAppointmentCubit({

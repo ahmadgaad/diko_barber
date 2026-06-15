@@ -4,13 +4,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
-import 'package:ronaq_barber/core/shared/domain/entities/favorite_type.dart';
-import 'package:ronaq_barber/core/shared/domain/entities/nearest_package.dart';
-import 'package:ronaq_barber/core/shared/domain/entities/nearest_service.dart';
-import 'package:ronaq_barber/core/shared/domain/entities/salon.dart';
-import 'package:ronaq_barber/core/theme/app_colors.dart';
-import 'package:ronaq_barber/features/favorites/presentation/cubit/favorites_cubit.dart';
-import 'package:ronaq_barber/features/favorites/presentation/cubit/favorites_state.dart';
+import 'package:zain/core/shared/domain/entities/favorite_type.dart';
+import 'package:zain/core/shared/domain/entities/nearest_package.dart';
+import 'package:zain/core/shared/domain/entities/nearest_service.dart';
+import 'package:zain/core/shared/domain/entities/salon.dart';
+import 'package:zain/core/theme/app_colors.dart';
+import 'package:zain/features/favorites/presentation/cubit/favorites_cubit.dart';
+import 'package:zain/features/favorites/presentation/cubit/favorites_state.dart';
 import 'package:shimmer/shimmer.dart';
 
 class FavoritesView extends StatefulWidget {

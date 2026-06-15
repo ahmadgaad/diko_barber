@@ -3,6 +3,12 @@
   "app": {
     "back_to_exit": "Press back again to exit"
   },
+  "auth_gate": {
+    "title": "Join Diko Barber",
+    "body": "Sign in or create a free account to use this feature",
+    "sign_in": "Sign In",
+    "create_account": "Create Account"
+  },
   "onboarding": {
     "language_toggle": "العربية",
     "screen_1": {
@@ -20,7 +26,8 @@
     "next": "Next",
     "skip": "Skip",
     "sign_in": "Sign in",
-    "sign_up": "Sign up"
+    "sign_up": "Sign up",
+    "continue_as_guest": "Continue as Guest"
   },
   "auth": {
     "language_toggle": "العربية",

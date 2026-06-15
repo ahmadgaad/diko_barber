@@ -1,8 +1,9 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:ronaq_barber/core/networking/result.dart';
-import 'package:ronaq_barber/core/router/app_routes.dart';
-import 'package:ronaq_barber/features/onboarding/domain/use_cases/complete_onboarding_use_case.dart';
-import 'package:ronaq_barber/features/onboarding/domain/use_cases/get_onboarding_use_case.dart';
+import 'package:zain/core/networking/result.dart';
+import 'package:zain/core/router/app_routes.dart';
+import 'package:zain/core/services/user_session.dart';
+import 'package:zain/features/onboarding/domain/use_cases/complete_onboarding_use_case.dart';
+import 'package:zain/features/onboarding/domain/use_cases/get_onboarding_use_case.dart';
 
 import 'onboarding_state.dart';
 
@@ -10,14 +11,17 @@ class OnboardingCubit extends Cubit<OnboardingState> {
   OnboardingCubit({
     required CompleteOnboardingUseCase completeOnboardingUseCase,
     required GetOnboardingUseCase getOnboardingUseCase,
+    required UserSession userSession,
   })  : _completeOnboardingUseCase = completeOnboardingUseCase,
         _getOnboardingUseCase = getOnboardingUseCase,
+        _userSession = userSession,
         super(const OnboardingLoading()) {
     _loadItems();
   }
 
   final CompleteOnboardingUseCase _completeOnboardingUseCase;
   final GetOnboardingUseCase _getOnboardingUseCase;
+  final UserSession _userSession;
 
   OnboardingLoaded get _loaded => state as OnboardingLoaded;
 
@@ -61,5 +65,11 @@ class OnboardingCubit extends Cubit<OnboardingState> {
   Future<void> signUp() async {
     await _completeOnboardingUseCase();
     emit(const OnboardingNavigate(target: AppRoutes.signup));
+  }
+
+  Future<void> continueAsGuest() async {
+    await _completeOnboardingUseCase();
+    await _userSession.continueAsGuest();
+    emit(const OnboardingNavigate(target: AppRoutes.home));
   }
 }

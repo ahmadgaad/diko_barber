@@ -4,14 +4,14 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
-import 'package:ronaq_barber/core/resources/svg_resources.dart';
-import 'package:ronaq_barber/core/router/app_routes.dart';
-import 'package:ronaq_barber/core/theme/app_colors.dart';
-import 'package:ronaq_barber/core/widgets/app_gradient_button.dart';
-import 'package:ronaq_barber/core/widgets/app_snack_bar.dart' show AppSnackBar, SnackBarType;
-import 'package:ronaq_barber/core/widgets/app_text_form_field.dart';
-import 'package:ronaq_barber/features/auth/presentation/cubit/reset_password_cubit.dart';
-import 'package:ronaq_barber/features/auth/presentation/cubit/reset_password_state.dart';
+import 'package:zain/core/resources/svg_resources.dart';
+import 'package:zain/core/router/app_routes.dart';
+import 'package:zain/core/theme/app_colors.dart';
+import 'package:zain/core/widgets/app_gradient_button.dart';
+import 'package:zain/core/widgets/app_snack_bar.dart' show AppSnackBar, SnackBarType;
+import 'package:zain/core/widgets/app_text_form_field.dart';
+import 'package:zain/features/auth/presentation/cubit/reset_password_cubit.dart';
+import 'package:zain/features/auth/presentation/cubit/reset_password_state.dart';
 
 class ResetPasswordView extends StatefulWidget {
   const ResetPasswordView({super.key});

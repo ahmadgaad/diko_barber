@@ -1,7 +1,13 @@
 {
-  "app_name": "ديكو باربر",
+  "app_name": "قصّة",
   "app": {
     "back_to_exit": "اضغط مرة أخرى للخروج"
+  },
+  "auth_gate": {
+    "title": "انضم إلى قصّة",
+    "body": "سجّل الدخول أو أنشئ حساباً مجانياً لاستخدام هذه الميزة",
+    "sign_in": "تسجيل الدخول",
+    "create_account": "إنشاء حساب"
   },
   "onboarding": {
     "language_toggle": "English",
@@ -20,7 +26,8 @@
     "next": "التالي",
     "skip": "تخطي",
     "sign_in": "تسجيل الدخول",
-    "sign_up": "إنشاء حساب"
+    "sign_up": "إنشاء حساب",
+    "continue_as_guest": "المتابعة كزائر"
   },
   "auth": {
     "language_toggle": "English",

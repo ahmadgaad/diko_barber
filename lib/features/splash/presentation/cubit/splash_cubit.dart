@@ -1,8 +1,8 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:ronaq_barber/core/networking/result.dart';
-import 'package:ronaq_barber/core/router/app_routes.dart';
-import 'package:ronaq_barber/features/onboarding/domain/use_cases/get_onboarding_use_case.dart';
-import 'package:ronaq_barber/features/splash/domain/use_cases/complete_splash_use_case.dart';
+import 'package:zain/core/networking/result.dart';
+import 'package:zain/core/router/app_routes.dart';
+import 'package:zain/features/onboarding/domain/use_cases/get_onboarding_use_case.dart';
+import 'package:zain/features/splash/domain/use_cases/complete_splash_use_case.dart';
 
 import 'splash_state.dart';
 

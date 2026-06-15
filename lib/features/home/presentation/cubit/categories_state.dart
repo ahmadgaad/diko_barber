@@ -1,4 +1,4 @@
-import 'package:ronaq_barber/core/shared/domain/entities/category.dart';
+import 'package:zain/core/shared/domain/entities/category.dart';
 
 sealed class CategoriesState {
   const CategoriesState();

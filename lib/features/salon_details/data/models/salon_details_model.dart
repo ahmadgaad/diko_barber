@@ -1,9 +1,9 @@
-import 'package:ronaq_barber/core/shared/domain/entities/coupon.dart';
-import 'package:ronaq_barber/features/salon_details/domain/entities/package.dart';
-import 'package:ronaq_barber/features/salon_details/domain/entities/salon_details.dart';
-import 'package:ronaq_barber/features/salon_details/domain/entities/salon_service.dart';
-import 'package:ronaq_barber/features/salon_details/domain/entities/salon_staff.dart';
-import 'package:ronaq_barber/features/salon_details/domain/entities/shift.dart';
+import 'package:zain/core/shared/domain/entities/coupon.dart';
+import 'package:zain/features/salon_details/domain/entities/package.dart';
+import 'package:zain/features/salon_details/domain/entities/salon_details.dart';
+import 'package:zain/features/salon_details/domain/entities/salon_service.dart';
+import 'package:zain/features/salon_details/domain/entities/salon_staff.dart';
+import 'package:zain/features/salon_details/domain/entities/shift.dart';
 
 class SalonDetailsModel extends SalonDetails {
   const SalonDetailsModel({

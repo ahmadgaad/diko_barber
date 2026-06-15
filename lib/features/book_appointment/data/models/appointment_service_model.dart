@@ -1,4 +1,4 @@
-import 'package:ronaq_barber/features/book_appointment/domain/entities/appointment_service.dart';
+import 'package:zain/features/book_appointment/domain/entities/appointment_service.dart';
 
 class AppointmentServiceModel extends AppointmentService {
   const AppointmentServiceModel({

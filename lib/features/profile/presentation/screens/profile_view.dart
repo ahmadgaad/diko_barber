@@ -5,13 +5,13 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
-import 'package:ronaq_barber/core/resources/svg_resources.dart';
-import 'package:ronaq_barber/core/router/app_routes.dart';
-import 'package:ronaq_barber/core/theme/app_colors.dart';
-import 'package:ronaq_barber/core/theme/cubit/theme_cubit.dart';
-import 'package:ronaq_barber/core/theme/cubit/theme_state.dart';
-import 'package:ronaq_barber/features/profile/presentation/cubit/profile_cubit.dart';
-import 'package:ronaq_barber/features/profile/presentation/cubit/profile_state.dart';
+import 'package:zain/core/resources/svg_resources.dart';
+import 'package:zain/core/router/app_routes.dart';
+import 'package:zain/core/theme/app_colors.dart';
+import 'package:zain/core/theme/cubit/theme_cubit.dart';
+import 'package:zain/core/theme/cubit/theme_state.dart';
+import 'package:zain/features/profile/presentation/cubit/profile_cubit.dart';
+import 'package:zain/features/profile/presentation/cubit/profile_state.dart';
 import 'package:shimmer/shimmer.dart';
 
 class ProfileView extends StatelessWidget {

@@ -1,8 +1,8 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:ronaq_barber/core/theme/app_colors.dart';
-import 'package:ronaq_barber/core/widgets/app_gradient_button.dart';
+import 'package:zain/core/theme/app_colors.dart';
+import 'package:zain/core/widgets/app_gradient_button.dart';
 
 /// Full-page error view with an optional retry button.
 ///

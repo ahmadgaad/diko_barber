@@ -1,6 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:ronaq_barber/core/shared/domain/entities/booking.dart';
-import 'package:ronaq_barber/features/booking/presentation/cubit/bookings_state.dart';
+import 'package:zain/core/shared/domain/entities/booking.dart';
+import 'package:zain/features/booking/presentation/cubit/bookings_state.dart';
 
 class BookingsCubit extends Cubit<BookingsState> {
   BookingsCubit() : super(const BookingsLoading()) {

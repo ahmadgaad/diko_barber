@@ -1,7 +1,7 @@
-import 'package:ronaq_barber/core/networking/api_error_model.dart';
-import 'package:ronaq_barber/core/networking/result.dart';
-import 'package:ronaq_barber/features/book_appointment/domain/entities/time_slot.dart';
-import 'package:ronaq_barber/features/book_appointment/domain/repositories/book_appointment_repository.dart';
+import 'package:zain/core/networking/api_error_model.dart';
+import 'package:zain/core/networking/result.dart';
+import 'package:zain/features/book_appointment/domain/entities/time_slot.dart';
+import 'package:zain/features/book_appointment/domain/repositories/book_appointment_repository.dart';
 
 class GetTimeSlotsUseCase {
   const GetTimeSlotsUseCase(this._repository);

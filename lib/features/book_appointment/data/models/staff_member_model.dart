@@ -1,4 +1,4 @@
-import 'package:ronaq_barber/features/book_appointment/domain/entities/staff_member.dart';
+import 'package:zain/features/book_appointment/domain/entities/staff_member.dart';
 
 class StaffMemberModel extends StaffMember {
   const StaffMemberModel({

@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:ronaq_barber/core/shared/domain/entities/salon.dart';
-import 'package:ronaq_barber/core/theme/app_colors.dart';
-import 'package:ronaq_barber/core/theme/app_map_style.dart';
-import 'package:ronaq_barber/features/explore/presentation/components/salon_marker_icons.dart';
+import 'package:zain/core/shared/domain/entities/salon.dart';
+import 'package:zain/core/theme/app_colors.dart';
+import 'package:zain/core/theme/app_map_style.dart';
+import 'package:zain/features/explore/presentation/components/salon_marker_icons.dart';
 
 class SalonMapView extends StatefulWidget {
   const SalonMapView({

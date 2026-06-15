@@ -6,16 +6,16 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:ronaq_barber/core/router/app_routes.dart';
-import 'package:ronaq_barber/core/theme/app_colors.dart';
-import 'package:ronaq_barber/core/widgets/app_dropdown_field.dart';
-import 'package:ronaq_barber/core/widgets/app_gradient_button.dart';
-import 'package:ronaq_barber/core/widgets/app_snack_bar.dart';
-import 'package:ronaq_barber/core/widgets/app_text_form_field.dart';
-import 'package:ronaq_barber/core/widgets/user_type_toggle.dart';
-import 'package:ronaq_barber/features/auth/presentation/components/sign_in_header.dart';
-import 'package:ronaq_barber/features/auth/presentation/cubit/sign_up_cubit.dart';
-import 'package:ronaq_barber/features/auth/presentation/cubit/sign_up_state.dart';
+import 'package:zain/core/router/app_routes.dart';
+import 'package:zain/core/theme/app_colors.dart';
+import 'package:zain/core/widgets/app_dropdown_field.dart';
+import 'package:zain/core/widgets/app_gradient_button.dart';
+import 'package:zain/core/widgets/app_snack_bar.dart';
+import 'package:zain/core/widgets/app_text_form_field.dart';
+import 'package:zain/core/widgets/user_type_toggle.dart';
+import 'package:zain/features/auth/presentation/components/sign_in_header.dart';
+import 'package:zain/features/auth/presentation/cubit/sign_up_cubit.dart';
+import 'package:zain/features/auth/presentation/cubit/sign_up_state.dart';
 
 class SignUpView extends StatefulWidget {
   const SignUpView({super.key});

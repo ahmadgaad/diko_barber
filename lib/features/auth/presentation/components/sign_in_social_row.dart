@@ -2,8 +2,8 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:ronaq_barber/core/resources/svg_resources.dart';
-import 'package:ronaq_barber/core/widgets/social_icon_button.dart';
+import 'package:zain/core/resources/svg_resources.dart';
+import 'package:zain/core/widgets/social_icon_button.dart';
 
 class SignInSocialRow extends StatelessWidget {
   const SignInSocialRow({

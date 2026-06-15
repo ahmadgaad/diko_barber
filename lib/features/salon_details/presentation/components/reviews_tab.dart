@@ -3,13 +3,13 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:ronaq_barber/core/di/service_locator.dart';
-import 'package:ronaq_barber/core/theme/app_colors.dart';
-import 'package:ronaq_barber/features/salon_details/domain/entities/rating_stats.dart';
-import 'package:ronaq_barber/features/salon_details/domain/entities/review.dart';
-import 'package:ronaq_barber/features/salon_details/presentation/components/empty_tab.dart';
-import 'package:ronaq_barber/features/salon_details/presentation/cubit/salon_ratings_cubit.dart';
-import 'package:ronaq_barber/features/salon_details/presentation/cubit/salon_ratings_state.dart';
+import 'package:zain/core/di/service_locator.dart';
+import 'package:zain/core/theme/app_colors.dart';
+import 'package:zain/features/salon_details/domain/entities/rating_stats.dart';
+import 'package:zain/features/salon_details/domain/entities/review.dart';
+import 'package:zain/features/salon_details/presentation/components/empty_tab.dart';
+import 'package:zain/features/salon_details/presentation/cubit/salon_ratings_cubit.dart';
+import 'package:zain/features/salon_details/presentation/cubit/salon_ratings_state.dart';
 import 'package:shimmer/shimmer.dart';
 
 class ReviewsTab extends StatelessWidget {

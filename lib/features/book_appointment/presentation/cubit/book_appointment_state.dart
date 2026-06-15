@@ -1,7 +1,7 @@
-import 'package:ronaq_barber/features/book_appointment/domain/entities/appointment_service.dart';
-import 'package:ronaq_barber/features/book_appointment/domain/entities/coupon_validation.dart';
-import 'package:ronaq_barber/features/book_appointment/domain/entities/staff_member.dart';
-import 'package:ronaq_barber/features/book_appointment/domain/entities/time_slot.dart';
+import 'package:zain/features/book_appointment/domain/entities/appointment_service.dart';
+import 'package:zain/features/book_appointment/domain/entities/coupon_validation.dart';
+import 'package:zain/features/book_appointment/domain/entities/staff_member.dart';
+import 'package:zain/features/book_appointment/domain/entities/time_slot.dart';
 
 sealed class BookAppointmentState {
   const BookAppointmentState();

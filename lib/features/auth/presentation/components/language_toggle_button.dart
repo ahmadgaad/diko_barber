@@ -3,11 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
-import 'package:ronaq_barber/core/di/service_locator.dart';
-import 'package:ronaq_barber/core/l10n/app_locales.dart';
-import 'package:ronaq_barber/core/locale/domain/use_cases/save_locale_use_case.dart';
-import 'package:ronaq_barber/core/resources/svg_resources.dart';
-import 'package:ronaq_barber/core/theme/app_colors.dart';
+import 'package:zain/core/di/service_locator.dart';
+import 'package:zain/core/l10n/app_locales.dart';
+import 'package:zain/core/locale/domain/use_cases/save_locale_use_case.dart';
+import 'package:zain/core/resources/svg_resources.dart';
+import 'package:zain/core/theme/app_colors.dart';
 
 class LanguageToggleButton extends StatelessWidget {
   const LanguageToggleButton({super.key});

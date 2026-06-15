@@ -1,4 +1,4 @@
-import 'package:ronaq_barber/features/salon_details/domain/entities/salon_details.dart';
+import 'package:zain/features/salon_details/domain/entities/salon_details.dart';
 
 sealed class SalonDetailsState {
   const SalonDetailsState();

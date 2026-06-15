@@ -1,12 +1,12 @@
-import 'package:ronaq_barber/core/cache/cache_keys.dart';
-import 'package:ronaq_barber/core/cache/shared_pref_cache_client.dart';
-import 'package:ronaq_barber/core/networking/api_error_model.dart';
-import 'package:ronaq_barber/core/networking/result.dart';
-import 'package:ronaq_barber/features/onboarding/data/data_sources/onboarding_local_data_source.dart';
-import 'package:ronaq_barber/features/onboarding/data/data_sources/onboarding_remote_data_source.dart';
-import 'package:ronaq_barber/features/onboarding/data/models/onboarding_item_model.dart';
-import 'package:ronaq_barber/features/onboarding/domain/entities/onboarding_item.dart';
-import 'package:ronaq_barber/features/onboarding/domain/repositories/onboarding_repository.dart';
+import 'package:zain/core/cache/cache_keys.dart';
+import 'package:zain/core/cache/shared_pref_cache_client.dart';
+import 'package:zain/core/networking/api_error_model.dart';
+import 'package:zain/core/networking/result.dart';
+import 'package:zain/features/onboarding/data/data_sources/onboarding_local_data_source.dart';
+import 'package:zain/features/onboarding/data/data_sources/onboarding_remote_data_source.dart';
+import 'package:zain/features/onboarding/data/models/onboarding_item_model.dart';
+import 'package:zain/features/onboarding/domain/entities/onboarding_item.dart';
+import 'package:zain/features/onboarding/domain/repositories/onboarding_repository.dart';
 
 class OnboardingRepositoryImpl implements OnboardingRepository {
   OnboardingRepositoryImpl({

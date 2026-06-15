@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-import 'package:ronaq_barber/core/resources/image_resources.dart';
-import 'package:ronaq_barber/core/widgets/theme_toggle_button.dart';
+import 'package:zain/core/resources/image_resources.dart';
+import 'package:zain/core/widgets/theme_toggle_button.dart';
 
 // import 'language_toggle_button.dart';
 

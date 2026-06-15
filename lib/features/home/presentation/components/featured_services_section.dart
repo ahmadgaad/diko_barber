@@ -3,11 +3,12 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:ronaq_barber/core/shared/domain/entities/nearest_service.dart';
-import 'package:ronaq_barber/core/theme/app_colors.dart';
-import 'package:ronaq_barber/features/home/presentation/components/section_header.dart';
-import 'package:ronaq_barber/features/home/presentation/cubit/featured_services_cubit.dart';
-import 'package:ronaq_barber/features/home/presentation/cubit/featured_services_state.dart';
+import 'package:zain/core/shared/domain/entities/nearest_service.dart';
+import 'package:zain/core/theme/app_colors.dart';
+import 'package:zain/core/widgets/auth_gate.dart';
+import 'package:zain/features/home/presentation/components/section_header.dart';
+import 'package:zain/features/home/presentation/cubit/featured_services_cubit.dart';
+import 'package:zain/features/home/presentation/cubit/featured_services_state.dart';
 import 'package:shimmer/shimmer.dart';
 
 class FeaturedServicesSection extends StatelessWidget {
@@ -132,9 +133,12 @@ class _ServiceImage extends StatelessWidget {
           top: 10.h,
           end: 10.w,
           child: GestureDetector(
-            onTap: () => context
-                .read<FeaturedServicesCubit>()
-                .toggleFavorite(service.id),
+            onTap: () => AuthGate.guard(
+              context,
+              () => context
+                  .read<FeaturedServicesCubit>()
+                  .toggleFavorite(service.id),
+            ),
             child: Container(
               width: 28.r,
               height: 28.r,

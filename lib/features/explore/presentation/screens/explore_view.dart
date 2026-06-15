@@ -4,15 +4,16 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:ronaq_barber/core/theme/app_colors.dart';
-import 'package:ronaq_barber/core/widgets/app_snack_bar.dart';
-import 'package:ronaq_barber/features/explore/presentation/components/explore_empty_state.dart';
-import 'package:ronaq_barber/features/explore/presentation/components/explore_shimmer.dart';
-import 'package:ronaq_barber/features/explore/presentation/components/explore_sheet_header.dart';
-import 'package:ronaq_barber/features/explore/presentation/components/salon_grid_card.dart';
-import 'package:ronaq_barber/features/explore/presentation/components/salon_map_view.dart';
-import 'package:ronaq_barber/features/explore/presentation/cubit/explore_cubit.dart';
-import 'package:ronaq_barber/features/explore/presentation/cubit/explore_state.dart';
+import 'package:zain/core/theme/app_colors.dart';
+import 'package:zain/core/widgets/app_snack_bar.dart';
+import 'package:zain/core/widgets/auth_gate.dart';
+import 'package:zain/features/explore/presentation/components/explore_empty_state.dart';
+import 'package:zain/features/explore/presentation/components/explore_sheet_header.dart';
+import 'package:zain/features/explore/presentation/components/explore_shimmer.dart';
+import 'package:zain/features/explore/presentation/components/salon_grid_card.dart';
+import 'package:zain/features/explore/presentation/components/salon_map_view.dart';
+import 'package:zain/features/explore/presentation/cubit/explore_cubit.dart';
+import 'package:zain/features/explore/presentation/cubit/explore_state.dart';
 
 class ExploreView extends StatefulWidget {
   const ExploreView({super.key, this.onSheetSizeChanged});
@@ -114,12 +115,14 @@ class _ExploreViewState extends State<ExploreView> {
               return SalonGridCard(
                 salon: salon,
                 isHighlighted: salon.id == state.highlightedSalonId,
-                onTap: () {
+                onTap: () => AuthGate.guard(context, () {
                   context.read<ExploreCubit>().highlightSalon(salon.id);
                   context.push('/salon/${salon.id}');
-                },
-                onFavoriteTap: () =>
-                    context.read<ExploreCubit>().toggleFavorite(salon.id),
+                }),
+                onFavoriteTap: () => AuthGate.guard(
+                  context,
+                  () => context.read<ExploreCubit>().toggleFavorite(salon.id),
+                ),
               );
             },
           ),
@@ -322,4 +325,3 @@ class _ExploreViewState extends State<ExploreView> {
     );
   }
 }
-

@@ -1,14 +1,14 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:ronaq_barber/core/networking/result.dart';
-import 'package:ronaq_barber/core/router/app_routes.dart';
-import 'package:ronaq_barber/core/services/location_service.dart';
-import 'package:ronaq_barber/core/shared/domain/entities/city.dart';
-import 'package:ronaq_barber/core/shared/domain/entities/neighborhood.dart';
-import 'package:ronaq_barber/core/shared/domain/use_cases/get_categories_use_case.dart';
-import 'package:ronaq_barber/core/shared/domain/use_cases/get_cities_use_case.dart';
-import 'package:ronaq_barber/core/shared/domain/use_cases/get_neighborhoods_use_case.dart';
-import 'package:ronaq_barber/features/salon_auth/domain/entities/salon_register_params.dart';
-import 'package:ronaq_barber/features/salon_auth/domain/use_cases/salon_register_use_case.dart';
+import 'package:zain/core/networking/result.dart';
+import 'package:zain/core/router/app_routes.dart';
+import 'package:zain/core/services/location_service.dart';
+import 'package:zain/core/shared/domain/entities/city.dart';
+import 'package:zain/core/shared/domain/entities/neighborhood.dart';
+import 'package:zain/core/shared/domain/use_cases/get_categories_use_case.dart';
+import 'package:zain/core/shared/domain/use_cases/get_cities_use_case.dart';
+import 'package:zain/core/shared/domain/use_cases/get_neighborhoods_use_case.dart';
+import 'package:zain/features/salon_auth/domain/entities/salon_register_params.dart';
+import 'package:zain/features/salon_auth/domain/use_cases/salon_register_use_case.dart';
 
 import 'salon_register_state.dart';
 

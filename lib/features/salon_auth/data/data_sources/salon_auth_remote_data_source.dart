@@ -1,8 +1,8 @@
 import 'package:dio/dio.dart';
-import 'package:ronaq_barber/core/networking/api_consumer.dart';
-import 'package:ronaq_barber/core/networking/api_response.dart';
-import 'package:ronaq_barber/core/networking/endpoints.dart';
-import 'package:ronaq_barber/features/salon_auth/domain/entities/salon_register_params.dart';
+import 'package:zain/core/networking/api_consumer.dart';
+import 'package:zain/core/networking/api_response.dart';
+import 'package:zain/core/networking/endpoints.dart';
+import 'package:zain/features/salon_auth/domain/entities/salon_register_params.dart';
 
 abstract class SalonAuthRemoteDataSource {
   Future<ApiResponse<dynamic>> register(SalonRegisterParams params);

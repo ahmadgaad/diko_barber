@@ -1,4 +1,4 @@
-import 'package:ronaq_barber/features/book_appointment/domain/entities/coupon_validation.dart';
+import 'package:zain/features/book_appointment/domain/entities/coupon_validation.dart';
 
 class CouponValidationModel extends CouponValidation {
   const CouponValidationModel({

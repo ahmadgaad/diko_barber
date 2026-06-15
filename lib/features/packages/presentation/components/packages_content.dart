@@ -3,12 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
-import 'package:ronaq_barber/core/theme/app_colors.dart';
-import 'package:ronaq_barber/features/packages/presentation/components/package_grid_card.dart';
-import 'package:ronaq_barber/features/packages/presentation/components/package_list_card.dart';
-import 'package:ronaq_barber/features/packages/presentation/components/packages_layout_mode.dart';
-import 'package:ronaq_barber/features/packages/presentation/cubit/packages_list_cubit.dart';
-import 'package:ronaq_barber/features/packages/presentation/cubit/packages_list_state.dart';
+import 'package:zain/core/theme/app_colors.dart';
+import 'package:zain/features/packages/presentation/components/package_grid_card.dart';
+import 'package:zain/features/packages/presentation/components/package_list_card.dart';
+import 'package:zain/features/packages/presentation/components/packages_layout_mode.dart';
+import 'package:zain/features/packages/presentation/cubit/packages_list_cubit.dart';
+import 'package:zain/features/packages/presentation/cubit/packages_list_state.dart';
 
 class PackagesContent extends StatelessWidget {
   const PackagesContent({

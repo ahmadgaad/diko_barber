@@ -1,8 +1,8 @@
-import 'package:ronaq_barber/core/shared/domain/entities/city.dart';
-import 'package:ronaq_barber/core/shared/domain/entities/neighborhood.dart';
+import 'package:zain/core/shared/domain/entities/city.dart';
+import 'package:zain/core/shared/domain/entities/neighborhood.dart';
 
-export 'package:ronaq_barber/core/shared/domain/entities/city.dart';
-export 'package:ronaq_barber/core/shared/domain/entities/neighborhood.dart';
+export 'package:zain/core/shared/domain/entities/city.dart';
+export 'package:zain/core/shared/domain/entities/neighborhood.dart';
 
 class Gender {
   final int id;

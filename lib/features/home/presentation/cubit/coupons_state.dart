@@ -1,4 +1,4 @@
-import 'package:ronaq_barber/core/shared/domain/entities/coupon.dart';
+import 'package:zain/core/shared/domain/entities/coupon.dart';
 
 sealed class CouponsState {
   const CouponsState();

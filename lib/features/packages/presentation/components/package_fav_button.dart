@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:ronaq_barber/core/shared/domain/entities/nearest_package.dart';
-import 'package:ronaq_barber/features/packages/presentation/cubit/packages_list_cubit.dart';
+import 'package:zain/core/shared/domain/entities/nearest_package.dart';
+import 'package:zain/features/packages/presentation/cubit/packages_list_cubit.dart';
 
 class PackageFavButton extends StatelessWidget {
   const PackageFavButton({

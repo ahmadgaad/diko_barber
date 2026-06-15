@@ -1,4 +1,4 @@
-import 'package:ronaq_barber/core/shared/domain/entities/neighborhood.dart';
+import 'package:zain/core/shared/domain/entities/neighborhood.dart';
 
 class NeighborhoodModel extends Neighborhood {
   const NeighborhoodModel({required super.id, required super.name});

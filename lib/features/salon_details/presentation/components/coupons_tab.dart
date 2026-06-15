@@ -1,10 +1,10 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:ronaq_barber/core/shared/domain/entities/coupon.dart';
-import 'package:ronaq_barber/core/theme/app_colors.dart';
-import 'package:ronaq_barber/features/home/presentation/components/coupons_section.dart';
-import 'package:ronaq_barber/features/salon_details/presentation/components/empty_tab.dart';
+import 'package:zain/core/shared/domain/entities/coupon.dart';
+import 'package:zain/core/theme/app_colors.dart';
+import 'package:zain/features/home/presentation/components/coupons_section.dart';
+import 'package:zain/features/salon_details/presentation/components/empty_tab.dart';
 
 class CouponsTab extends StatelessWidget {
   const CouponsTab({super.key, required this.coupons, required this.colors});

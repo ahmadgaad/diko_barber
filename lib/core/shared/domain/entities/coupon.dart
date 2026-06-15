@@ -1,4 +1,4 @@
-import 'package:ronaq_barber/core/shared/domain/entities/distance.dart';
+import 'package:zain/core/shared/domain/entities/distance.dart';
 
 class CouponAppliesTo {
   const CouponAppliesTo({required this.id, required this.name});

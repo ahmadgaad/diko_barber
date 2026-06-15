@@ -4,9 +4,9 @@ import 'package:dio/dio.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/foundation.dart';
 import 'package:pretty_dio_logger/pretty_dio_logger.dart';
-import 'package:ronaq_barber/core/cache/cache_keys.dart';
-import 'package:ronaq_barber/core/networking/api_error_handler.dart';
-import 'package:ronaq_barber/core/networking/api_response.dart';
+import 'package:zain/core/cache/cache_keys.dart';
+import 'package:zain/core/networking/api_error_handler.dart';
+import 'package:zain/core/networking/api_response.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'api_consumer.dart';

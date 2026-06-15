@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
-import 'package:ronaq_barber/features/salon_details/domain/entities/rating_stats.dart';
-import 'package:ronaq_barber/features/salon_details/domain/entities/review.dart';
+import 'package:zain/features/salon_details/domain/entities/rating_stats.dart';
+import 'package:zain/features/salon_details/domain/entities/review.dart';
 
 class SalonRatingsPage extends Equatable {
   const SalonRatingsPage({

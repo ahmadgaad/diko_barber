@@ -1,10 +1,10 @@
 import 'dart:developer';
 
-import 'package:ronaq_barber/core/cache/cache_keys.dart';
-import 'package:ronaq_barber/core/cache/secure_storage_cache_client.dart';
-import 'package:ronaq_barber/core/di/service_locator.dart';
-import 'package:ronaq_barber/core/router/app_router.dart';
-import 'package:ronaq_barber/core/router/app_routes.dart';
+import 'package:zain/core/cache/cache_keys.dart';
+import 'package:zain/core/cache/secure_storage_cache_client.dart';
+import 'package:zain/core/di/service_locator.dart';
+import 'package:zain/core/router/app_router.dart';
+import 'package:zain/core/router/app_routes.dart';
 import 'package:dio/dio.dart';
 
 class AuthorizationInterceptor extends Interceptor {

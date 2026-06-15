@@ -1,8 +1,8 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:ronaq_barber/core/cache/cache_keys.dart';
-import 'package:ronaq_barber/core/cache/secure_storage_cache_client.dart';
-import 'package:ronaq_barber/features/auth/domain/use_cases/logout_use_case.dart';
-import 'package:ronaq_barber/features/profile/presentation/cubit/profile_state.dart';
+import 'package:zain/core/cache/cache_keys.dart';
+import 'package:zain/core/cache/secure_storage_cache_client.dart';
+import 'package:zain/features/auth/domain/use_cases/logout_use_case.dart';
+import 'package:zain/features/profile/presentation/cubit/profile_state.dart';
 
 class ProfileCubit extends Cubit<ProfileState> {
   ProfileCubit({

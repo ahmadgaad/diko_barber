@@ -1,6 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:ronaq_barber/core/networking/result.dart';
-import 'package:ronaq_barber/core/shared/domain/use_cases/get_banners_use_case.dart';
+import 'package:zain/core/networking/result.dart';
+import 'package:zain/core/shared/domain/use_cases/get_banners_use_case.dart';
 
 import 'banners_state.dart';
 

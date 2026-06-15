@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:ronaq_barber/core/shared/domain/entities/nearest_package.dart';
+import 'package:zain/core/shared/domain/entities/nearest_package.dart';
 
 class PackageDiscountBadge extends StatelessWidget {
   const PackageDiscountBadge({super.key, required this.package});

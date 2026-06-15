@@ -1,17 +1,17 @@
 import 'dart:developer';
 
-import 'package:ronaq_barber/core/networking/api_error_model.dart';
-import 'package:ronaq_barber/core/networking/result.dart';
-import 'package:ronaq_barber/features/salon_details/data/data_sources/salon_details_remote_data_source.dart';
-import 'package:ronaq_barber/features/salon_details/data/models/gallery_image_model.dart';
-import 'package:ronaq_barber/features/salon_details/data/models/rating_model.dart';
-import 'package:ronaq_barber/features/salon_details/data/models/salon_details_model.dart';
-import 'package:ronaq_barber/features/salon_details/domain/entities/rating_stats.dart';
-import 'package:ronaq_barber/features/salon_details/domain/entities/review.dart';
-import 'package:ronaq_barber/features/salon_details/domain/entities/salon_details.dart';
-import 'package:ronaq_barber/features/salon_details/domain/entities/salon_gallery_page.dart';
-import 'package:ronaq_barber/features/salon_details/domain/entities/salon_ratings_page.dart';
-import 'package:ronaq_barber/features/salon_details/domain/repositories/salon_details_repository.dart';
+import 'package:zain/core/networking/api_error_model.dart';
+import 'package:zain/core/networking/result.dart';
+import 'package:zain/features/salon_details/data/data_sources/salon_details_remote_data_source.dart';
+import 'package:zain/features/salon_details/data/models/gallery_image_model.dart';
+import 'package:zain/features/salon_details/data/models/rating_model.dart';
+import 'package:zain/features/salon_details/data/models/salon_details_model.dart';
+import 'package:zain/features/salon_details/domain/entities/rating_stats.dart';
+import 'package:zain/features/salon_details/domain/entities/review.dart';
+import 'package:zain/features/salon_details/domain/entities/salon_details.dart';
+import 'package:zain/features/salon_details/domain/entities/salon_gallery_page.dart';
+import 'package:zain/features/salon_details/domain/entities/salon_ratings_page.dart';
+import 'package:zain/features/salon_details/domain/repositories/salon_details_repository.dart';
 
 class SalonDetailsRepositoryImpl implements SalonDetailsRepository {
   const SalonDetailsRepositoryImpl(this._remoteDataSource);

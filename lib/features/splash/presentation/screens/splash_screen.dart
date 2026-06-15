@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:ronaq_barber/core/di/service_locator.dart';
+import 'package:zain/core/di/service_locator.dart';
 
 import '../cubit/splash_cubit.dart';
 import '../cubit/splash_state.dart';

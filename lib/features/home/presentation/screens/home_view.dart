@@ -7,37 +7,40 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_maps_flutter_android/google_maps_flutter_android.dart';
-import 'package:ronaq_barber/core/router/app_routes.dart';
-import 'package:ronaq_barber/core/shared/domain/entities/category.dart';
-import 'package:ronaq_barber/core/theme/app_colors.dart';
-import 'package:ronaq_barber/core/widgets/app_bottom_nav_bar.dart';
-import 'package:ronaq_barber/core/widgets/app_snack_bar.dart';
-import 'package:ronaq_barber/features/booking/presentation/screens/booking_view.dart';
-import 'package:ronaq_barber/features/explore/presentation/cubit/explore_cubit.dart';
-import 'package:ronaq_barber/features/explore/presentation/screens/explore_view.dart';
-import 'package:ronaq_barber/features/favorites/presentation/screens/favorites_view.dart';
-import 'package:ronaq_barber/features/home/presentation/components/banners_section.dart';
-import 'package:ronaq_barber/features/home/presentation/components/categories_section.dart';
-import 'package:ronaq_barber/features/home/presentation/components/coupons_section.dart';
-import 'package:ronaq_barber/features/home/presentation/components/featured_packages_section.dart';
-import 'package:ronaq_barber/features/home/presentation/components/featured_services_section.dart';
-import 'package:ronaq_barber/features/home/presentation/components/home_header.dart';
-import 'package:ronaq_barber/features/home/presentation/components/nearby_salons_section.dart';
-import 'package:ronaq_barber/features/home/presentation/cubit/banners_cubit.dart';
-import 'package:ronaq_barber/features/home/presentation/cubit/categories_cubit.dart';
-import 'package:ronaq_barber/features/home/presentation/cubit/coupons_cubit.dart';
-import 'package:ronaq_barber/features/home/presentation/cubit/featured_packages_cubit.dart';
-import 'package:ronaq_barber/features/home/presentation/cubit/featured_services_cubit.dart';
-import 'package:ronaq_barber/features/home/presentation/cubit/home_cubit.dart';
-import 'package:ronaq_barber/features/home/presentation/cubit/home_state.dart';
-import 'package:ronaq_barber/features/home/presentation/cubit/salons_cubit.dart';
-import 'package:ronaq_barber/features/home/presentation/cubit/salons_state.dart';
-import 'package:ronaq_barber/features/profile/presentation/screens/profile_view.dart';
+import 'package:zain/core/di/service_locator.dart';
+import 'package:zain/core/router/app_routes.dart';
+import 'package:zain/core/services/user_session.dart';
+import 'package:zain/core/shared/domain/entities/category.dart';
+import 'package:zain/core/theme/app_colors.dart';
+import 'package:zain/core/widgets/app_bottom_nav_bar.dart';
+import 'package:zain/core/widgets/app_snack_bar.dart';
+import 'package:zain/core/widgets/auth_gate.dart';
+import 'package:zain/features/booking/presentation/screens/booking_view.dart';
+import 'package:zain/features/explore/presentation/cubit/explore_cubit.dart';
+import 'package:zain/features/explore/presentation/screens/explore_view.dart';
+import 'package:zain/features/favorites/presentation/screens/favorites_view.dart';
+import 'package:zain/features/home/presentation/components/banners_section.dart';
+import 'package:zain/features/home/presentation/components/categories_section.dart';
+import 'package:zain/features/home/presentation/components/coupons_section.dart';
+import 'package:zain/features/home/presentation/components/featured_packages_section.dart';
+import 'package:zain/features/home/presentation/components/featured_services_section.dart';
+import 'package:zain/features/home/presentation/components/home_header.dart';
+import 'package:zain/features/home/presentation/components/nearby_salons_section.dart';
+import 'package:zain/features/home/presentation/cubit/banners_cubit.dart';
+import 'package:zain/features/home/presentation/cubit/categories_cubit.dart';
+import 'package:zain/features/home/presentation/cubit/coupons_cubit.dart';
+import 'package:zain/features/home/presentation/cubit/featured_packages_cubit.dart';
+import 'package:zain/features/home/presentation/cubit/featured_services_cubit.dart';
+import 'package:zain/features/home/presentation/cubit/home_cubit.dart';
+import 'package:zain/features/home/presentation/cubit/home_state.dart';
+import 'package:zain/features/home/presentation/cubit/salons_cubit.dart';
+import 'package:zain/features/home/presentation/cubit/salons_state.dart';
+import 'package:zain/features/profile/presentation/screens/profile_view.dart';
 
 class HomeScope extends InheritedWidget {
   const HomeScope({super.key, required this.onSwitchTab, required super.child});
 
-  final void Function(HomeTab tab, {Category? category}) onSwitchTab;
+  final Future<void> Function(HomeTab tab, {Category? category}) onSwitchTab;
 
   static HomeScope of(BuildContext context) =>
       context.dependOnInheritedWidgetOfExactType<HomeScope>()!;
@@ -94,7 +97,21 @@ class _HomeViewState extends State<HomeView>
     );
   }
 
-  void _switchTab(HomeTab tab, {Category? category}) {
+  static const _protectedTabs = {
+    HomeTab.bookings,
+    HomeTab.favorites,
+    HomeTab.profile,
+  };
+
+  Future<void> _switchTab(HomeTab tab, {Category? category}) async {
+    if (_protectedTabs.contains(tab)) {
+      final isAuth = await sl<UserSession>().isAuthenticated;
+      if (!mounted) return;
+      if (!isAuth) {
+        AuthGate.show(context);
+        return;
+      }
+    }
     _navController.animateTo(0.0, curve: Curves.easeOut);
     if (tab == HomeTab.explore) {
       context.read<ExploreCubit>().selectCategory(category);

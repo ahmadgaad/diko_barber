@@ -1,11 +1,11 @@
 import 'dart:async';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:ronaq_barber/core/services/location_service.dart';
-import 'package:ronaq_barber/core/shared/domain/entities/favorite_type.dart';
-import 'package:ronaq_barber/features/salon_details/domain/use_cases/get_salon_details_use_case.dart';
-import 'package:ronaq_barber/core/shared/domain/use_cases/toggle_favorite_use_case.dart';
-import 'package:ronaq_barber/features/salon_details/presentation/cubit/salon_details_state.dart';
+import 'package:zain/core/services/location_service.dart';
+import 'package:zain/core/shared/domain/entities/favorite_type.dart';
+import 'package:zain/features/salon_details/domain/use_cases/get_salon_details_use_case.dart';
+import 'package:zain/core/shared/domain/use_cases/toggle_favorite_use_case.dart';
+import 'package:zain/features/salon_details/presentation/cubit/salon_details_state.dart';
 
 class SalonDetailsCubit extends Cubit<SalonDetailsState> {
   SalonDetailsCubit(

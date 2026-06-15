@@ -2,16 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
-import 'package:ronaq_barber/core/theme/app_colors.dart';
-import 'package:ronaq_barber/features/explore/presentation/components/explore_back_button.dart';
-import 'package:ronaq_barber/features/explore/presentation/components/explore_empty_state.dart';
-import 'package:ronaq_barber/features/explore/presentation/components/explore_map_sheet_header.dart';
-import 'package:ronaq_barber/features/explore/presentation/components/explore_shimmer.dart';
-import 'package:ronaq_barber/features/explore/presentation/components/map_preview_card.dart';
-import 'package:ronaq_barber/features/explore/presentation/components/salon_grid_card.dart';
-import 'package:ronaq_barber/features/explore/presentation/components/salon_map_view.dart';
-import 'package:ronaq_barber/features/explore/presentation/cubit/explore_cubit.dart';
-import 'package:ronaq_barber/features/explore/presentation/cubit/explore_state.dart';
+import 'package:zain/core/theme/app_colors.dart';
+import 'package:zain/features/explore/presentation/components/explore_back_button.dart';
+import 'package:zain/features/explore/presentation/components/explore_empty_state.dart';
+import 'package:zain/features/explore/presentation/components/explore_map_sheet_header.dart';
+import 'package:zain/features/explore/presentation/components/explore_shimmer.dart';
+import 'package:zain/features/explore/presentation/components/map_preview_card.dart';
+import 'package:zain/features/explore/presentation/components/salon_grid_card.dart';
+import 'package:zain/features/explore/presentation/components/salon_map_view.dart';
+import 'package:zain/features/explore/presentation/cubit/explore_cubit.dart';
+import 'package:zain/features/explore/presentation/cubit/explore_state.dart';
 
 class ExploreMapScreen extends StatefulWidget {
   const ExploreMapScreen({super.key});

@@ -1,4 +1,4 @@
-import 'package:ronaq_barber/core/shared/domain/entities/nearest_package.dart';
+import 'package:zain/core/shared/domain/entities/nearest_package.dart';
 
 class PackagesPage {
   const PackagesPage({required this.packages, required this.hasMore});

@@ -4,10 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
-import 'package:ronaq_barber/core/theme/app_colors.dart';
-import 'package:ronaq_barber/features/packages/domain/entities/package_details.dart';
-import 'package:ronaq_barber/features/packages/presentation/cubit/package_details_cubit.dart';
-import 'package:ronaq_barber/features/packages/presentation/cubit/package_details_state.dart';
+import 'package:zain/core/theme/app_colors.dart';
+import 'package:zain/features/packages/domain/entities/package_details.dart';
+import 'package:zain/features/packages/presentation/cubit/package_details_cubit.dart';
+import 'package:zain/features/packages/presentation/cubit/package_details_state.dart';
 import 'package:shimmer/shimmer.dart';
 
 class PackageDetailsScreen extends StatelessWidget {

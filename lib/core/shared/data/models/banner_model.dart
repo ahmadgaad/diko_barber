@@ -1,4 +1,4 @@
-import 'package:ronaq_barber/core/shared/domain/entities/banner.dart';
+import 'package:zain/core/shared/domain/entities/banner.dart';
 
 class BannerModel extends Banner {
   const BannerModel({

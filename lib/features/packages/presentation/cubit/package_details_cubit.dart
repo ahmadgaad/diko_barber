@@ -1,8 +1,8 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:ronaq_barber/core/shared/domain/entities/favorite_type.dart';
-import 'package:ronaq_barber/core/shared/domain/use_cases/toggle_favorite_use_case.dart';
-import 'package:ronaq_barber/features/packages/domain/use_cases/get_package_details_use_case.dart';
-import 'package:ronaq_barber/features/packages/presentation/cubit/package_details_state.dart';
+import 'package:zain/core/shared/domain/entities/favorite_type.dart';
+import 'package:zain/core/shared/domain/use_cases/toggle_favorite_use_case.dart';
+import 'package:zain/features/packages/domain/use_cases/get_package_details_use_case.dart';
+import 'package:zain/features/packages/presentation/cubit/package_details_state.dart';
 
 class PackageDetailsCubit extends Cubit<PackageDetailsState> {
   PackageDetailsCubit(this._getPackageDetails, this._toggleFavoriteUseCase)

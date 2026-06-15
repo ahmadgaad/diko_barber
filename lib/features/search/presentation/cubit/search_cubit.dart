@@ -1,12 +1,12 @@
 import 'dart:convert';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:ronaq_barber/core/cache/cache_keys.dart';
-import 'package:ronaq_barber/core/cache/shared_pref_cache_client.dart';
-import 'package:ronaq_barber/core/shared/domain/entities/coupon.dart';
-import 'package:ronaq_barber/core/shared/domain/entities/distance.dart';
-import 'package:ronaq_barber/core/shared/domain/entities/salon.dart';
-import 'package:ronaq_barber/core/shared/domain/entities/specialization.dart';
+import 'package:zain/core/cache/cache_keys.dart';
+import 'package:zain/core/cache/shared_pref_cache_client.dart';
+import 'package:zain/core/shared/domain/entities/coupon.dart';
+import 'package:zain/core/shared/domain/entities/distance.dart';
+import 'package:zain/core/shared/domain/entities/salon.dart';
+import 'package:zain/core/shared/domain/entities/specialization.dart';
 import 'search_state.dart';
 
 class SearchCubit extends Cubit<SearchState> {

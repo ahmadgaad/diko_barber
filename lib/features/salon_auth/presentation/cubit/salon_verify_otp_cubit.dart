@@ -1,9 +1,9 @@
 import 'dart:async';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:ronaq_barber/core/networking/result.dart';
-import 'package:ronaq_barber/features/salon_auth/domain/use_cases/salon_resend_otp_use_case.dart';
-import 'package:ronaq_barber/features/salon_auth/domain/use_cases/salon_verify_otp_use_case.dart';
+import 'package:zain/core/networking/result.dart';
+import 'package:zain/features/salon_auth/domain/use_cases/salon_resend_otp_use_case.dart';
+import 'package:zain/features/salon_auth/domain/use_cases/salon_verify_otp_use_case.dart';
 
 import 'salon_verify_otp_state.dart';
 

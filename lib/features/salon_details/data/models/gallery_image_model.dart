@@ -1,4 +1,4 @@
-import 'package:ronaq_barber/features/salon_details/domain/entities/gallery_image.dart';
+import 'package:zain/features/salon_details/domain/entities/gallery_image.dart';
 
 class GalleryImageModel extends GalleryImage {
   const GalleryImageModel({

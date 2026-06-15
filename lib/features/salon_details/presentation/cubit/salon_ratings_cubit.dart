@@ -1,7 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:ronaq_barber/features/salon_details/domain/entities/review.dart';
-import 'package:ronaq_barber/features/salon_details/domain/use_cases/get_salon_ratings_use_case.dart';
-import 'package:ronaq_barber/features/salon_details/presentation/cubit/salon_ratings_state.dart';
+import 'package:zain/features/salon_details/domain/entities/review.dart';
+import 'package:zain/features/salon_details/domain/use_cases/get_salon_ratings_use_case.dart';
+import 'package:zain/features/salon_details/presentation/cubit/salon_ratings_state.dart';
 
 class SalonRatingsCubit extends Cubit<SalonRatingsState> {
   SalonRatingsCubit(this._getSalonRatings) : super(const SalonRatingsLoading());

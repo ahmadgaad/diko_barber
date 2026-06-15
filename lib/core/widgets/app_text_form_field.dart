@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:ronaq_barber/core/theme/app_colors.dart';
-import 'package:ronaq_barber/core/utils/arabic_digits_formatter.dart';
+import 'package:zain/core/theme/app_colors.dart';
+import 'package:zain/core/utils/arabic_digits_formatter.dart';
 
 class AppTextFormField extends StatelessWidget {
   const AppTextFormField({
@@ -48,10 +48,7 @@ class AppTextFormField extends StatelessWidget {
         _buildLabel(colors),
         SizedBox(height: 8.h),
         _buildTextField(colors, hasError),
-        if (hasError) ...[
-          SizedBox(height: 8.h),
-          _buildErrorText(colors),
-        ],
+        if (hasError) ...[SizedBox(height: 8.h), _buildErrorText(colors)],
       ],
     );
   }
@@ -82,17 +79,17 @@ class AppTextFormField extends StatelessWidget {
     );
   }
 
-  static final _numericTypes = {
-    TextInputType.number,
-    TextInputType.phone,
-  };
+  static final _numericTypes = {TextInputType.number, TextInputType.phone};
 
   Widget _buildTextField(AppColors colors, bool hasError) {
     final borderColor = hasError ? colors.error500 : colors.neutral300;
     final isMultiline = maxLines > 1;
-    final radius = isMultiline ? BorderRadius.circular(16.r) : BorderRadius.circular(999.r);
+    final radius = isMultiline
+        ? BorderRadius.circular(16.r)
+        : BorderRadius.circular(999.r);
 
-    final isNumeric = keyboardType != null && _numericTypes.contains(keyboardType);
+    final isNumeric =
+        keyboardType != null && _numericTypes.contains(keyboardType);
     final formatters = [
       if (isNumeric) const ArabicDigitsFormatter(),
       ...?inputFormatters,
@@ -122,10 +119,7 @@ class AppTextFormField extends StatelessWidget {
         suffixIcon: suffixIcon,
         filled: true,
         fillColor: colors.neutral50,
-        contentPadding: EdgeInsets.symmetric(
-          horizontal: 20.w,
-          vertical: 14.h,
-        ),
+        contentPadding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 14.h),
         border: OutlineInputBorder(
           borderRadius: radius,
           borderSide: BorderSide(color: borderColor),
@@ -136,8 +130,9 @@ class AppTextFormField extends StatelessWidget {
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: radius,
-          borderSide:
-              BorderSide(color: hasError ? colors.error500 : splashOrange),
+          borderSide: BorderSide(
+            color: hasError ? colors.error500 : splashOrange,
+          ),
         ),
       ),
     );

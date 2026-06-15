@@ -3,9 +3,9 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:ronaq_barber/core/di/service_locator.dart';
-import 'package:ronaq_barber/core/shared/domain/entities/nearest_service.dart';
-import 'package:ronaq_barber/core/theme/app_colors.dart';
+import 'package:zain/core/di/service_locator.dart';
+import 'package:zain/core/shared/domain/entities/nearest_service.dart';
+import 'package:zain/core/theme/app_colors.dart';
 import 'package:shimmer/shimmer.dart';
 
 import '../cubit/nearest_services_list_cubit.dart';

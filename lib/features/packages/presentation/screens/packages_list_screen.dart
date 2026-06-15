@@ -3,16 +3,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
-import 'package:ronaq_barber/core/theme/app_colors.dart';
-import 'package:ronaq_barber/features/packages/presentation/components/packages_content.dart';
-import 'package:ronaq_barber/features/packages/presentation/components/packages_error_view.dart';
-import 'package:ronaq_barber/features/packages/presentation/components/packages_filter_button.dart';
-import 'package:ronaq_barber/features/packages/presentation/components/packages_filter_sheet.dart';
-import 'package:ronaq_barber/features/packages/presentation/components/packages_layout_mode.dart';
-import 'package:ronaq_barber/features/packages/presentation/components/packages_search_bar.dart';
-import 'package:ronaq_barber/features/packages/presentation/components/packages_shimmer.dart';
-import 'package:ronaq_barber/features/packages/presentation/cubit/packages_list_cubit.dart';
-import 'package:ronaq_barber/features/packages/presentation/cubit/packages_list_state.dart';
+import 'package:zain/core/theme/app_colors.dart';
+import 'package:zain/features/packages/presentation/components/packages_content.dart';
+import 'package:zain/features/packages/presentation/components/packages_error_view.dart';
+import 'package:zain/features/packages/presentation/components/packages_filter_button.dart';
+import 'package:zain/features/packages/presentation/components/packages_filter_sheet.dart';
+import 'package:zain/features/packages/presentation/components/packages_layout_mode.dart';
+import 'package:zain/features/packages/presentation/components/packages_search_bar.dart';
+import 'package:zain/features/packages/presentation/components/packages_shimmer.dart';
+import 'package:zain/features/packages/presentation/cubit/packages_list_cubit.dart';
+import 'package:zain/features/packages/presentation/cubit/packages_list_state.dart';
 
 class PackagesListScreen extends StatefulWidget {
   const PackagesListScreen({super.key});

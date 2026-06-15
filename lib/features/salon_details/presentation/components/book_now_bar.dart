@@ -3,11 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
-import 'package:ronaq_barber/core/router/app_routes.dart';
-import 'package:ronaq_barber/core/theme/app_colors.dart';
-import 'package:ronaq_barber/features/book_appointment/presentation/book_appointment_args.dart';
-import 'package:ronaq_barber/features/salon_details/presentation/cubit/salon_details_cubit.dart';
-import 'package:ronaq_barber/features/salon_details/presentation/cubit/salon_details_state.dart';
+import 'package:zain/core/router/app_routes.dart';
+import 'package:zain/core/theme/app_colors.dart';
+import 'package:zain/core/widgets/auth_gate.dart';
+import 'package:zain/features/book_appointment/presentation/book_appointment_args.dart';
+import 'package:zain/features/salon_details/presentation/cubit/salon_details_cubit.dart';
+import 'package:zain/features/salon_details/presentation/cubit/salon_details_state.dart';
 
 class BookNowBar extends StatelessWidget {
   const BookNowBar({
@@ -96,14 +97,17 @@ class BookNowBar extends StatelessWidget {
                 ),
               ],
               GestureDetector(
-                onTap: () => context.push(
-                  AppRoutes.bookAppointment,
-                  extra: BookAppointmentArgs(
-                    salonId: salonId,
-                    salonName: salonName,
-                    couponCode: couponCode,
-                    serviceIds: serviceIds,
-                    packageIds: packageIds,
+                onTap: () => AuthGate.guard(
+                  context,
+                  () => context.push(
+                    AppRoutes.bookAppointment,
+                    extra: BookAppointmentArgs(
+                      salonId: salonId,
+                      salonName: salonName,
+                      couponCode: couponCode,
+                      serviceIds: serviceIds,
+                      packageIds: packageIds,
+                    ),
                   ),
                 ),
                 child: Container(

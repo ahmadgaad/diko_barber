@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:ronaq_barber/core/resources/svg_resources.dart';
-import 'package:ronaq_barber/core/theme/app_colors.dart';
-import 'package:ronaq_barber/core/theme/cubit/theme_cubit.dart';
-import 'package:ronaq_barber/core/theme/cubit/theme_state.dart';
+import 'package:zain/core/resources/svg_resources.dart';
+import 'package:zain/core/theme/app_colors.dart';
+import 'package:zain/core/theme/cubit/theme_cubit.dart';
+import 'package:zain/core/theme/cubit/theme_state.dart';
 
 class ThemeToggleButton extends StatelessWidget {
   const ThemeToggleButton({super.key});

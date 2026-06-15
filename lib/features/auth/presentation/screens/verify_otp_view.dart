@@ -4,10 +4,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:pinput/pinput.dart';
-import 'package:ronaq_barber/core/theme/app_colors.dart';
-import 'package:ronaq_barber/core/utils/arabic_digits_formatter.dart';
-import 'package:ronaq_barber/features/auth/presentation/cubit/verify_otp_cubit.dart';
-import 'package:ronaq_barber/features/auth/presentation/cubit/verify_otp_state.dart';
+import 'package:zain/core/theme/app_colors.dart';
+import 'package:zain/core/utils/arabic_digits_formatter.dart';
+import 'package:zain/features/auth/presentation/cubit/verify_otp_cubit.dart';
+import 'package:zain/features/auth/presentation/cubit/verify_otp_state.dart';
 
 class VerifyOtpView extends StatelessWidget {
   const VerifyOtpView({super.key, required this.email});

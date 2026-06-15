@@ -1,17 +1,17 @@
 import 'package:intl/intl.dart';
-import 'package:ronaq_barber/core/networking/api_error_model.dart';
-import 'package:ronaq_barber/core/networking/result.dart';
-import 'package:ronaq_barber/features/book_appointment/data/data_sources/book_appointment_remote_data_source.dart';
-import 'package:ronaq_barber/features/book_appointment/data/models/appointment_service_model.dart';
-import 'package:ronaq_barber/features/book_appointment/data/models/coupon_validation_model.dart';
-import 'package:ronaq_barber/features/book_appointment/data/models/staff_member_model.dart';
-import 'package:ronaq_barber/features/book_appointment/data/models/time_slot_model.dart';
-import 'package:ronaq_barber/features/book_appointment/domain/entities/appointment_service.dart';
-import 'package:ronaq_barber/features/book_appointment/domain/entities/book_appointment_params.dart';
-import 'package:ronaq_barber/features/book_appointment/domain/entities/coupon_validation.dart';
-import 'package:ronaq_barber/features/book_appointment/domain/entities/staff_member.dart';
-import 'package:ronaq_barber/features/book_appointment/domain/entities/time_slot.dart';
-import 'package:ronaq_barber/features/book_appointment/domain/repositories/book_appointment_repository.dart';
+import 'package:zain/core/networking/api_error_model.dart';
+import 'package:zain/core/networking/result.dart';
+import 'package:zain/features/book_appointment/data/data_sources/book_appointment_remote_data_source.dart';
+import 'package:zain/features/book_appointment/data/models/appointment_service_model.dart';
+import 'package:zain/features/book_appointment/data/models/coupon_validation_model.dart';
+import 'package:zain/features/book_appointment/data/models/staff_member_model.dart';
+import 'package:zain/features/book_appointment/data/models/time_slot_model.dart';
+import 'package:zain/features/book_appointment/domain/entities/appointment_service.dart';
+import 'package:zain/features/book_appointment/domain/entities/book_appointment_params.dart';
+import 'package:zain/features/book_appointment/domain/entities/coupon_validation.dart';
+import 'package:zain/features/book_appointment/domain/entities/staff_member.dart';
+import 'package:zain/features/book_appointment/domain/entities/time_slot.dart';
+import 'package:zain/features/book_appointment/domain/repositories/book_appointment_repository.dart';
 
 class BookAppointmentRepositoryImpl implements BookAppointmentRepository {
   const BookAppointmentRepositoryImpl(this._dataSource);

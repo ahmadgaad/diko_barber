@@ -7,16 +7,16 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
-import 'package:ronaq_barber/core/router/app_routes.dart';
-import 'package:ronaq_barber/core/shared/domain/entities/coupon.dart';
-import 'package:ronaq_barber/core/theme/app_colors.dart';
-import 'package:ronaq_barber/core/widgets/app_gradient_button.dart';
-import 'package:ronaq_barber/core/widgets/app_snack_bar.dart';
-import 'package:ronaq_barber/features/book_appointment/presentation/book_appointment_args.dart';
-import 'package:ronaq_barber/features/home/presentation/components/section_header.dart';
-import 'package:ronaq_barber/features/salon_details/presentation/screens/salon_details_args.dart';
-import 'package:ronaq_barber/features/home/presentation/cubit/coupons_cubit.dart';
-import 'package:ronaq_barber/features/home/presentation/cubit/coupons_state.dart';
+import 'package:zain/core/router/app_routes.dart';
+import 'package:zain/core/shared/domain/entities/coupon.dart';
+import 'package:zain/core/theme/app_colors.dart';
+import 'package:zain/core/widgets/app_gradient_button.dart';
+import 'package:zain/core/widgets/app_snack_bar.dart';
+import 'package:zain/features/book_appointment/presentation/book_appointment_args.dart';
+import 'package:zain/features/home/presentation/components/section_header.dart';
+import 'package:zain/features/salon_details/presentation/screens/salon_details_args.dart';
+import 'package:zain/features/home/presentation/cubit/coupons_cubit.dart';
+import 'package:zain/features/home/presentation/cubit/coupons_state.dart';
 import 'package:shimmer/shimmer.dart';
 
 class CouponsSection extends StatelessWidget {

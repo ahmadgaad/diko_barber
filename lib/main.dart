@@ -4,11 +4,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_maps_flutter_android/google_maps_flutter_android.dart';
 import 'package:google_maps_flutter_platform_interface/google_maps_flutter_platform_interface.dart';
 import 'package:intl/date_symbol_data_local.dart';
-import 'package:ronaq_barber/core/di/service_locator.dart';
-import 'package:ronaq_barber/core/l10n/app_locales.dart';
-import 'package:ronaq_barber/core/locale/domain/use_cases/get_locale_use_case.dart';
-import 'package:ronaq_barber/core/observers/app_bloc_observer.dart';
-import 'package:ronaq_barber/ronaq_barber_app.dart';
+import 'package:zain/core/di/service_locator.dart';
+import 'package:zain/core/l10n/app_locales.dart';
+import 'package:zain/core/locale/domain/use_cases/get_locale_use_case.dart';
+import 'package:zain/core/observers/app_bloc_observer.dart';
+import 'package:zain/ronaq_barber_app.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -35,7 +35,7 @@ void main() async {
       fallbackLocale: AppLocales.fallback,
       startLocale: startLocale,
       saveLocale: false,
-      child: const RonaqBarberApp(),
+      child: const ZainApp(),
     ),
   );
 }

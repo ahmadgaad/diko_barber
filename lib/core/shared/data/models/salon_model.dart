@@ -1,6 +1,6 @@
-import 'package:ronaq_barber/core/shared/domain/entities/distance.dart';
-import 'package:ronaq_barber/core/shared/domain/entities/salon.dart';
-import 'package:ronaq_barber/core/shared/domain/entities/specialization.dart';
+import 'package:zain/core/shared/domain/entities/distance.dart';
+import 'package:zain/core/shared/domain/entities/salon.dart';
+import 'package:zain/core/shared/domain/entities/specialization.dart';
 
 class SalonModel extends Salon {
   const SalonModel({

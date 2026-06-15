@@ -1,4 +1,4 @@
-import 'package:ronaq_barber/features/onboarding/domain/entities/onboarding_item.dart';
+import 'package:zain/features/onboarding/domain/entities/onboarding_item.dart';
 
 class OnboardingItemModel extends OnboardingItem {
   const OnboardingItemModel({

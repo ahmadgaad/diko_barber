@@ -1,6 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:ronaq_barber/core/networking/result.dart';
-import 'package:ronaq_barber/features/auth/domain/use_cases/forgot_password_use_case.dart';
+import 'package:zain/core/networking/result.dart';
+import 'package:zain/features/auth/domain/use_cases/forgot_password_use_case.dart';
 
 import 'forgot_password_state.dart';
 

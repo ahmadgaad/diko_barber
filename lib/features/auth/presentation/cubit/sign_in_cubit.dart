@@ -1,12 +1,12 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
-import 'package:ronaq_barber/core/cache/cache_keys.dart';
-import 'package:ronaq_barber/core/cache/secure_storage_cache_client.dart';
-import 'package:ronaq_barber/core/cache/shared_pref_cache_client.dart';
-import 'package:ronaq_barber/core/networking/result.dart';
-import 'package:ronaq_barber/core/router/app_routes.dart';
-import 'package:ronaq_barber/features/auth/domain/use_cases/sign_in_use_case.dart';
-import 'package:ronaq_barber/features/auth/domain/use_cases/social_login_use_case.dart';
+import 'package:zain/core/cache/cache_keys.dart';
+import 'package:zain/core/cache/secure_storage_cache_client.dart';
+import 'package:zain/core/cache/shared_pref_cache_client.dart';
+import 'package:zain/core/networking/result.dart';
+import 'package:zain/core/router/app_routes.dart';
+import 'package:zain/features/auth/domain/use_cases/sign_in_use_case.dart';
+import 'package:zain/features/auth/domain/use_cases/social_login_use_case.dart';
 
 import 'sign_in_state.dart';
 

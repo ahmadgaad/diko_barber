@@ -2,14 +2,14 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:ronaq_barber/core/resources/image_resources.dart';
-import 'package:ronaq_barber/core/shared/domain/entities/category.dart';
-import 'package:ronaq_barber/core/theme/app_colors.dart';
-import 'package:ronaq_barber/core/widgets/app_bottom_nav_bar.dart';
-import 'package:ronaq_barber/features/home/presentation/components/section_header.dart';
-import 'package:ronaq_barber/features/home/presentation/cubit/categories_cubit.dart';
-import 'package:ronaq_barber/features/home/presentation/cubit/categories_state.dart';
-import 'package:ronaq_barber/features/home/presentation/screens/home_view.dart';
+import 'package:zain/core/resources/image_resources.dart';
+import 'package:zain/core/shared/domain/entities/category.dart';
+import 'package:zain/core/theme/app_colors.dart';
+import 'package:zain/core/widgets/app_bottom_nav_bar.dart';
+import 'package:zain/features/home/presentation/components/section_header.dart';
+import 'package:zain/features/home/presentation/cubit/categories_cubit.dart';
+import 'package:zain/features/home/presentation/cubit/categories_state.dart';
+import 'package:zain/features/home/presentation/screens/home_view.dart';
 import 'package:shimmer/shimmer.dart';
 
 class CategoriesSection extends StatelessWidget {

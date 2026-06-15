@@ -1,5 +1,5 @@
-import 'package:ronaq_barber/core/shared/domain/entities/category.dart';
-import 'package:ronaq_barber/core/shared/domain/entities/salon.dart';
+import 'package:zain/core/shared/domain/entities/category.dart';
+import 'package:zain/core/shared/domain/entities/salon.dart';
 
 sealed class ExploreState {
   const ExploreState();

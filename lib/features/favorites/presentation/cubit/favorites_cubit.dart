@@ -1,12 +1,12 @@
 import 'dart:async';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:ronaq_barber/core/networking/result.dart';
-import 'package:ronaq_barber/core/shared/domain/entities/favorite_type.dart';
-import 'package:ronaq_barber/core/shared/domain/entities/favorites_tab_result.dart';
-import 'package:ronaq_barber/core/shared/domain/use_cases/get_favorites_use_case.dart';
-import 'package:ronaq_barber/core/shared/domain/use_cases/toggle_favorite_use_case.dart';
-import 'package:ronaq_barber/features/favorites/presentation/cubit/favorites_state.dart';
+import 'package:zain/core/networking/result.dart';
+import 'package:zain/core/shared/domain/entities/favorite_type.dart';
+import 'package:zain/core/shared/domain/entities/favorites_tab_result.dart';
+import 'package:zain/core/shared/domain/use_cases/get_favorites_use_case.dart';
+import 'package:zain/core/shared/domain/use_cases/toggle_favorite_use_case.dart';
+import 'package:zain/features/favorites/presentation/cubit/favorites_state.dart';
 
 class FavoritesCubit extends Cubit<FavoritesState> {
   FavoritesCubit(

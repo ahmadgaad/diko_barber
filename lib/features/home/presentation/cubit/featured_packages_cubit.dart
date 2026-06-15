@@ -2,12 +2,12 @@ import 'dart:async';
 import 'dart:developer';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:ronaq_barber/core/networking/result.dart';
-import 'package:ronaq_barber/core/services/location_service.dart';
-import 'package:ronaq_barber/core/shared/domain/entities/favorite_type.dart';
-import 'package:ronaq_barber/core/shared/domain/entities/nearest_packages_params.dart';
-import 'package:ronaq_barber/core/shared/domain/use_cases/get_nearest_packages_use_case.dart';
-import 'package:ronaq_barber/core/shared/domain/use_cases/toggle_favorite_use_case.dart';
+import 'package:zain/core/networking/result.dart';
+import 'package:zain/core/services/location_service.dart';
+import 'package:zain/core/shared/domain/entities/favorite_type.dart';
+import 'package:zain/core/shared/domain/entities/nearest_packages_params.dart';
+import 'package:zain/core/shared/domain/use_cases/get_nearest_packages_use_case.dart';
+import 'package:zain/core/shared/domain/use_cases/toggle_favorite_use_case.dart';
 
 import 'featured_packages_state.dart';
 

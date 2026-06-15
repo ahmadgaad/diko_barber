@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:ronaq_barber/core/theme/app_colors.dart';
-import 'package:ronaq_barber/features/packages/presentation/components/packages_layout_mode.dart';
+import 'package:zain/core/theme/app_colors.dart';
+import 'package:zain/features/packages/presentation/components/packages_layout_mode.dart';
 import 'package:shimmer/shimmer.dart';
 
 class PackagesShimmer extends StatelessWidget {

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:ronaq_barber/core/theme/app_colors.dart';
+import 'package:zain/core/theme/app_colors.dart';
 import 'package:shimmer/shimmer.dart';
 
 /// Wraps any skeleton widget with the app shimmer animation.

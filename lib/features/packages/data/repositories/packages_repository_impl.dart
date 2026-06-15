@@ -1,14 +1,14 @@
 import 'dart:developer';
 
-import 'package:ronaq_barber/core/networking/api_error_model.dart';
-import 'package:ronaq_barber/core/networking/result.dart';
-import 'package:ronaq_barber/core/shared/data/models/nearest_package_model.dart';
-import 'package:ronaq_barber/core/shared/domain/entities/nearest_packages_params.dart';
-import 'package:ronaq_barber/features/packages/data/data_sources/packages_remote_data_source.dart';
-import 'package:ronaq_barber/features/packages/data/models/package_details_model.dart';
-import 'package:ronaq_barber/features/packages/domain/entities/package_details.dart';
-import 'package:ronaq_barber/features/packages/domain/entities/packages_page.dart';
-import 'package:ronaq_barber/features/packages/domain/repositories/packages_repository.dart';
+import 'package:zain/core/networking/api_error_model.dart';
+import 'package:zain/core/networking/result.dart';
+import 'package:zain/core/shared/data/models/nearest_package_model.dart';
+import 'package:zain/core/shared/domain/entities/nearest_packages_params.dart';
+import 'package:zain/features/packages/data/data_sources/packages_remote_data_source.dart';
+import 'package:zain/features/packages/data/models/package_details_model.dart';
+import 'package:zain/features/packages/domain/entities/package_details.dart';
+import 'package:zain/features/packages/domain/entities/packages_page.dart';
+import 'package:zain/features/packages/domain/repositories/packages_repository.dart';
 
 class PackagesRepositoryImpl implements PackagesRepository {
   const PackagesRepositoryImpl(this._remoteDataSource);

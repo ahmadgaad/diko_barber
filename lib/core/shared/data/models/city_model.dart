@@ -1,4 +1,4 @@
-import 'package:ronaq_barber/core/shared/domain/entities/city.dart';
+import 'package:zain/core/shared/domain/entities/city.dart';
 
 class CityModel extends City {
   const CityModel({required super.id, required super.name});

@@ -3,17 +3,19 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
-import 'package:ronaq_barber/core/router/app_routes.dart';
-import 'package:ronaq_barber/core/theme/app_colors.dart';
-import 'package:ronaq_barber/core/widgets/app_divider_with_text.dart';
-import 'package:ronaq_barber/core/widgets/app_gradient_button.dart';
-import 'package:ronaq_barber/core/widgets/app_snack_bar.dart';
-import 'package:ronaq_barber/core/widgets/app_text_form_field.dart';
-import 'package:ronaq_barber/features/auth/presentation/components/sign_in_footer.dart';
-import 'package:ronaq_barber/features/auth/presentation/components/sign_in_header.dart';
-import 'package:ronaq_barber/features/auth/presentation/components/sign_in_social_row.dart';
-import 'package:ronaq_barber/features/auth/presentation/cubit/sign_in_cubit.dart';
-import 'package:ronaq_barber/features/auth/presentation/cubit/sign_in_state.dart';
+import 'package:zain/core/di/service_locator.dart';
+import 'package:zain/core/router/app_routes.dart';
+import 'package:zain/core/services/user_session.dart';
+import 'package:zain/core/theme/app_colors.dart';
+import 'package:zain/core/widgets/app_divider_with_text.dart';
+import 'package:zain/core/widgets/app_gradient_button.dart';
+import 'package:zain/core/widgets/app_snack_bar.dart';
+import 'package:zain/core/widgets/app_text_form_field.dart';
+import 'package:zain/features/auth/presentation/components/sign_in_footer.dart';
+import 'package:zain/features/auth/presentation/components/sign_in_header.dart';
+import 'package:zain/features/auth/presentation/components/sign_in_social_row.dart';
+import 'package:zain/features/auth/presentation/cubit/sign_in_cubit.dart';
+import 'package:zain/features/auth/presentation/cubit/sign_in_state.dart';
 
 class SignInView extends StatefulWidget {
   const SignInView({super.key});
@@ -182,9 +184,32 @@ class _SignInViewState extends State<SignInView> {
               SizedBox(height: 32.h),
               AppGradientButton(
                 label: tr('auth.sign_in'),
-                enabled: formState.isValid,
                 isLoading: formState.isSubmitting,
                 onTap: cubit.signIn,
+              ),
+              SizedBox(height: 12.h),
+              SizedBox(
+                width: double.infinity,
+                height: 48.h,
+                child: OutlinedButton(
+                  onPressed: () => _continueAsGuest(context),
+                  style: OutlinedButton.styleFrom(
+                    side: BorderSide(
+                      color: AppColors.of(context).neutral300,
+                    ),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(999.r),
+                    ),
+                  ),
+                  child: Text(
+                    tr('onboarding.continue_as_guest'),
+                    style: TextStyle(
+                      fontSize: 16.sp,
+                      fontWeight: FontWeight.w500,
+                      color: AppColors.of(context).neutral600,
+                    ),
+                  ),
+                ),
               ),
             ],
           ),
@@ -209,4 +234,9 @@ class _SignInViewState extends State<SignInView> {
     );
   }
 
+  Future<void> _continueAsGuest(BuildContext context) async {
+    await sl<UserSession>().continueAsGuest();
+    if (!context.mounted) return;
+    context.go(AppRoutes.home);
+  }
 }

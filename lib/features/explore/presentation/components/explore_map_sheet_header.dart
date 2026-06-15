@@ -1,8 +1,8 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:ronaq_barber/core/theme/app_colors.dart';
-import 'package:ronaq_barber/features/explore/presentation/cubit/explore_state.dart';
+import 'package:zain/core/theme/app_colors.dart';
+import 'package:zain/features/explore/presentation/cubit/explore_state.dart';
 import 'category_filter_chips.dart';
 
 class ExploreMapSheetHeader extends StatelessWidget {

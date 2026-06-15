@@ -1,6 +1,6 @@
-import 'package:ronaq_barber/core/shared/domain/entities/distance.dart';
-import 'package:ronaq_barber/core/shared/domain/entities/nearest_package.dart';
-import 'package:ronaq_barber/features/packages/domain/entities/package_details.dart';
+import 'package:zain/core/shared/domain/entities/distance.dart';
+import 'package:zain/core/shared/domain/entities/nearest_package.dart';
+import 'package:zain/features/packages/domain/entities/package_details.dart';
 
 class PackageDetailsModel extends PackageDetails {
   const PackageDetailsModel({

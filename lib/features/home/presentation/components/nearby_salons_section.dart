@@ -3,13 +3,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
-import 'package:ronaq_barber/core/shared/domain/entities/salon.dart';
-import 'package:ronaq_barber/core/theme/app_colors.dart';
-import 'package:ronaq_barber/core/widgets/app_bottom_nav_bar.dart';
-import 'package:ronaq_barber/features/home/presentation/components/section_header.dart';
-import 'package:ronaq_barber/features/home/presentation/cubit/salons_cubit.dart';
-import 'package:ronaq_barber/features/home/presentation/cubit/salons_state.dart';
-import 'package:ronaq_barber/features/home/presentation/screens/home_view.dart';
+import 'package:zain/core/shared/domain/entities/salon.dart';
+import 'package:zain/core/theme/app_colors.dart';
+import 'package:zain/core/widgets/app_bottom_nav_bar.dart';
+import 'package:zain/core/widgets/auth_gate.dart';
+import 'package:zain/features/home/presentation/components/section_header.dart';
+import 'package:zain/features/home/presentation/cubit/salons_cubit.dart';
+import 'package:zain/features/home/presentation/cubit/salons_state.dart';
+import 'package:zain/features/home/presentation/screens/home_view.dart';
 import 'package:shimmer/shimmer.dart';
 
 class NearbySalonsSection extends StatelessWidget {
@@ -80,7 +81,10 @@ class _SalonsList extends StatelessWidget {
                   (salon) => Padding(
                     padding: EdgeInsetsDirectional.only(end: 12.w),
                     child: GestureDetector(
-                      onTap: () => context.push('/salon/${salon.id}'),
+                      onTap: () => AuthGate.guard(
+                        context,
+                        () => context.push('/salon/${salon.id}'),
+                      ),
                       child: _SalonCard(salon: salon, colors: colors),
                     ),
                   ),
@@ -175,7 +179,10 @@ class _SalonImage extends StatelessWidget {
           child: _FavoriteButton(
             isFavorite: salon.isFavorite,
             colors: colors,
-            onTap: () => context.read<SalonsCubit>().toggleFavorite(salon.id),
+            onTap: () => AuthGate.guard(
+              context,
+              () => context.read<SalonsCubit>().toggleFavorite(salon.id),
+            ),
           ),
         ),
         // Top-right: distance badge

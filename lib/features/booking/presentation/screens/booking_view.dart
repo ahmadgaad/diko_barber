@@ -3,10 +3,10 @@ import 'package:easy_localization/easy_localization.dart' hide TextDirection;
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:ronaq_barber/core/shared/domain/entities/booking.dart';
-import 'package:ronaq_barber/core/theme/app_colors.dart';
-import 'package:ronaq_barber/features/booking/presentation/cubit/bookings_cubit.dart';
-import 'package:ronaq_barber/features/booking/presentation/cubit/bookings_state.dart';
+import 'package:zain/core/shared/domain/entities/booking.dart';
+import 'package:zain/core/theme/app_colors.dart';
+import 'package:zain/features/booking/presentation/cubit/bookings_cubit.dart';
+import 'package:zain/features/booking/presentation/cubit/bookings_state.dart';
 import 'package:shimmer/shimmer.dart';
 
 class BookingView extends StatelessWidget {

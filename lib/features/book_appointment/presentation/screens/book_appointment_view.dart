@@ -4,13 +4,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
-import 'package:ronaq_barber/core/router/app_routes.dart';
-import 'package:ronaq_barber/core/theme/app_colors.dart';
-import 'package:ronaq_barber/core/widgets/app_gradient_button.dart';
-import 'package:ronaq_barber/features/book_appointment/domain/entities/appointment_service.dart';
-import 'package:ronaq_barber/features/book_appointment/domain/entities/staff_member.dart';
-import 'package:ronaq_barber/features/book_appointment/presentation/cubit/book_appointment_cubit.dart';
-import 'package:ronaq_barber/features/book_appointment/presentation/cubit/book_appointment_state.dart';
+import 'package:zain/core/router/app_routes.dart';
+import 'package:zain/core/theme/app_colors.dart';
+import 'package:zain/core/widgets/app_gradient_button.dart';
+import 'package:zain/features/book_appointment/domain/entities/appointment_service.dart';
+import 'package:zain/features/book_appointment/domain/entities/staff_member.dart';
+import 'package:zain/features/book_appointment/presentation/cubit/book_appointment_cubit.dart';
+import 'package:zain/features/book_appointment/presentation/cubit/book_appointment_state.dart';
 import 'package:shimmer/shimmer.dart';
 
 class BookAppointmentView extends StatelessWidget {

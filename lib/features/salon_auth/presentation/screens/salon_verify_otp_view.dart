@@ -4,11 +4,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:pinput/pinput.dart';
-import 'package:ronaq_barber/core/router/app_routes.dart';
-import 'package:ronaq_barber/core/utils/arabic_digits_formatter.dart';
-import 'package:ronaq_barber/core/theme/app_colors.dart';
-import 'package:ronaq_barber/features/salon_auth/presentation/cubit/salon_verify_otp_cubit.dart';
-import 'package:ronaq_barber/features/salon_auth/presentation/cubit/salon_verify_otp_state.dart';
+import 'package:zain/core/router/app_routes.dart';
+import 'package:zain/core/utils/arabic_digits_formatter.dart';
+import 'package:zain/core/theme/app_colors.dart';
+import 'package:zain/features/salon_auth/presentation/cubit/salon_verify_otp_cubit.dart';
+import 'package:zain/features/salon_auth/presentation/cubit/salon_verify_otp_state.dart';
 
 class SalonVerifyOtpView extends StatelessWidget {
   const SalonVerifyOtpView({super.key, required this.email});

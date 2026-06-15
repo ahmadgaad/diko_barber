@@ -2,9 +2,9 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:ronaq_barber/core/shared/domain/entities/category.dart';
-import 'package:ronaq_barber/core/theme/app_colors.dart';
-import 'package:ronaq_barber/features/explore/presentation/cubit/explore_cubit.dart';
+import 'package:zain/core/shared/domain/entities/category.dart';
+import 'package:zain/core/theme/app_colors.dart';
+import 'package:zain/features/explore/presentation/cubit/explore_cubit.dart';
 
 class CategoryFilterChips extends StatefulWidget {
   const CategoryFilterChips({

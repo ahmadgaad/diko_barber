@@ -1,4 +1,4 @@
-import 'package:ronaq_barber/core/shared/domain/entities/nearest_service.dart';
+import 'package:zain/core/shared/domain/entities/nearest_service.dart';
 
 sealed class FeaturedServicesState {
   const FeaturedServicesState();

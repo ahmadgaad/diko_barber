@@ -1,6 +1,6 @@
-import 'package:ronaq_barber/core/shared/domain/entities/nearest_package.dart';
-import 'package:ronaq_barber/core/shared/domain/entities/nearest_service.dart';
-import 'package:ronaq_barber/core/shared/domain/entities/salon.dart';
+import 'package:zain/core/shared/domain/entities/nearest_package.dart';
+import 'package:zain/core/shared/domain/entities/nearest_service.dart';
+import 'package:zain/core/shared/domain/entities/salon.dart';
 
 sealed class FavoritesState {
   const FavoritesState();

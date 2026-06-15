@@ -1,4 +1,4 @@
-import 'package:ronaq_barber/features/salon_details/domain/entities/review.dart';
+import 'package:zain/features/salon_details/domain/entities/review.dart';
 
 class RatingModel extends Review {
   const RatingModel({

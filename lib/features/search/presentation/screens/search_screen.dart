@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:ronaq_barber/core/di/service_locator.dart';
-import 'package:ronaq_barber/core/theme/app_colors.dart';
-import 'package:ronaq_barber/features/search/presentation/cubit/search_cubit.dart';
-import 'package:ronaq_barber/features/search/presentation/screens/search_view.dart';
+import 'package:zain/core/di/service_locator.dart';
+import 'package:zain/core/theme/app_colors.dart';
+import 'package:zain/features/search/presentation/cubit/search_cubit.dart';
+import 'package:zain/features/search/presentation/screens/search_view.dart';
 
 class SearchScreen extends StatelessWidget {
   const SearchScreen({super.key});

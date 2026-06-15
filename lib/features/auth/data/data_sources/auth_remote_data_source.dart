@@ -1,8 +1,8 @@
 import 'package:dio/dio.dart';
-import 'package:ronaq_barber/core/networking/api_consumer.dart';
-import 'package:ronaq_barber/core/networking/api_response.dart';
-import 'package:ronaq_barber/core/networking/endpoints.dart';
-import 'package:ronaq_barber/features/auth/domain/entities/sign_up_params.dart';
+import 'package:zain/core/networking/api_consumer.dart';
+import 'package:zain/core/networking/api_response.dart';
+import 'package:zain/core/networking/endpoints.dart';
+import 'package:zain/features/auth/domain/entities/sign_up_params.dart';
 
 abstract class AuthRemoteDataSource {
   Future<ApiResponse<dynamic>> signIn({

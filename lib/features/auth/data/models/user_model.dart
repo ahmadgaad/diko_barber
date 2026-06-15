@@ -1,6 +1,6 @@
-import 'package:ronaq_barber/core/shared/data/models/city_model.dart';
-import 'package:ronaq_barber/core/shared/data/models/neighborhood_model.dart';
-import 'package:ronaq_barber/features/auth/domain/entities/user.dart';
+import 'package:zain/core/shared/data/models/city_model.dart';
+import 'package:zain/core/shared/data/models/neighborhood_model.dart';
+import 'package:zain/features/auth/domain/entities/user.dart';
 
 class GenderModel extends Gender {
   const GenderModel({required super.id, required super.name});

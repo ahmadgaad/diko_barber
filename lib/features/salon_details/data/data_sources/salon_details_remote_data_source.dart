@@ -1,6 +1,6 @@
-import 'package:ronaq_barber/core/networking/api_consumer.dart';
-import 'package:ronaq_barber/core/networking/api_response.dart';
-import 'package:ronaq_barber/core/networking/endpoints.dart';
+import 'package:zain/core/networking/api_consumer.dart';
+import 'package:zain/core/networking/api_response.dart';
+import 'package:zain/core/networking/endpoints.dart';
 
 abstract class SalonDetailsRemoteDataSource {
   Future<ApiResponse<dynamic>> getSalonDetails(

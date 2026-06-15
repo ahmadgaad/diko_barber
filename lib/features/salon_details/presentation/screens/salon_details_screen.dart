@@ -1,21 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:ronaq_barber/core/theme/app_colors.dart';
-import 'package:ronaq_barber/features/salon_details/presentation/components/book_now_bar.dart';
-import 'package:ronaq_barber/features/salon_details/presentation/components/coupons_tab.dart';
-import 'package:ronaq_barber/features/salon_details/presentation/components/cover_sliver_app_bar.dart';
-import 'package:ronaq_barber/features/salon_details/presentation/components/gallery_tab.dart';
-import 'package:ronaq_barber/features/salon_details/presentation/components/packages_tab.dart';
-import 'package:ronaq_barber/features/salon_details/presentation/components/reviews_tab.dart';
-import 'package:ronaq_barber/features/salon_details/presentation/components/salon_details_error_view.dart';
-import 'package:ronaq_barber/features/salon_details/presentation/components/salon_details_loading_view.dart';
-import 'package:ronaq_barber/features/salon_details/presentation/components/salon_info_section.dart';
-import 'package:ronaq_barber/features/salon_details/presentation/components/salon_tab_bar_delegate.dart';
-import 'package:ronaq_barber/features/salon_details/presentation/components/services_tab.dart';
-import 'package:ronaq_barber/features/salon_details/presentation/components/shifts_tab.dart';
-import 'package:ronaq_barber/features/salon_details/presentation/components/staff_tab.dart';
-import 'package:ronaq_barber/features/salon_details/presentation/cubit/salon_details_cubit.dart';
-import 'package:ronaq_barber/features/salon_details/presentation/cubit/salon_details_state.dart';
+import 'package:zain/core/theme/app_colors.dart';
+import 'package:zain/features/salon_details/presentation/components/book_now_bar.dart';
+import 'package:zain/features/salon_details/presentation/components/coupons_tab.dart';
+import 'package:zain/features/salon_details/presentation/components/cover_sliver_app_bar.dart';
+import 'package:zain/features/salon_details/presentation/components/gallery_tab.dart';
+import 'package:zain/features/salon_details/presentation/components/packages_tab.dart';
+import 'package:zain/features/salon_details/presentation/components/reviews_tab.dart';
+import 'package:zain/features/salon_details/presentation/components/salon_details_error_view.dart';
+import 'package:zain/features/salon_details/presentation/components/salon_details_loading_view.dart';
+import 'package:zain/features/salon_details/presentation/components/salon_info_section.dart';
+import 'package:zain/features/salon_details/presentation/components/salon_tab_bar_delegate.dart';
+import 'package:zain/features/salon_details/presentation/components/services_tab.dart';
+import 'package:zain/features/salon_details/presentation/components/shifts_tab.dart';
+import 'package:zain/features/salon_details/presentation/components/staff_tab.dart';
+import 'package:zain/features/salon_details/presentation/cubit/salon_details_cubit.dart';
+import 'package:zain/features/salon_details/presentation/cubit/salon_details_state.dart';
 
 class SalonDetailsScreen extends StatefulWidget {
   const SalonDetailsScreen({super.key, this.initialTab = 0});
