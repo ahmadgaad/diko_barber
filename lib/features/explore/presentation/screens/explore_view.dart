@@ -12,6 +12,7 @@ import 'package:zain/features/explore/presentation/components/explore_sheet_head
 import 'package:zain/features/explore/presentation/components/explore_shimmer.dart';
 import 'package:zain/features/explore/presentation/components/salon_grid_card.dart';
 import 'package:zain/features/explore/presentation/components/salon_map_view.dart';
+import 'package:zain/core/widgets/app_shell.dart';
 import 'package:zain/features/explore/presentation/cubit/explore_cubit.dart';
 import 'package:zain/features/explore/presentation/cubit/explore_state.dart';
 
@@ -55,7 +56,9 @@ class _ExploreViewState extends State<ExploreView> {
 
   void _onSheetScroll() {
     if (!_sheetController.isAttached) return;
-    widget.onSheetSizeChanged?.call(_sheetController.size, _maxSize);
+    final callback = widget.onSheetSizeChanged ??
+        ExploreShellCallback.maybeOf(context)?.onSheetSizeChanged;
+    callback?.call(_sheetController.size, _maxSize);
   }
 
   @override

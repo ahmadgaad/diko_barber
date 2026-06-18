@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
+import 'package:zain/core/router/app_routes.dart';
 import 'package:pinput/pinput.dart';
 import 'package:zain/core/theme/app_colors.dart';
 import 'package:zain/core/utils/arabic_digits_formatter.dart';
@@ -19,7 +20,7 @@ class VerifyOtpView extends StatelessWidget {
     return BlocListener<VerifyOtpCubit, VerifyOtpState>(
       listener: (context, state) {
         if (state is VerifyOtpSuccess) {
-          context.go('/home');
+          context.go(AppRoutes.home);
         }
       },
       child: SafeArea(

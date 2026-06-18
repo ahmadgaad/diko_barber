@@ -9,7 +9,7 @@ import 'package:zain/core/widgets/app_bottom_nav_bar.dart';
 import 'package:zain/features/home/presentation/components/section_header.dart';
 import 'package:zain/features/home/presentation/cubit/categories_cubit.dart';
 import 'package:zain/features/home/presentation/cubit/categories_state.dart';
-import 'package:zain/features/home/presentation/screens/home_view.dart';
+import 'package:zain/core/widgets/app_shell.dart';
 import 'package:shimmer/shimmer.dart';
 
 class CategoriesSection extends StatelessWidget {

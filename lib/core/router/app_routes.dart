@@ -1,6 +1,10 @@
 abstract final class AppRoutes {
   static const splash = '/splash';
-  static const home = '/home';
+  static const home = '/';
+  static const explore = '/explore';
+  static const bookings = '/bookings';
+  static const favorites = '/favorites';
+  static const profile = '/profile';
   static const onboarding = '/onboarding';
   static const login = '/login';
   static const signup = '/signup';
@@ -18,6 +22,9 @@ abstract final class AppRoutes {
   static const packagesList = '/packages';
 
   static const claimCoupon = '/claim-coupon';
+  static const bookingSchedule = '/booking-schedule';
+
+  static const checkout = '/checkout';
 
   // Salon Auth
   static const salonSignup = '/salon-signup';

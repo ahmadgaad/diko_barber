@@ -58,8 +58,19 @@ import 'package:zain/features/salon_auth/presentation/cubit/salon_verify_otp_cub
 import 'package:zain/features/claim_coupon/data/data_sources/claim_coupon_remote_data_source.dart';
 import 'package:zain/features/claim_coupon/data/repositories/claim_coupon_repository_impl.dart';
 import 'package:zain/features/claim_coupon/domain/repositories/claim_coupon_repository.dart';
+import 'package:zain/features/claim_coupon/domain/use_cases/get_available_barbers_use_case.dart';
+import 'package:zain/features/claim_coupon/domain/use_cases/get_available_slots_use_case.dart';
 import 'package:zain/features/claim_coupon/domain/use_cases/get_coupon_eligible_items_use_case.dart';
 import 'package:zain/features/claim_coupon/presentation/cubit/claim_coupon_cubit.dart';
+import 'package:zain/features/checkout/data/data_sources/checkout_remote_data_source.dart';
+import 'package:zain/features/checkout/data/repositories/checkout_repository_impl.dart';
+import 'package:zain/features/checkout/domain/repositories/checkout_repository.dart';
+import 'package:zain/features/checkout/domain/use_cases/get_payment_methods_use_case.dart';
+import 'package:zain/features/checkout/presentation/cubit/checkout_cubit.dart';
+import 'package:zain/features/booking_schedule/data/data_sources/booking_schedule_remote_data_source.dart';
+import 'package:zain/features/booking_schedule/data/repositories/booking_schedule_repository_impl.dart';
+import 'package:zain/features/booking_schedule/domain/repositories/booking_schedule_repository.dart';
+import 'package:zain/features/booking_schedule/domain/use_cases/create_appointment_use_case.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get_it/get_it.dart';
@@ -375,8 +386,43 @@ Future<void> setupServiceLocator() async {
   sl.registerLazySingleton<GetCouponEligibleItemsUseCase>(
     () => GetCouponEligibleItemsUseCase(sl<ClaimCouponRepository>()),
   );
+  sl.registerLazySingleton<GetAvailableSlotsUseCase>(
+    () => GetAvailableSlotsUseCase(sl<ClaimCouponRepository>()),
+  );
+  sl.registerLazySingleton<GetAvailableBarbersUseCase>(
+    () => GetAvailableBarbersUseCase(sl<ClaimCouponRepository>()),
+  );
   sl.registerFactory<ClaimCouponCubit>(
-    () => ClaimCouponCubit(sl<GetCouponEligibleItemsUseCase>()),
+    () => ClaimCouponCubit(
+      sl<GetCouponEligibleItemsUseCase>(),
+      sl<GetAvailableSlotsUseCase>(),
+      sl<GetAvailableBarbersUseCase>(),
+    ),
+  );
+
+  // Booking schedule
+  sl.registerLazySingleton<BookingScheduleRemoteDataSource>(
+    () => BookingScheduleRemoteDataSourceImpl(sl<INetworkService>()),
+  );
+  sl.registerLazySingleton<BookingScheduleRepository>(
+    () => BookingScheduleRepositoryImpl(sl<BookingScheduleRemoteDataSource>()),
+  );
+  sl.registerLazySingleton<CreateAppointmentUseCase>(
+    () => CreateAppointmentUseCase(sl<BookingScheduleRepository>()),
+  );
+
+  // Checkout
+  sl.registerLazySingleton<CheckoutRemoteDataSource>(
+    () => CheckoutRemoteDataSourceImpl(sl<INetworkService>()),
+  );
+  sl.registerLazySingleton<CheckoutRepository>(
+    () => CheckoutRepositoryImpl(sl<CheckoutRemoteDataSource>()),
+  );
+  sl.registerLazySingleton<GetPaymentMethodsUseCase>(
+    () => GetPaymentMethodsUseCase(sl<CheckoutRepository>()),
+  );
+  sl.registerFactory<CheckoutCubit>(
+    () => CheckoutCubit(sl<GetPaymentMethodsUseCase>()),
   );
 
   sl.registerFactory<HomeCubit>(

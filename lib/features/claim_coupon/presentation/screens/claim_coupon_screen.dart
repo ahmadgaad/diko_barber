@@ -16,6 +16,7 @@ class ClaimCouponScreen extends StatelessWidget {
       create: (_) => sl<ClaimCouponCubit>()
         ..load(
           couponId: args.couponId,
+          salonId: args.salonId,
           couponCode: args.couponCode,
           couponName: args.couponName,
           salonName: args.salonName,

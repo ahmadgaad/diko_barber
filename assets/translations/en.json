@@ -11,7 +11,16 @@
     "no_items": "No eligible services or packages found for this coupon.",
     "next": "Next",
     "next_with_count": "Next ({count} selected)",
-    "save": "Save {amount}"
+    "save": "Save {amount}",
+    "schedule_title": "Choose Date & Time",
+    "choose_date": "Date",
+    "choose_time": "Available Times",
+    "choose_barber": "Choose Barber",
+    "any_barber": "Any Barber",
+    "no_slots": "No available times for this date.",
+    "no_barbers": "No barbers available for this slot.",
+    "book": "Confirm Booking",
+    "tap_to_choose": "Tap to choose"
   },
   "auth_gate": {
     "title": "Join Diko Barber",
@@ -371,5 +380,25 @@
     "coupon_valid": "Coupon applied",
     "coupon_invalid": "Invalid coupon",
     "any_staff_label": "Any available"
+  },
+  "checkout": {
+    "title": "Booking Summary",
+    "appointment_details": "Appointment Details",
+    "services": "Services",
+    "price_breakdown": "Price Breakdown",
+    "subtotal": "Subtotal",
+    "coupon_discount": "Coupon ({code})",
+    "tax": "Tax",
+    "home_service_fee": "Home Service Fee",
+    "total": "Total",
+    "date": "Date",
+    "time": "Time",
+    "duration_minutes": "{minutes} min",
+    "currency": "EGP",
+    "pay_now": "Pay Now",
+    "pay_later": "Pay Later",
+    "choose_payment_method": "Choose Payment Method",
+    "confirm_payment": "Confirm Payment",
+    "retry": "Retry"
   }
 }

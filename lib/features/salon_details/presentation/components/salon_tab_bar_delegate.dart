@@ -7,14 +7,16 @@ class SalonTabBarDelegate extends SliverPersistentHeaderDelegate {
   const SalonTabBarDelegate({
     required this.tabController,
     required this.colors,
+    this.selectedServiceCount = 0,
+    this.selectedPackageCount = 0,
   });
 
   final TabController tabController;
   final AppColors colors;
+  final int selectedServiceCount;
+  final int selectedPackageCount;
 
-  static const _tabs = [
-    'salon_details.tab_services',
-    'salon_details.tab_packages',
+  static const _otherTabs = [
     'salon_details.tab_coupons',
     'salon_details.tab_staff',
     'salon_details.tab_shifts',
@@ -52,12 +54,61 @@ class SalonTabBarDelegate extends SliverPersistentHeaderDelegate {
           fontWeight: FontWeight.w400,
         ),
         dividerColor: colors.neutral200,
-        tabs: _tabs.map((key) => Tab(text: tr(key))).toList(),
+        tabs: [
+          _BadgeTab(
+            label: tr('salon_details.tab_services'),
+            count: selectedServiceCount,
+          ),
+          _BadgeTab(
+            label: tr('salon_details.tab_packages'),
+            count: selectedPackageCount,
+          ),
+          ..._otherTabs.map((key) => Tab(text: tr(key))),
+        ],
       ),
     );
   }
 
   @override
   bool shouldRebuild(SalonTabBarDelegate oldDelegate) =>
-      oldDelegate.colors != colors;
+      oldDelegate.colors != colors ||
+      oldDelegate.selectedServiceCount != selectedServiceCount ||
+      oldDelegate.selectedPackageCount != selectedPackageCount;
+}
+
+class _BadgeTab extends StatelessWidget {
+  const _BadgeTab({required this.label, required this.count});
+
+  final String label;
+  final int count;
+
+  @override
+  Widget build(BuildContext context) {
+    return Tab(
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Text(label),
+          if (count > 0) ...[
+            SizedBox(width: 6.w),
+            Container(
+              padding: EdgeInsets.symmetric(horizontal: 6.w, vertical: 1.h),
+              decoration: BoxDecoration(
+                color: splashOrange,
+                borderRadius: BorderRadius.circular(99.r),
+              ),
+              child: Text(
+                '$count',
+                style: TextStyle(
+                  fontSize: 10.sp,
+                  fontWeight: FontWeight.w700,
+                  color: Colors.white,
+                ),
+              ),
+            ),
+          ],
+        ],
+      ),
+    );
+  }
 }

@@ -1,10 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:zain/core/di/service_locator.dart';
-import 'package:zain/features/booking/presentation/cubit/bookings_cubit.dart';
-import 'package:zain/features/favorites/presentation/cubit/favorites_cubit.dart';
-import 'package:zain/features/profile/presentation/cubit/profile_cubit.dart';
-import 'package:zain/features/explore/presentation/cubit/explore_cubit.dart';
 import 'package:zain/features/home/presentation/cubit/banners_cubit.dart';
 import 'package:zain/features/home/presentation/cubit/categories_cubit.dart';
 import 'package:zain/features/home/presentation/cubit/coupons_cubit.dart';
@@ -28,10 +24,6 @@ class HomeScreen extends StatelessWidget {
         BlocProvider(create: (_) => sl<CouponsCubit>()),
         BlocProvider(create: (_) => sl<FeaturedPackagesCubit>()),
         BlocProvider(create: (_) => sl<FeaturedServicesCubit>()),
-        BlocProvider(create: (_) => sl<ExploreCubit>()),
-        BlocProvider(create: (_) => sl<BookingsCubit>()),
-        BlocProvider(create: (_) => sl<FavoritesCubit>()),
-        BlocProvider(create: (_) => sl<ProfileCubit>()),
       ],
       child: const HomeView(),
     );

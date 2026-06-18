@@ -33,11 +33,17 @@ abstract final class EndPoints {
   static String salonServices(int id) => 'user/salons/$id/services';
   static String salonStaff(int id) => 'user/salons/$id/staff';
   static String salonSlots(int id) => 'user/salons/$id/slots';
+  static String availableSlots(int salonId) => 'user/salon/$salonId/available-slots';
+  static String availableBarbers(int salonId) => 'user/salon/$salonId/available-barbers';
   static const String validateCoupon = 'user/coupons/validate';
   static const String createBooking = 'user/bookings';
+  static const String appointments = 'appointments/store';
   static const String toggleFavorite = 'user/toggle-favorite';
   static const String favorites = 'user/favorites';
   static const String couponServicesAndPackages = 'user/coupon/services-and-packages';
+
+  // Payment
+  static const String paymentMethods = 'shared/payment-methods';
 
   // Salon Auth
   static const String salonRegister = 'salon-auth/register';

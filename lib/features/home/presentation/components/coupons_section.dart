@@ -276,6 +276,7 @@ void _navigateToClaim({
     AppRoutes.claimCoupon,
     extra: ClaimCouponArgs(
       couponId: coupon.id,
+      salonId: coupon.salon.id,
       couponCode: coupon.code,
       couponName: coupon.name,
       salonName: coupon.salon.name,
@@ -286,6 +287,7 @@ void _navigateToClaim({
 void _showCouponDetailSheet(BuildContext context, Coupon coupon) {
   showModalBottomSheet<void>(
     context: context,
+    useRootNavigator: true,
     isScrollControlled: true,
     backgroundColor: Colors.transparent,
     builder: (_) => _CouponDetailSheet(coupon: coupon, rootContext: context),

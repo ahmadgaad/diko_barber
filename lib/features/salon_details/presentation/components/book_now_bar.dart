@@ -5,8 +5,9 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:zain/core/router/app_routes.dart';
 import 'package:zain/core/theme/app_colors.dart';
+import 'package:zain/core/widgets/app_gradient_button.dart';
 import 'package:zain/core/widgets/auth_gate.dart';
-import 'package:zain/features/book_appointment/presentation/book_appointment_args.dart';
+import 'package:zain/features/booking_schedule/presentation/booking_schedule_args.dart';
 import 'package:zain/features/salon_details/presentation/cubit/salon_details_cubit.dart';
 import 'package:zain/features/salon_details/presentation/cubit/salon_details_state.dart';
 
@@ -30,6 +31,7 @@ class BookNowBar extends StatelessWidget {
         final couponCode = loaded?.couponCode;
         final serviceIds = loaded?.selectedServiceIds ?? const {};
         final packageIds = loaded?.selectedPackageIds ?? const {};
+        final hasSelection = serviceIds.isNotEmpty || packageIds.isNotEmpty;
 
         return Container(
           padding: EdgeInsets.fromLTRB(16.w, 12.h, 16.w, 24.h),
@@ -96,33 +98,19 @@ class BookNowBar extends StatelessWidget {
                   ),
                 ),
               ],
-              GestureDetector(
+              AppGradientButton(
+                label: tr('salon_details.book_now'),
+                enabled: hasSelection,
                 onTap: () => AuthGate.guard(
                   context,
                   () => context.push(
-                    AppRoutes.bookAppointment,
-                    extra: BookAppointmentArgs(
+                    AppRoutes.bookingSchedule,
+                    extra: BookingScheduleArgs(
                       salonId: salonId,
                       salonName: salonName,
                       couponCode: couponCode,
                       serviceIds: serviceIds,
                       packageIds: packageIds,
-                    ),
-                  ),
-                ),
-                child: Container(
-                  height: 52.h,
-                  decoration: const BoxDecoration(
-                    gradient: buttonGradient,
-                    borderRadius: BorderRadius.all(Radius.circular(999)),
-                  ),
-                  alignment: Alignment.center,
-                  child: Text(
-                    tr('salon_details.book_now'),
-                    style: TextStyle(
-                      fontSize: 16.sp,
-                      fontWeight: FontWeight.w700,
-                      color: Colors.white,
                     ),
                   ),
                 ),

@@ -106,6 +106,8 @@ class _LoadedView extends StatelessWidget {
             delegate: SalonTabBarDelegate(
               tabController: tabController,
               colors: colors,
+              selectedServiceCount: state.selectedServiceIds.length,
+              selectedPackageCount: state.selectedPackageIds.length,
             ),
           ),
         ],

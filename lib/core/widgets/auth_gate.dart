@@ -14,6 +14,7 @@ abstract final class AuthGate {
       context: context,
       backgroundColor: Colors.transparent,
       isScrollControlled: true,
+      useRootNavigator: true,
       builder: (_) => const _AuthGateSheet(),
     );
   }

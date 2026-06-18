@@ -5,6 +5,7 @@ import 'package:zain/features/book_appointment/domain/entities/book_appointment_
 import 'package:zain/features/book_appointment/domain/entities/coupon_validation.dart';
 import 'package:zain/features/book_appointment/domain/entities/staff_member.dart';
 import 'package:zain/features/book_appointment/domain/entities/time_slot.dart';
+import 'package:zain/features/booking_schedule/domain/entities/created_appointment.dart';
 
 abstract class BookAppointmentRepository {
   Future<Result<ApiErrorModel, List<AppointmentService>>> getSalonServices(
@@ -26,7 +27,7 @@ abstract class BookAppointmentRepository {
     required int serviceId,
   });
 
-  Future<Result<ApiErrorModel, int>> createBooking(
+  Future<Result<ApiErrorModel, CreatedAppointment>> createBooking(
     BookAppointmentParams params,
   );
 }

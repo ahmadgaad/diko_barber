@@ -11,7 +11,16 @@
     "no_items": "لا توجد خدمات أو باقات متاحة لهذا الكوبون.",
     "next": "التالي",
     "next_with_count": "التالي ({count} محدد)",
-    "save": "وفّر {amount}"
+    "save": "وفّر {amount}",
+    "schedule_title": "اختر التاريخ والوقت",
+    "choose_date": "التاريخ",
+    "choose_time": "الأوقات المتاحة",
+    "choose_barber": "اختر الحلاق",
+    "any_barber": "أي حلاق",
+    "no_slots": "لا توجد أوقات متاحة في هذا التاريخ.",
+    "no_barbers": "لا يوجد حلاقون متاحون لهذا الوقت.",
+    "book": "تأكيد الحجز",
+    "tap_to_choose": "اضغط للاختيار"
   },
   "auth_gate": {
     "title": "انضم إلى زين",
@@ -371,5 +380,25 @@
     "coupon_valid": "تم تطبيق الكوبون",
     "coupon_invalid": "كوبون غير صالح",
     "any_staff_label": "أي حلاق"
+  },
+  "checkout": {
+    "title": "ملخص الحجز",
+    "appointment_details": "تفاصيل الموعد",
+    "services": "الخدمات",
+    "price_breakdown": "تفاصيل السعر",
+    "subtotal": "المجموع الفرعي",
+    "coupon_discount": "كوبون ({code})",
+    "tax": "الضريبة",
+    "home_service_fee": "رسوم الخدمة المنزلية",
+    "total": "الإجمالي",
+    "date": "التاريخ",
+    "time": "الوقت",
+    "duration_minutes": "{minutes} دقيقة",
+    "currency": "ج.م",
+    "pay_now": "ادفع الآن",
+    "pay_later": "ادفع لاحقاً",
+    "choose_payment_method": "اختر طريقة الدفع",
+    "confirm_payment": "تأكيد الدفع",
+    "retry": "إعادة المحاولة"
   }
 }

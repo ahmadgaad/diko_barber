@@ -10,7 +10,7 @@ import 'package:zain/core/widgets/auth_gate.dart';
 import 'package:zain/features/home/presentation/components/section_header.dart';
 import 'package:zain/features/home/presentation/cubit/salons_cubit.dart';
 import 'package:zain/features/home/presentation/cubit/salons_state.dart';
-import 'package:zain/features/home/presentation/screens/home_view.dart';
+import 'package:zain/core/widgets/app_shell.dart';
 import 'package:shimmer/shimmer.dart';
 
 class NearbySalonsSection extends StatelessWidget {

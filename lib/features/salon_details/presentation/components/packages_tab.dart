@@ -54,10 +54,7 @@ class _PackageTile extends StatefulWidget {
 class _PackageTileState extends State<_PackageTile> {
   bool _expanded = false;
 
-  void _toggleExpanded() {
-    if (widget.package.services.isEmpty) return;
-    setState(() => _expanded = !_expanded);
-  }
+  void _toggleExpanded() => setState(() => _expanded = !_expanded);
 
   @override
   Widget build(BuildContext context) {
@@ -66,100 +63,100 @@ class _PackageTileState extends State<_PackageTile> {
     final colors = widget.colors;
     final hasServices = package.services.isNotEmpty;
 
-    return GestureDetector(
-      onTap: _toggleExpanded,
-      child: AnimatedContainer(
-        duration: const Duration(milliseconds: 150),
-        decoration: BoxDecoration(
-          color: colors.neutral100,
-          borderRadius: BorderRadius.circular(14.r),
-          border: Border.all(
-            color: isSelected ? splashOrange : colors.neutral200,
-            width: isSelected ? 1.5 : 1,
-          ),
+    return AnimatedContainer(
+      duration: const Duration(milliseconds: 150),
+      decoration: BoxDecoration(
+        color: colors.neutral100,
+        borderRadius: BorderRadius.circular(14.r),
+        border: Border.all(
+          color: isSelected ? splashOrange : colors.neutral200,
+          width: isSelected ? 1.5 : 1,
         ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            ClipRRect(
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Image — tap to select/deselect
+          GestureDetector(
+            onTap: () => context
+                .read<SalonDetailsCubit>()
+                .togglePackageSelection(package.id),
+            child: ClipRRect(
               borderRadius: BorderRadius.vertical(top: Radius.circular(13.r)),
               child: SizedBox(
-              height: 120.h,
-              width: double.infinity,
-              child: Stack(
-                fit: StackFit.expand,
-                children: [
-                  CachedNetworkImage(
-                    imageUrl: package.image,
-                    fit: BoxFit.cover,
-                    placeholder: (_, _) => Container(color: colors.neutral200),
-                    errorWidget: (_, _, _) => Container(
-                      color: colors.neutral200,
-                      alignment: Alignment.center,
-                      child: Icon(
-                        Icons.spa_outlined,
-                        color: colors.neutral400,
-                        size: 32.r,
+                height: 120.h,
+                width: double.infinity,
+                child: Stack(
+                  fit: StackFit.expand,
+                  children: [
+                    CachedNetworkImage(
+                      imageUrl: package.image,
+                      fit: BoxFit.cover,
+                      placeholder: (_, _) =>
+                          Container(color: colors.neutral200),
+                      errorWidget: (_, _, _) => Container(
+                        color: colors.neutral200,
+                        alignment: Alignment.center,
+                        child: Icon(
+                          Icons.spa_outlined,
+                          color: colors.neutral400,
+                          size: 32.r,
+                        ),
                       ),
                     ),
-                  ),
-                  DecoratedBox(
-                    decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                        begin: Alignment.topCenter,
-                        end: Alignment.bottomCenter,
-                        colors: [
-                          Colors.transparent,
-                          Colors.black.withValues(alpha: 0.6),
+                    DecoratedBox(
+                      decoration: BoxDecoration(
+                        gradient: LinearGradient(
+                          begin: Alignment.topCenter,
+                          end: Alignment.bottomCenter,
+                          colors: [
+                            Colors.transparent,
+                            Colors.black.withValues(alpha: 0.6),
+                          ],
+                        ),
+                      ),
+                    ),
+                    Positioned(
+                      bottom: 10.h,
+                      left: 12.w,
+                      right: 12.w,
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: Text(
+                              package.name,
+                              style: TextStyle(
+                                fontSize: 15.sp,
+                                fontWeight: FontWeight.w700,
+                                color: Colors.white,
+                              ),
+                            ),
+                          ),
+                          Container(
+                            padding: EdgeInsets.symmetric(
+                              horizontal: 10.w,
+                              vertical: 5.h,
+                            ),
+                            decoration: BoxDecoration(
+                              color: splashOrange,
+                              borderRadius: BorderRadius.circular(999.r),
+                            ),
+                            child: Text(
+                              '${package.price.toInt()} ${tr('home.currency')}',
+                              style: TextStyle(
+                                fontSize: 12.sp,
+                                fontWeight: FontWeight.w700,
+                                color: Colors.white,
+                              ),
+                            ),
+                          ),
                         ],
                       ),
                     ),
-                  ),
-                  Positioned(
-                    bottom: 10.h,
-                    left: 12.w,
-                    right: 12.w,
-                    child: Row(
-                      children: [
-                        Expanded(
-                          child: Text(
-                            package.name,
-                            style: TextStyle(
-                              fontSize: 15.sp,
-                              fontWeight: FontWeight.w700,
-                              color: Colors.white,
-                            ),
-                          ),
-                        ),
-                        Container(
-                          padding: EdgeInsets.symmetric(
-                            horizontal: 10.w,
-                            vertical: 5.h,
-                          ),
-                          decoration: BoxDecoration(
-                            color: splashOrange,
-                            borderRadius: BorderRadius.circular(999.r),
-                          ),
-                          child: Text(
-                            '${package.price.toInt()} ${tr('home.currency')}',
-                            style: TextStyle(
-                              fontSize: 12.sp,
-                              fontWeight: FontWeight.w700,
-                              color: Colors.white,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  // Selection indicator — top-right corner (own tap target)
-                  PositionedDirectional(
-                    top: 10.h,
-                    end: 10.w,
-                    child: GestureDetector(
-                      onTap: () => context
-                          .read<SalonDetailsCubit>()
-                          .togglePackageSelection(package.id),
+                    // Selection indicator
+                    PositionedDirectional(
+                      top: 10.h,
+                      end: 10.w,
                       child: AnimatedContainer(
                         duration: const Duration(milliseconds: 150),
                         width: 24.r,
@@ -170,7 +167,8 @@ class _PackageTileState extends State<_PackageTile> {
                               ? splashOrange
                               : Colors.black.withValues(alpha: 0.35),
                           border: Border.all(
-                            color: isSelected ? splashOrange : Colors.white54,
+                            color:
+                                isSelected ? splashOrange : Colors.white54,
                             width: 1.5,
                           ),
                         ),
@@ -183,12 +181,15 @@ class _PackageTileState extends State<_PackageTile> {
                             : null,
                       ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
-            ),
-            Padding(
+          ),
+          // Content — tap to expand/collapse included services
+          GestureDetector(
+            onTap: hasServices ? _toggleExpanded : null,
+            child: Padding(
               padding: EdgeInsets.all(12.w),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -220,7 +221,6 @@ class _PackageTileState extends State<_PackageTile> {
                       ),
                     ],
                   ),
-                  // Expand toggle + included services
                   if (hasServices) ...[
                     SizedBox(height: 8.h),
                     _ExpandToggle(
@@ -243,8 +243,8 @@ class _PackageTileState extends State<_PackageTile> {
                 ],
               ),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

@@ -10,6 +10,7 @@ import 'package:zain/features/book_appointment/domain/use_cases/get_staff_use_ca
 import 'package:zain/features/book_appointment/domain/use_cases/get_time_slots_use_case.dart';
 import 'package:zain/features/book_appointment/domain/use_cases/validate_coupon_use_case.dart';
 import 'package:zain/features/book_appointment/presentation/cubit/book_appointment_state.dart';
+import 'package:zain/features/booking_schedule/domain/entities/created_appointment.dart';
 
 class BookAppointmentCubit extends Cubit<BookAppointmentState> {
   BookAppointmentCubit({
@@ -147,7 +148,46 @@ class BookAppointmentCubit extends Cubit<BookAppointmentState> {
     await Future.delayed(const Duration(milliseconds: 800));
     if (isClosed) return;
 
-    emit(const BookAppointmentSuccess(bookingId: 1001));
+    emit(BookAppointmentSuccess(
+      appointment: CreatedAppointment(
+        id: 1001,
+        code: 'APT-1001#',
+        status: const AppointmentStatus(id: 0, name: 'Pending Payment'),
+        appointmentDate: current.selectedDate.toIso8601String().split('T')[0],
+        startTime: current.selectedSlot!.time,
+        endTime: current.selectedSlot!.time,
+        salon: AppointmentSalon(
+          id: current.salonId,
+          name: current.salonName,
+          logo: '',
+        ),
+        staff: AppointmentStaff(
+          id: current.selectedStaff?.id ?? 0,
+          name: current.selectedStaff?.name ?? '',
+          image: current.selectedStaff?.avatar ?? '',
+        ),
+        purchase: AppointmentPurchase(
+          id: 0,
+          code: '',
+          subTotal: current.originalPrice,
+          couponAmount: current.discountAmount,
+          tax: 0,
+          taxPercentage: 0,
+          homeServiceFee: 0,
+          totalAmount: current.finalPrice,
+          couponCode: current.couponCode,
+        ),
+        services: [
+          AppointmentLineItem(
+            id: current.selectedService!.id,
+            serviceName: current.selectedService!.name,
+            durationMinutes: current.selectedService!.durationMinutes,
+            unitPrice: '${current.selectedService!.price}',
+            subTotal: '${current.selectedService!.price}',
+          ),
+        ],
+      ),
+    ));
   }
 
   List<AppointmentService> _mockServices() => [

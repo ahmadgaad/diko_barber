@@ -2,6 +2,7 @@ import 'package:zain/features/book_appointment/domain/entities/appointment_servi
 import 'package:zain/features/book_appointment/domain/entities/coupon_validation.dart';
 import 'package:zain/features/book_appointment/domain/entities/staff_member.dart';
 import 'package:zain/features/book_appointment/domain/entities/time_slot.dart';
+import 'package:zain/features/booking_schedule/domain/entities/created_appointment.dart';
 
 sealed class BookAppointmentState {
   const BookAppointmentState();
@@ -123,7 +124,7 @@ class BookAppointmentData extends BookAppointmentState {
 }
 
 class BookAppointmentSuccess extends BookAppointmentState {
-  const BookAppointmentSuccess({required this.bookingId});
+  const BookAppointmentSuccess({required this.appointment});
 
-  final int bookingId;
+  final CreatedAppointment appointment;
 }

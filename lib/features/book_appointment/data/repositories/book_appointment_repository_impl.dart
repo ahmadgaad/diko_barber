@@ -12,6 +12,8 @@ import 'package:zain/features/book_appointment/domain/entities/coupon_validation
 import 'package:zain/features/book_appointment/domain/entities/staff_member.dart';
 import 'package:zain/features/book_appointment/domain/entities/time_slot.dart';
 import 'package:zain/features/book_appointment/domain/repositories/book_appointment_repository.dart';
+import 'package:zain/features/booking_schedule/data/models/created_appointment_model.dart';
+import 'package:zain/features/booking_schedule/domain/entities/created_appointment.dart';
 
 class BookAppointmentRepositoryImpl implements BookAppointmentRepository {
   const BookAppointmentRepositoryImpl(this._dataSource);
@@ -117,7 +119,7 @@ class BookAppointmentRepositoryImpl implements BookAppointmentRepository {
   }
 
   @override
-  Future<Result<ApiErrorModel, int>> createBooking(
+  Future<Result<ApiErrorModel, CreatedAppointment>> createBooking(
     BookAppointmentParams params,
   ) async {
     try {
@@ -135,8 +137,8 @@ class BookAppointmentRepositoryImpl implements BookAppointmentRepository {
           ApiErrorModel(message: response.message ?? 'حدث خطأ غير معروف'),
         );
       }
-      final id = (response.data as Map<String, dynamic>)['id'] as int;
-      return Success(id);
+      final data = response.data as Map<String, dynamic>;
+      return Success(CreatedAppointmentModel.fromJson(data));
     } catch (_) {
       return Failure(ApiErrorModel(message: 'حدث خطأ غير معروف'));
     }

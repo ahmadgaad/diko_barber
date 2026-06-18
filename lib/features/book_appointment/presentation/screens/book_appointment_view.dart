@@ -19,13 +19,21 @@ class BookAppointmentView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colors = AppColors.of(context);
-    return BlocBuilder<BookAppointmentCubit, BookAppointmentState>(
+    return BlocConsumer<BookAppointmentCubit, BookAppointmentState>(
+      listenWhen: (_, current) => current is BookAppointmentSuccess,
+      listener: (context, state) {
+        if (state is BookAppointmentSuccess) {
+          context.pushReplacement(
+            AppRoutes.checkout,
+            extra: state.appointment,
+          );
+        }
+      },
       builder: (context, state) => switch (state) {
         BookAppointmentLoading() => _LoadingScaffold(colors: colors),
         BookAppointmentError(:final message) =>
           _ErrorScaffold(message: message, colors: colors),
-        BookAppointmentSuccess(:final bookingId) =>
-          _SuccessScaffold(bookingId: bookingId, colors: colors),
+        BookAppointmentSuccess() => const SizedBox.shrink(),
         BookAppointmentData() =>
           _DataScaffold(state: state, colors: colors),
       },
@@ -1267,107 +1275,6 @@ class _PriceRow extends StatelessWidget {
   }
 }
 
-// ── Success scaffold ──────────────────────────────────────────────────────────
-
-class _SuccessScaffold extends StatelessWidget {
-  const _SuccessScaffold({required this.bookingId, required this.colors});
-
-  final int bookingId;
-  final AppColors colors;
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: colors.neutral50,
-      body: SafeArea(
-        child: Center(
-          child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: 32.w),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Container(
-                  width: 80.r,
-                  height: 80.r,
-                  decoration: BoxDecoration(
-                    color: splashOrange.withValues(alpha: 0.1),
-                    shape: BoxShape.circle,
-                  ),
-                  child: Icon(
-                    Icons.check_circle_outline_rounded,
-                    size: 44.r,
-                    color: splashOrange,
-                  ),
-                ),
-                SizedBox(height: 20.h),
-                Text(
-                  tr('book_appointment.booking_confirmed'),
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontSize: 22.sp,
-                    fontWeight: FontWeight.w800,
-                    color: colors.neutral900,
-                  ),
-                ),
-                SizedBox(height: 8.h),
-                Container(
-                  padding: EdgeInsets.symmetric(
-                    horizontal: 16.w,
-                    vertical: 8.h,
-                  ),
-                  decoration: BoxDecoration(
-                    color: splashOrange.withValues(alpha: 0.08),
-                    borderRadius: BorderRadius.circular(999.r),
-                    border: Border.all(
-                      color: splashOrange.withValues(alpha: 0.3),
-                    ),
-                  ),
-                  child: Text(
-                    tr(
-                      'book_appointment.booking_id',
-                      namedArgs: {'id': '$bookingId'},
-                    ),
-                    style: TextStyle(
-                      fontSize: 14.sp,
-                      fontWeight: FontWeight.w700,
-                      color: splashOrange,
-                    ),
-                  ),
-                ),
-                SizedBox(height: 32.h),
-                AppGradientButton(
-                  label: tr('book_appointment.view_bookings'),
-                  onTap: () => context.go(AppRoutes.home),
-                ),
-                SizedBox(height: 12.h),
-                GestureDetector(
-                  onTap: () => Navigator.of(context).pop(),
-                  child: Container(
-                    height: 52.h,
-                    decoration: BoxDecoration(
-                      color: colors.neutral100,
-                      borderRadius: BorderRadius.circular(999.r),
-                      border: Border.all(color: colors.neutral200),
-                    ),
-                    alignment: Alignment.center,
-                    child: Text(
-                      tr('book_appointment.done'),
-                      style: TextStyle(
-                        fontSize: 15.sp,
-                        fontWeight: FontWeight.w600,
-                        color: colors.neutral700,
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-}
 
 // ── Loading scaffold ──────────────────────────────────────────────────────────
 
