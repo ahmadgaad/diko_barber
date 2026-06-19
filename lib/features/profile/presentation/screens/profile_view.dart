@@ -706,6 +706,7 @@ class _SignOutButton extends StatelessWidget {
 void _showDeleteAccountSheet(BuildContext context, AppColors colors) {
   showModalBottomSheet<void>(
     context: context,
+    useRootNavigator: true,
     backgroundColor: colors.neutral100,
     shape: RoundedRectangleBorder(
       borderRadius: BorderRadius.vertical(top: Radius.circular(22.r)),

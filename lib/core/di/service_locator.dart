@@ -24,6 +24,11 @@ import 'package:zain/features/home/presentation/cubit/home_cubit.dart';
 import 'package:zain/features/home/presentation/cubit/salons_cubit.dart';
 import 'package:zain/features/explore/presentation/cubit/explore_cubit.dart';
 import 'package:zain/features/search/presentation/cubit/search_cubit.dart';
+import 'package:zain/features/booking/data/data_sources/bookings_remote_data_source.dart';
+import 'package:zain/features/booking/data/repositories/bookings_repository_impl.dart';
+import 'package:zain/features/booking/domain/repositories/bookings_repository.dart';
+import 'package:zain/features/booking/domain/use_cases/get_appointment_statuses_use_case.dart';
+import 'package:zain/features/booking/domain/use_cases/get_appointments_use_case.dart';
 import 'package:zain/features/booking/presentation/cubit/bookings_cubit.dart';
 import 'package:zain/features/favorites/presentation/cubit/favorites_cubit.dart';
 import 'package:zain/core/theme/cubit/theme_cubit.dart';
@@ -479,7 +484,25 @@ Future<void> setupServiceLocator() async {
       sl<ToggleFavoriteUseCase>(),
     ),
   );
-  sl.registerFactory<BookingsCubit>(BookingsCubit.new);
+  // Bookings
+  sl.registerLazySingleton<BookingsRemoteDataSource>(
+    () => BookingsRemoteDataSourceImpl(sl<INetworkService>()),
+  );
+  sl.registerLazySingleton<BookingsRepository>(
+    () => BookingsRepositoryImpl(sl<BookingsRemoteDataSource>()),
+  );
+  sl.registerLazySingleton<GetAppointmentStatusesUseCase>(
+    () => GetAppointmentStatusesUseCase(sl<BookingsRepository>()),
+  );
+  sl.registerLazySingleton<GetAppointmentsUseCase>(
+    () => GetAppointmentsUseCase(sl<BookingsRepository>()),
+  );
+  sl.registerFactory<BookingsCubit>(
+    () => BookingsCubit(
+      sl<GetAppointmentStatusesUseCase>(),
+      sl<GetAppointmentsUseCase>(),
+    ),
+  );
   sl.registerFactory<FavoritesCubit>(
     () => FavoritesCubit(
       sl<GetFavoritesUseCase>(),

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:zain/core/resources/image_resources.dart';
 import 'package:zain/core/theme/app_colors.dart';
 
+import '../components/z_light_painter.dart';
 import '../cubit/splash_cubit.dart';
 
 class SplashAnimationView extends StatefulWidget {
@@ -17,40 +17,34 @@ class _SplashAnimationViewState extends State<SplashAnimationView>
     with SingleTickerProviderStateMixin {
   late final AnimationController _controller;
 
-  late final Animation<double> _logoScale;
-  late final Animation<double> _logoOpacity;
-  late final Animation<double> _nameOpacity;
-  late final Animation<double> _nameSlide;
+  late final Animation<double> _zOpacity;
+  late final Animation<double> _lightProgress;
+  late final Animation<double> _fadeOut;
 
   @override
   void initState() {
     super.initState();
     _controller = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 1600),
+      duration: const Duration(milliseconds: 2400),
     )..addStatusListener(_onStatus);
 
-    _logoScale = Tween<double>(begin: 0.82, end: 1.0).animate(
+    _zOpacity = CurvedAnimation(
+      parent: _controller,
+      curve: const Interval(0.0, 0.15),
+    );
+
+    _lightProgress = Tween<double>(begin: 0.0, end: 1.0).animate(
       CurvedAnimation(
         parent: _controller,
-        curve: const Interval(0.0, 0.55, curve: Curves.easeOutCubic),
+        curve: const Interval(0.15, 0.78, curve: Curves.easeInOut),
       ),
     );
 
-    _logoOpacity = CurvedAnimation(
-      parent: _controller,
-      curve: const Interval(0.0, 0.40),
-    );
-
-    _nameOpacity = CurvedAnimation(
-      parent: _controller,
-      curve: const Interval(0.42, 0.72),
-    );
-
-    _nameSlide = Tween<double>(begin: 16.0, end: 0.0).animate(
+    _fadeOut = Tween<double>(begin: 1.0, end: 0.0).animate(
       CurvedAnimation(
         parent: _controller,
-        curve: const Interval(0.42, 0.72, curve: Curves.easeOut),
+        curve: const Interval(0.85, 1.0, curve: Curves.easeIn),
       ),
     );
 
@@ -63,7 +57,7 @@ class _SplashAnimationViewState extends State<SplashAnimationView>
 
   void _onStatus(AnimationStatus status) async {
     if (status == AnimationStatus.completed && mounted) {
-      await Future.delayed(const Duration(milliseconds: 600));
+      await Future.delayed(const Duration(milliseconds: 200));
       if (mounted) await context.read<SplashCubit>().onAnimationComplete();
     }
   }
@@ -84,47 +78,24 @@ class _SplashAnimationViewState extends State<SplashAnimationView>
           const DecoratedBox(
             decoration: BoxDecoration(gradient: splashGradient),
           ),
-          SafeArea(
+          Center(
             child: AnimatedBuilder(
               animation: _controller,
-              builder: (context, _) => Column(
-                children: [
-                  const Spacer(flex: 5),
-
-                  Transform.scale(
-                    scale: _logoScale.value,
-                    child: Opacity(
-                      opacity: _logoOpacity.value.clamp(0.0, 1.0),
-                      child: Image.asset(
-                        ImageResources.logo,
-                        width: 130.r,
-                        height: 130.r,
-                        fit: BoxFit.contain,
-                      ),
+              builder: (context, _) => Opacity(
+                opacity: (_fadeOut.value * _zOpacity.value).clamp(0.0, 1.0),
+                child: SizedBox(
+                  width: 160.r,
+                  height: 180.r,
+                  child: CustomPaint(
+                    painter: ZLightPainter(
+                      progress: _lightProgress.value,
+                      glowColor: splashOrange,
+                      letterColor: Colors.white.withValues(alpha: 0.25),
+                      strokeWidth: 14.r,
+                      glowRadius: 28.r,
                     ),
                   ),
-
-                  SizedBox(height: 28.h),
-
-                  Transform.translate(
-                    offset: Offset(0, _nameSlide.value),
-                    child: Opacity(
-                      opacity: _nameOpacity.value.clamp(0.0, 1.0),
-                      child: Text(
-                        'زين',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 42.sp,
-                          fontWeight: FontWeight.w700,
-                          letterSpacing: 6,
-                          height: 1,
-                        ),
-                      ),
-                    ),
-                  ),
-
-                  const Spacer(flex: 6),
-                ],
+                ),
               ),
             ),
           ),

@@ -64,6 +64,8 @@ class AppointmentPurchase {
     required this.tax,
     required this.taxPercentage,
     required this.homeServiceFee,
+    required this.commissionAmount,
+    required this.platformCommissionPercentage,
     required this.totalAmount,
     this.couponCode,
   });
@@ -75,6 +77,8 @@ class AppointmentPurchase {
   final num tax;
   final num taxPercentage;
   final num homeServiceFee;
+  final num commissionAmount;
+  final num platformCommissionPercentage;
   final num totalAmount;
   final String? couponCode;
 }

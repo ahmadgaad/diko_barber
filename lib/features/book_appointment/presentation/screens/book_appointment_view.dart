@@ -29,6 +29,7 @@ class BookAppointmentView extends StatelessWidget {
           );
         }
       },
+      buildWhen: (_, current) => current is! BookAppointmentSuccess,
       builder: (context, state) => switch (state) {
         BookAppointmentLoading() => _LoadingScaffold(colors: colors),
         BookAppointmentError(:final message) =>

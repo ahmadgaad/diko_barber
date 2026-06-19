@@ -38,6 +38,7 @@ class BookingScheduleView extends StatelessWidget {
           );
         }
       },
+      buildWhen: (prev, curr) => curr is BookingScheduleForm,
       builder: (context, state) {
         if (state is! BookingScheduleForm) return const SizedBox.shrink();
         return _ScheduleScaffold(state: state, colors: colors);

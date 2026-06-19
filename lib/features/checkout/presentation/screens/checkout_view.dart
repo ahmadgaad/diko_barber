@@ -10,6 +10,7 @@ import 'package:zain/core/widgets/app_gradient_button.dart';
 import 'package:zain/features/booking_schedule/domain/entities/created_appointment.dart';
 import '../components/checkout_info_row.dart';
 import '../components/checkout_service_tile.dart';
+import '../components/payment_countdown_banner.dart';
 import '../components/payment_methods_sheet.dart';
 import '../cubit/checkout_cubit.dart';
 
@@ -57,7 +58,13 @@ class _TopBar extends StatelessWidget {
       child: Row(
         children: [
           GestureDetector(
-            onTap: () => context.go(AppRoutes.home),
+            onTap: () {
+              if (context.canPop()) {
+                context.pop();
+              } else {
+                context.go(AppRoutes.home);
+              }
+            },
             child: Container(
               width: 38.r,
               height: 38.r,
@@ -111,6 +118,10 @@ class _Content extends StatelessWidget {
       children: [
         // ── Status badge ─────────────────────────────────────────────
         _StatusBadge(appointment: appointment, colors: colors),
+        SizedBox(height: 12.h),
+
+        // ── Payment hint ─────────────────────────────────────────────
+        PaymentCountdownBanner(colors: colors),
         SizedBox(height: 20.h),
 
         // ── Appointment details ──────────────────────────────────────
@@ -162,7 +173,7 @@ class _Content extends StatelessWidget {
               if (purchase.tax > 0) ...[
                 SizedBox(height: 10.h),
                 CheckoutInfoRow(
-                  label: tr('checkout.tax'),
+                  label: '${tr('checkout.tax')} (${purchase.taxPercentage.toStringAsFixed(0)}%)',
                   value: '${purchase.tax.toStringAsFixed(2)} ${tr('checkout.currency')}',
                   colors: colors,
                 ),
@@ -172,6 +183,14 @@ class _Content extends StatelessWidget {
                 CheckoutInfoRow(
                   label: tr('checkout.home_service_fee'),
                   value: '${purchase.homeServiceFee.toStringAsFixed(2)} ${tr('checkout.currency')}',
+                  colors: colors,
+                ),
+              ],
+              if (purchase.commissionAmount > 0) ...[
+                SizedBox(height: 10.h),
+                CheckoutInfoRow(
+                  label: '${tr('checkout.commission')} (${purchase.platformCommissionPercentage.toStringAsFixed(0)}%)',
+                  value: '${purchase.commissionAmount.toStringAsFixed(2)} ${tr('checkout.currency')}',
                   colors: colors,
                 ),
               ],
@@ -438,7 +457,7 @@ class _BottomBar extends StatelessWidget {
           ),
           SizedBox(height: 8.h),
           GestureDetector(
-            onTap: () => context.go(AppRoutes.home),
+            onTap: () => context.go(AppRoutes.bookings),
             child: Container(
               height: 48.h,
               decoration: BoxDecoration(

@@ -174,6 +174,8 @@ class BookAppointmentCubit extends Cubit<BookAppointmentState> {
           tax: 0,
           taxPercentage: 0,
           homeServiceFee: 0,
+          commissionAmount: 0,
+          platformCommissionPercentage: 0,
           totalAmount: current.finalPrice,
           couponCode: current.couponCode,
         ),

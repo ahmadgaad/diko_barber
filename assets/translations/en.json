@@ -319,7 +319,10 @@
     "empty_body": "Book your first appointment and enjoy a great experience",
     "cancel": "Cancel",
     "view_details": "Details",
-    "book_again": "Book Again"
+    "book_again": "Book Again",
+    "pay": "Pay",
+    "reschedule": "Reschedule",
+    "rate": "Rate"
   },
   "search": {
     "hint": "Search salons, services...",
@@ -390,6 +393,7 @@
     "coupon_discount": "Coupon ({code})",
     "tax": "Tax",
     "home_service_fee": "Home Service Fee",
+    "commission": "Service Fee",
     "total": "Total",
     "date": "Date",
     "time": "Time",
@@ -399,6 +403,7 @@
     "pay_later": "Pay Later",
     "choose_payment_method": "Choose Payment Method",
     "confirm_payment": "Confirm Payment",
-    "retry": "Retry"
+    "retry": "Retry",
+    "payment_hint": "Payment must be completed within 5 minutes of your booking time or it will be cancelled"
   }
 }

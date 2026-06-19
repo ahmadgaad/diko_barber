@@ -14,6 +14,7 @@ import 'package:zain/core/theme/app_colors.dart';
 import 'package:zain/core/widgets/app_bottom_nav_bar.dart';
 import 'package:zain/core/widgets/app_snack_bar.dart';
 import 'package:zain/core/widgets/auth_gate.dart';
+import 'package:zain/features/booking/presentation/cubit/bookings_cubit.dart';
 import 'package:zain/features/explore/presentation/cubit/explore_cubit.dart';
 
 class HomeScope extends InheritedWidget {
@@ -97,6 +98,15 @@ class _AppShellState extends State<AppShell>
       context.read<ExploreCubit>().selectCategory(category);
     }
     widget.navigationShell.goBranch(tab.index);
+  }
+
+  @override
+  void didUpdateWidget(covariant AppShell oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.navigationShell.currentIndex != oldWidget.navigationShell.currentIndex &&
+        _currentTab == HomeTab.bookings) {
+      context.read<BookingsCubit>().refresh();
+    }
   }
 
   @override

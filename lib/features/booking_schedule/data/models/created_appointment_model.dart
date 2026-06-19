@@ -60,6 +60,8 @@ class CreatedAppointmentModel extends CreatedAppointment {
       tax: json['tax'] as num? ?? 0,
       taxPercentage: json['tax_percentage'] as num? ?? 0,
       homeServiceFee: json['home_service_fee'] as num? ?? 0,
+      commissionAmount: json['commission_amount'] as num? ?? 0,
+      platformCommissionPercentage: json['platform_commission_percentage'] as num? ?? 0,
       totalAmount: json['total_amount'] as num,
       couponCode: json['coupon_code'] as String?,
     );

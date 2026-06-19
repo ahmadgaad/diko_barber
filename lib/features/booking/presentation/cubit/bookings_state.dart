@@ -1,4 +1,5 @@
 import 'package:zain/core/shared/domain/entities/booking.dart';
+import 'package:zain/features/booking/domain/entities/appointment_filter.dart';
 
 sealed class BookingsState {
   const BookingsState();
@@ -10,26 +11,30 @@ class BookingsLoading extends BookingsState {
 
 class BookingsLoaded extends BookingsState {
   const BookingsLoaded({
-    required this.all,
-    required this.filtered,
-    this.selectedStatus,
+    required this.filters,
+    required this.bookings,
+    this.selectedFilterIndex = 0,
+    this.isLoadingBookings = false,
   });
 
-  final List<Booking> all;
-  final List<Booking> filtered;
-  final BookingStatus? selectedStatus; // null = "All"
+  final List<AppointmentFilter> filters;
+  final List<Booking> bookings;
+  final int selectedFilterIndex;
+  final bool isLoadingBookings;
+
+  AppointmentFilter get selectedFilter => filters[selectedFilterIndex];
 
   BookingsLoaded copyWith({
-    List<Booking>? all,
-    List<Booking>? filtered,
-    BookingStatus? Function()? selectedStatus,
+    List<AppointmentFilter>? filters,
+    List<Booking>? bookings,
+    int? selectedFilterIndex,
+    bool? isLoadingBookings,
   }) {
     return BookingsLoaded(
-      all: all ?? this.all,
-      filtered: filtered ?? this.filtered,
-      selectedStatus: selectedStatus != null
-          ? selectedStatus()
-          : this.selectedStatus,
+      filters: filters ?? this.filters,
+      bookings: bookings ?? this.bookings,
+      selectedFilterIndex: selectedFilterIndex ?? this.selectedFilterIndex,
+      isLoadingBookings: isLoadingBookings ?? this.isLoadingBookings,
     );
   }
 }

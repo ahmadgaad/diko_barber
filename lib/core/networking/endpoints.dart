@@ -42,6 +42,10 @@ abstract final class EndPoints {
   static const String favorites = 'user/favorites';
   static const String couponServicesAndPackages = 'user/coupon/services-and-packages';
 
+  // Appointments
+  static const String appointmentStatuses = 'appointments/status';
+  static const String appointmentsList = 'appointments';
+
   // Payment
   static const String paymentMethods = 'shared/payment-methods';
 
