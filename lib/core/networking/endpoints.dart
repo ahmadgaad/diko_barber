@@ -9,6 +9,7 @@ abstract final class EndPoints {
   static const String forgotPassword = 'auth/forgot-password';
   static const String verifyResetPassword = 'auth/verify-reset-password';
   static const String resetPassword = 'auth/reset-password';
+  static const String updateLocation = 'auth/update-location';
 
   // Onboarding
   static const String onboarding = 'shared/onboarding';

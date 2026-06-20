@@ -109,6 +109,7 @@ import 'package:zain/features/auth/data/repositories/auth_repository_impl.dart';
 import 'package:zain/features/auth/domain/repositories/auth_repository.dart';
 import 'package:zain/features/auth/domain/use_cases/forgot_password_use_case.dart';
 import 'package:zain/features/auth/domain/use_cases/logout_use_case.dart';
+import 'package:zain/features/auth/domain/use_cases/update_location_use_case.dart';
 import 'package:zain/features/auth/domain/use_cases/reset_password_use_case.dart';
 import 'package:zain/features/auth/domain/use_cases/sign_in_use_case.dart';
 import 'package:zain/features/auth/domain/use_cases/sign_up_use_case.dart';
@@ -338,6 +339,9 @@ Future<void> setupServiceLocator() async {
   sl.registerLazySingleton<LogoutUseCase>(
     () => LogoutUseCase(sl<AuthRepository>()),
   );
+  sl.registerLazySingleton<UpdateLocationUseCase>(
+    () => UpdateLocationUseCase(sl<AuthRepository>()),
+  );
   sl.registerLazySingleton<SalonRegisterUseCase>(
     () => SalonRegisterUseCase(sl<SalonAuthRepository>()),
   );
@@ -474,7 +478,11 @@ Future<void> setupServiceLocator() async {
   );
 
   sl.registerFactory<HomeCubit>(
-    () => HomeCubit(sl<SecureStorageCacheClient>(), sl<SharedPrefCacheClient>()),
+    () => HomeCubit(
+      sl<SecureStorageCacheClient>(),
+      sl<SharedPrefCacheClient>(),
+      sl<UpdateLocationUseCase>(),
+    ),
   );
   sl.registerFactory<BannersCubit>(
     () => BannersCubit(sl<GetBannersUseCase>()),

@@ -188,6 +188,29 @@ class AuthRepositoryImpl implements AuthRepository {
   }
 
   @override
+  Future<Result<ApiErrorModel, void>> updateLocation({
+    required double lat,
+    required double long,
+    required String location,
+  }) async {
+    try {
+      final response = await _remoteDataSource.updateLocation(
+        lat: lat,
+        long: long,
+        location: location,
+      );
+      if (response.isError) {
+        return Failure(
+          ApiErrorModel(message: response.message ?? 'حدث خطأ غير معروف'),
+        );
+      }
+      return const Success(null);
+    } catch (_) {
+      return Failure(ApiErrorModel(message: 'حدث خطأ غير معروف'));
+    }
+  }
+
+  @override
   Future<Result<ApiErrorModel, void>> logout() async {
     try {
       final response = await _remoteDataSource.logout();

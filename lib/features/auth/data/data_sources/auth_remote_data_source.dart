@@ -40,6 +40,12 @@ abstract class AuthRemoteDataSource {
   });
 
   Future<ApiResponse<dynamic>> logout();
+
+  Future<ApiResponse<dynamic>> updateLocation({
+    required double lat,
+    required double long,
+    required String location,
+  });
 }
 
 class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
@@ -161,5 +167,21 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   @override
   Future<ApiResponse<dynamic>> logout() {
     return _networkService.postData(endPoint: EndPoints.logout);
+  }
+
+  @override
+  Future<ApiResponse<dynamic>> updateLocation({
+    required double lat,
+    required double long,
+    required String location,
+  }) {
+    return _networkService.postData(
+      endPoint: EndPoints.updateLocation,
+      body: {
+        'lat': lat.toString(),
+        'long': long.toString(),
+        'location': location,
+      },
+    );
   }
 }

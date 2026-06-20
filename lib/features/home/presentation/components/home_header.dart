@@ -13,11 +13,15 @@ class HomeHeader extends StatelessWidget {
     required this.userName,
     this.location,
     this.onSearchTap,
+    this.onLocationTap,
+    this.isUpdatingLocation = false,
   });
 
   final String userName;
   final String? location;
   final VoidCallback? onSearchTap;
+  final VoidCallback? onLocationTap;
+  final bool isUpdatingLocation;
 
   @override
   Widget build(BuildContext context) {
@@ -33,31 +37,45 @@ class HomeHeader extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 if (location != null) ...[
-                  Row(
-                    children: [
-                      SvgPicture.asset(
-                        SvgResources.locationPin,
-                        width: 14.r,
-                        height: 14.r,
-                        colorFilter:
-                            ColorFilter.mode(splashOrange, BlendMode.srcIn),
-                      ),
-                      SizedBox(width: 4.w),
-                      Flexible(
-                        child: Text(
-                          location!,
-                          style: TextStyle(
-                            fontSize: 12.sp,
-                            fontWeight: FontWeight.w500,
-                            color: colors.neutral500,
-                          ),
-                          overflow: TextOverflow.ellipsis,
+                  GestureDetector(
+                    onTap: onLocationTap,
+                    behavior: HitTestBehavior.opaque,
+                    child: Row(
+                      children: [
+                        SvgPicture.asset(
+                          SvgResources.locationPin,
+                          width: 14.r,
+                          height: 14.r,
+                          colorFilter:
+                              ColorFilter.mode(splashOrange, BlendMode.srcIn),
                         ),
-                      ),
-                      SizedBox(width: 2.w),
-                      Icon(Icons.keyboard_arrow_down_rounded,
-                          size: 14.r, color: colors.neutral500),
-                    ],
+                        SizedBox(width: 4.w),
+                        Flexible(
+                          child: Text(
+                            location!,
+                            style: TextStyle(
+                              fontSize: 12.sp,
+                              fontWeight: FontWeight.w500,
+                              color: colors.neutral500,
+                            ),
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ),
+                        SizedBox(width: 2.w),
+                        if (isUpdatingLocation)
+                          SizedBox(
+                            width: 12.r,
+                            height: 12.r,
+                            child: CircularProgressIndicator(
+                              strokeWidth: 1.5,
+                              color: splashOrange,
+                            ),
+                          )
+                        else
+                          Icon(Icons.keyboard_arrow_down_rounded,
+                              size: 14.r, color: colors.neutral500),
+                      ],
+                    ),
                   ),
                   SizedBox(height: 4.h),
                 ],

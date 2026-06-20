@@ -16,6 +16,7 @@ abstract final class AppRoutes {
   static const search = '/search';
   static const salonDetails = '/salon/:id';
   static const exploreMap = '/explore-map';
+  static const locationPicker = '/location-picker';
 
   static const bookAppointment = '/book-appointment';
   static const packageDetails = '/package/:id';
