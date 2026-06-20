@@ -1,6 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:zain/features/book_appointment/domain/entities/staff_member.dart';
+import 'package:zain/features/booking_schedule/domain/use_cases/create_appointment_use_case.dart';
 import 'package:zain/features/claim_coupon/domain/entities/available_slot.dart';
 import 'package:zain/features/claim_coupon/domain/use_cases/get_available_barbers_use_case.dart';
 import 'package:zain/features/claim_coupon/domain/use_cases/get_available_slots_use_case.dart';
@@ -12,11 +13,13 @@ class ClaimCouponCubit extends Cubit<ClaimCouponState> {
     this._getEligibleItems,
     this._getAvailableSlots,
     this._getAvailableBarbers,
+    this._createAppointment,
   ) : super(const ClaimCouponLoading());
 
   final GetCouponEligibleItemsUseCase _getEligibleItems;
   final GetAvailableSlotsUseCase _getAvailableSlots;
   final GetAvailableBarbersUseCase _getAvailableBarbers;
+  final CreateAppointmentUseCase _createAppointment;
 
   Future<void> load({
     required int couponId,
@@ -158,5 +161,39 @@ class ClaimCouponCubit extends Cubit<ClaimCouponState> {
     final current = state;
     if (current is! ClaimCouponData) return;
     emit(current.copyWith(selectedBarber: () => barber));
+  }
+
+  Future<void> confirmBooking() async {
+    final current = state;
+    if (current is! ClaimCouponData) return;
+    if (!current.canProceedToPayment) return;
+
+    emit(current.copyWith(isSubmitting: true, apiError: () => null));
+
+    final dateStr = DateFormat('yyyy-MM-dd').format(current.selectedDate!);
+    final result = await _createAppointment(
+      salonId: current.salonId,
+      appointmentDate: dateStr,
+      startTime: current.selectedSlot!.startTime,
+      staffId: current.selectedBarber!.id,
+      serviceIds: current.selectedServiceIdsList,
+      packageIds: current.selectedPackageIdsList,
+      couponId: current.couponId,
+    );
+
+    if (isClosed) return;
+
+    result.when(
+      success: (appointment) =>
+          emit(ClaimCouponSuccess(appointment: appointment)),
+      failure: (error) {
+        final latest = state;
+        if (latest is! ClaimCouponData) return;
+        emit(latest.copyWith(
+          isSubmitting: false,
+          apiError: () => error.message,
+        ));
+      },
+    );
   }
 }

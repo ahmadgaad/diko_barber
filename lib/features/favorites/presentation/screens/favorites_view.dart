@@ -152,7 +152,7 @@ class _SalonsTab extends StatelessWidget {
       );
     }
     return ListView.separated(
-      padding: EdgeInsets.all(16.w),
+      padding: EdgeInsets.fromLTRB(16.w, 16.w, 16.w, 100.h),
       physics: const BouncingScrollPhysics(),
       itemCount: salons.length,
       separatorBuilder: (_, _) => SizedBox(height: 10.h),
@@ -319,7 +319,7 @@ class _PackagesTab extends StatelessWidget {
       );
     }
     return ListView.separated(
-      padding: EdgeInsets.all(16.w),
+      padding: EdgeInsets.fromLTRB(16.w, 16.w, 16.w, 100.h),
       physics: const BouncingScrollPhysics(),
       itemCount: packages.length,
       separatorBuilder: (_, _) => SizedBox(height: 10.h),
@@ -537,7 +537,7 @@ class _ServicesTab extends StatelessWidget {
       );
     }
     return ListView.separated(
-      padding: EdgeInsets.all(16.w),
+      padding: EdgeInsets.fromLTRB(16.w, 16.w, 16.w, 100.h),
       physics: const BouncingScrollPhysics(),
       itemCount: services.length,
       separatorBuilder: (_, _) => SizedBox(height: 10.h),

@@ -4,7 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
+import 'package:zain/core/router/app_routes.dart';
 import 'package:zain/core/theme/app_colors.dart';
+import 'package:zain/core/widgets/auth_gate.dart';
+import 'package:zain/features/booking_schedule/presentation/booking_schedule_args.dart';
 import 'package:zain/features/packages/domain/entities/package_details.dart';
 import 'package:zain/features/packages/presentation/cubit/package_details_cubit.dart';
 import 'package:zain/features/packages/presentation/cubit/package_details_state.dart';
@@ -111,18 +114,22 @@ class _PackageAppBar extends StatelessWidget {
       pinned: true,
       backgroundColor: colors.neutral50,
       leading: Padding(
-        padding: EdgeInsets.all(8.r),
-        child: GestureDetector(
-          onTap: () => context.pop(),
-          child: Container(
-            decoration: BoxDecoration(
-              color: Colors.black.withValues(alpha: 0.45),
-              shape: BoxShape.circle,
-            ),
-            child: Icon(
-              Icons.arrow_back_ios_new_rounded,
-              color: Colors.white,
-              size: 18.r,
+        padding: EdgeInsetsDirectional.only(start: 8.w),
+        child: Center(
+          child: GestureDetector(
+            onTap: () => context.pop(),
+            child: Container(
+              width: 36.r,
+              height: 36.r,
+              decoration: BoxDecoration(
+                color: Colors.black.withValues(alpha: 0.45),
+                shape: BoxShape.circle,
+              ),
+              child: Icon(
+                Icons.arrow_back_ios_new_rounded,
+                color: Colors.white,
+                size: 18.r,
+              ),
             ),
           ),
         ),
@@ -711,7 +718,18 @@ class _BookBar extends StatelessWidget {
           SizedBox(width: 16.w),
           Expanded(
             child: GestureDetector(
-              onTap: () {},
+              onTap: () => AuthGate.guard(
+                context,
+                () => context.push(
+                  AppRoutes.bookingSchedule,
+                  extra: BookingScheduleArgs(
+                    salonId: package.salon.id,
+                    salonName: package.salon.name,
+                    serviceIds: const {},
+                    packageIds: {package.id},
+                  ),
+                ),
+              ),
               child: Container(
                 height: 48.h,
                 decoration: BoxDecoration(

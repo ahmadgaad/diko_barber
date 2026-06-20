@@ -64,7 +64,7 @@ class HomeView extends StatelessWidget {
                   const CouponsSection(),
                   const FeaturedPackagesSection(),
                   const FeaturedServicesSection(),
-                  SizedBox(height: 40.h),
+                  SizedBox(height: 100.h),
                 ],
               ),
             ),

@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
+import 'package:shimmer/shimmer.dart';
 import 'package:zain/core/resources/svg_resources.dart';
 import 'package:zain/core/router/app_routes.dart';
 import 'package:zain/core/theme/app_colors.dart';
@@ -12,7 +13,6 @@ import 'package:zain/core/theme/cubit/theme_cubit.dart';
 import 'package:zain/core/theme/cubit/theme_state.dart';
 import 'package:zain/features/profile/presentation/cubit/profile_cubit.dart';
 import 'package:zain/features/profile/presentation/cubit/profile_state.dart';
-import 'package:shimmer/shimmer.dart';
 
 class ProfileView extends StatelessWidget {
   const ProfileView({super.key});
@@ -148,7 +148,7 @@ class _ProfileContent extends StatelessWidget {
             tr('profile.version', namedArgs: {'version': '1.0.0'}),
             style: TextStyle(fontSize: 11.sp, color: colors.neutral400),
           ),
-          SizedBox(height: 28.h),
+          SizedBox(height: 100.h),
         ],
       ),
     );

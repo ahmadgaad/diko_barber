@@ -3,9 +3,12 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
 import 'package:shimmer/shimmer.dart';
+import 'package:zain/core/router/app_routes.dart';
 import 'package:zain/core/theme/app_colors.dart';
 import 'package:zain/core/widgets/app_gradient_button.dart';
+import 'package:zain/core/widgets/app_snack_bar.dart';
 import 'package:zain/features/book_appointment/domain/entities/staff_member.dart';
 import 'package:zain/features/claim_coupon/domain/entities/coupon_eligible_package.dart';
 import 'package:zain/features/claim_coupon/domain/entities/coupon_eligible_service.dart';
@@ -18,12 +21,36 @@ class ClaimCouponView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colors = AppColors.of(context);
-    return BlocBuilder<ClaimCouponCubit, ClaimCouponState>(
+    return BlocConsumer<ClaimCouponCubit, ClaimCouponState>(
+      listenWhen: (prev, curr) {
+        if (curr is ClaimCouponSuccess) return true;
+        if (prev is ClaimCouponData && curr is ClaimCouponData) {
+          return curr.apiError != null && curr.apiError != prev.apiError;
+        }
+        return false;
+      },
+      listener: (context, state) {
+        if (state is ClaimCouponSuccess) {
+          context.pushReplacement(
+            AppRoutes.checkout,
+            extra: state.appointment,
+          );
+        }
+        if (state is ClaimCouponData && state.apiError != null) {
+          AppSnackBar.show(
+            context,
+            message: state.apiError!,
+            type: SnackBarType.error,
+          );
+        }
+      },
+      buildWhen: (_, curr) => curr is! ClaimCouponSuccess,
       builder: (context, state) => switch (state) {
         ClaimCouponLoading() => _LoadingScaffold(colors: colors),
         ClaimCouponError(:final message) =>
           _ErrorScaffold(message: message, colors: colors),
         ClaimCouponData() => _DataScaffold(state: state, colors: colors),
+        ClaimCouponSuccess() => const SizedBox.shrink(),
       },
     );
   }
@@ -493,7 +520,7 @@ class _DateScroller extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(
-                          DateFormat('EEE').format(date),
+                          DateFormat('EEE', context.locale.languageCode).format(date),
                           style: TextStyle(
                             fontSize: 10.sp,
                             fontWeight: FontWeight.w500,
@@ -504,7 +531,7 @@ class _DateScroller extends StatelessWidget {
                         ),
                         SizedBox(height: 4.h),
                         Text(
-                          DateFormat('d').format(date),
+                          DateFormat('d', context.locale.languageCode).format(date),
                           style: TextStyle(
                             fontSize: 18.sp,
                             fontWeight: FontWeight.w700,
@@ -515,7 +542,7 @@ class _DateScroller extends StatelessWidget {
                         ),
                         SizedBox(height: 2.h),
                         Text(
-                          DateFormat('MMM').format(date),
+                          DateFormat('MMM', context.locale.languageCode).format(date),
                           style: TextStyle(
                             fontSize: 9.sp,
                             color: isSelected
@@ -1290,9 +1317,10 @@ class _BottomActionBar extends StatelessWidget {
       };
     } else {
       label = tr('claim_coupon.book');
-      enabled = state.canProceedToPayment;
+      enabled = state.canProceedToPayment && !state.isSubmitting;
       onTap = () {
-        // Step 3: create appointment — to be implemented
+        if (state.isSubmitting) return;
+        context.read<ClaimCouponCubit>().confirmBooking();
       };
     }
 

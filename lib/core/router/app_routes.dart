@@ -25,6 +25,8 @@ abstract final class AppRoutes {
   static const bookingSchedule = '/booking-schedule';
 
   static const checkout = '/checkout';
+  static const bookingDetails = '/booking-details';
+  static const paymentWebview = '/payment-webview';
 
   // Salon Auth
   static const salonSignup = '/salon-signup';

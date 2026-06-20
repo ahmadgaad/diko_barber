@@ -322,7 +322,32 @@
     "book_again": "احجز مجدداً",
     "pay": "الدفع",
     "reschedule": "إعادة جدولة",
-    "rate": "تقييم"
+    "rate": "تقييم",
+    "cancel_title": "إلغاء الحجز",
+    "cancel_subtitle": "هل أنت متأكد من إلغاء هذا الحجز؟",
+    "cancel_reason_hint": "سبب الإلغاء (اختياري)",
+    "cancel_yes": "تأكيد",
+    "cancel_no": "رجوع",
+    "cancel_success": "تم إلغاء الحجز بنجاح"
+  },
+  "service_details": {
+    "duration": "المدة",
+    "category": "التصنيف",
+    "price": "السعر",
+    "discounted_price": "بعد الخصم",
+    "distance": "المسافة"
+  },
+  "booking_details": {
+    "title": "تفاصيل الحجز",
+    "salon_info": "معلومات الصالون",
+    "appointment_info": "معلومات الموعد",
+    "date": "التاريخ",
+    "time": "الوقت",
+    "type": "نوع الحجز",
+    "barber": "الحلاق",
+    "services": "الخدمات",
+    "price_breakdown": "تفاصيل السعر",
+    "notes": "ملاحظات"
   },
   "search": {
     "hint": "ابحث عن صالونات، خدمات...",
@@ -403,6 +428,8 @@
     "pay_later": "ادفع لاحقاً",
     "choose_payment_method": "اختر طريقة الدفع",
     "confirm_payment": "تأكيد الدفع",
+    "processing": "جاري المعالجة...",
+    "payment": "الدفع",
     "retry": "إعادة المحاولة",
     "payment_hint": "يجب الدفع خلال ٥ دقائق من وقت حجزك وإلا سيتم إلغاؤه"
   }

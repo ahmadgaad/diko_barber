@@ -15,6 +15,7 @@ class CreateAppointmentUseCase {
     required int staffId,
     required List<int> serviceIds,
     required List<int> packageIds,
+    int? couponId,
   }) =>
       _repository.createAppointment(
         salonId: salonId,
@@ -23,5 +24,6 @@ class CreateAppointmentUseCase {
         staffId: staffId,
         serviceIds: serviceIds,
         packageIds: packageIds,
+        couponId: couponId,
       );
 }

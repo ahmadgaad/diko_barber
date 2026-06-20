@@ -7,6 +7,7 @@ import 'package:zain/core/shared/domain/entities/nearest_service.dart';
 import 'package:zain/core/theme/app_colors.dart';
 import 'package:zain/core/widgets/auth_gate.dart';
 import 'package:zain/features/home/presentation/components/section_header.dart';
+import 'package:zain/features/home/presentation/components/service_detail_sheet.dart';
 import 'package:zain/features/home/presentation/cubit/featured_services_cubit.dart';
 import 'package:zain/features/home/presentation/cubit/featured_services_state.dart';
 import 'package:shimmer/shimmer.dart';
@@ -56,7 +57,14 @@ class _ServicesList extends StatelessWidget {
             children: services.map((service) {
               return Padding(
                 padding: EdgeInsetsDirectional.only(end: 12.w),
-                child: _ServiceCard(service: service, colors: colors),
+                child: GestureDetector(
+                  onTap: () => ServiceDetailSheet.show(
+                    context,
+                    service: service,
+                    colors: colors,
+                  ),
+                  child: _ServiceCard(service: service, colors: colors),
+                ),
               );
             }).toList(),
           ),

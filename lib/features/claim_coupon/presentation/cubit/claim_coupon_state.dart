@@ -1,4 +1,5 @@
 import 'package:zain/features/book_appointment/domain/entities/staff_member.dart';
+import 'package:zain/features/booking_schedule/domain/entities/created_appointment.dart';
 import 'package:zain/features/claim_coupon/domain/entities/available_slot.dart';
 import 'package:zain/features/claim_coupon/domain/entities/coupon_eligible_package.dart';
 import 'package:zain/features/claim_coupon/domain/entities/coupon_eligible_service.dart';
@@ -37,6 +38,8 @@ class ClaimCouponData extends ClaimCouponState {
     this.isLoadingBarbers = false,
     this.barbersError,
     this.selectedBarber,
+    this.isSubmitting = false,
+    this.apiError,
   });
 
   final int couponId;
@@ -60,6 +63,9 @@ class ClaimCouponData extends ClaimCouponState {
   final bool isLoadingBarbers;
   final String? barbersError;
   final StaffMember? selectedBarber;
+
+  final bool isSubmitting;
+  final String? apiError;
 
   bool get canProceed =>
       selectedServiceIds.isNotEmpty || selectedPackageIds.isNotEmpty;
@@ -90,6 +96,8 @@ class ClaimCouponData extends ClaimCouponState {
     bool? isLoadingBarbers,
     String? Function()? barbersError,
     StaffMember? Function()? selectedBarber,
+    bool? isSubmitting,
+    String? Function()? apiError,
   }) {
     return ClaimCouponData(
       couponId: couponId,
@@ -112,6 +120,14 @@ class ClaimCouponData extends ClaimCouponState {
       barbersError: barbersError != null ? barbersError() : this.barbersError,
       selectedBarber:
           selectedBarber != null ? selectedBarber() : this.selectedBarber,
+      isSubmitting: isSubmitting ?? this.isSubmitting,
+      apiError: apiError != null ? apiError() : this.apiError,
     );
   }
+}
+
+class ClaimCouponSuccess extends ClaimCouponState {
+  const ClaimCouponSuccess({required this.appointment});
+
+  final CreatedAppointment appointment;
 }

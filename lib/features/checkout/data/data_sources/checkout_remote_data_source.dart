@@ -6,6 +6,10 @@ import 'package:zain/core/networking/endpoints.dart';
 
 abstract class CheckoutRemoteDataSource {
   Future<ApiResponse<dynamic>> getPaymentMethods();
+  Future<ApiResponse<dynamic>> payAppointment({
+    required int appointmentId,
+    required int paymentMethodId,
+  });
 }
 
 class CheckoutRemoteDataSourceImpl implements CheckoutRemoteDataSource {
@@ -20,6 +24,17 @@ class CheckoutRemoteDataSourceImpl implements CheckoutRemoteDataSource {
       queryParameters: {
         'is_android': Platform.isAndroid ? 1 : 0,
       },
+    );
+  }
+
+  @override
+  Future<ApiResponse<dynamic>> payAppointment({
+    required int appointmentId,
+    required int paymentMethodId,
+  }) {
+    return _networkService.postData(
+      endPoint: EndPoints.payAppointment(appointmentId),
+      body: {'payment_method': paymentMethodId},
     );
   }
 }

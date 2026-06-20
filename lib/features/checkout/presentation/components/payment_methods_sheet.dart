@@ -11,9 +11,14 @@ import '../cubit/checkout_cubit.dart';
 import '../cubit/checkout_state.dart';
 
 class PaymentMethodsSheet extends StatelessWidget {
-  const PaymentMethodsSheet({super.key, required this.colors});
+  const PaymentMethodsSheet({
+    super.key,
+    required this.colors,
+    required this.appointmentId,
+  });
 
   final AppColors colors;
+  final int appointmentId;
 
   @override
   Widget build(BuildContext context) {
@@ -60,7 +65,7 @@ class PaymentMethodsSheet extends StatelessWidget {
                 ),
               CheckoutPaymentMethodsError(:final message) =>
                 _ErrorBody(message: message, colors: colors),
-              CheckoutInitial() => const SizedBox.shrink(),
+              _ => const SizedBox.shrink(),
             },
           ),
           SizedBox(height: 16.h),
@@ -69,14 +74,20 @@ class PaymentMethodsSheet extends StatelessWidget {
                 curr is CheckoutPaymentMethodsLoaded ||
                 curr is CheckoutPaymentMethodsLoading,
             builder: (context, state) {
-              final hasSelection = state is CheckoutPaymentMethodsLoaded &&
-                  state.selectedMethodId != null;
+              final loaded = state is CheckoutPaymentMethodsLoaded;
+              final hasSelection = loaded && state.selectedMethodId != null;
+              final isPaying = loaded && state.isPaying;
               return AppGradientButton(
-                label: tr('checkout.confirm_payment'),
-                enabled: hasSelection,
-                onTap: () => Navigator.of(context).pop(
-                  (state as CheckoutPaymentMethodsLoaded).selectedMethod,
-                ),
+                label: isPaying
+                    ? tr('checkout.processing')
+                    : tr('checkout.confirm_payment'),
+                enabled: hasSelection && !isPaying,
+                onTap: () {
+                  Navigator.of(context).pop();
+                  context
+                      .read<CheckoutCubit>()
+                      .payAppointment(appointmentId);
+                },
               );
             },
           ),

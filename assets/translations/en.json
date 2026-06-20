@@ -322,7 +322,32 @@
     "book_again": "Book Again",
     "pay": "Pay",
     "reschedule": "Reschedule",
-    "rate": "Rate"
+    "rate": "Rate",
+    "cancel_title": "Cancel Booking",
+    "cancel_subtitle": "Are you sure you want to cancel this booking?",
+    "cancel_reason_hint": "Reason for cancellation (optional)",
+    "cancel_yes": "Confirm",
+    "cancel_no": "Back",
+    "cancel_success": "Booking cancelled successfully"
+  },
+  "service_details": {
+    "duration": "Duration",
+    "category": "Category",
+    "price": "Price",
+    "discounted_price": "After Discount",
+    "distance": "Distance"
+  },
+  "booking_details": {
+    "title": "Booking Details",
+    "salon_info": "Salon Info",
+    "appointment_info": "Appointment Info",
+    "date": "Date",
+    "time": "Time",
+    "type": "Booking Type",
+    "barber": "Barber",
+    "services": "Services",
+    "price_breakdown": "Price Breakdown",
+    "notes": "Notes"
   },
   "search": {
     "hint": "Search salons, services...",
@@ -403,6 +428,8 @@
     "pay_later": "Pay Later",
     "choose_payment_method": "Choose Payment Method",
     "confirm_payment": "Confirm Payment",
+    "processing": "Processing...",
+    "payment": "Payment",
     "retry": "Retry",
     "payment_hint": "Payment must be completed within 5 minutes of your booking time or it will be cancelled"
   }

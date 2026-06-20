@@ -22,7 +22,7 @@ class CoverSliverAppBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SliverAppBar(
-      expandedHeight: 240.h,
+      expandedHeight: 210.h,
       pinned: true,
       backgroundColor: colors.neutral50,
       surfaceTintColor: Colors.transparent,

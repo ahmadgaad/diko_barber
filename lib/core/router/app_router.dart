@@ -7,7 +7,10 @@ import 'package:zain/core/widgets/app_shell.dart';
 import 'package:zain/features/book_appointment/presentation/book_appointment_args.dart';
 import 'package:zain/features/book_appointment/presentation/screens/book_appointment_screen.dart';
 import 'package:zain/features/booking_schedule/domain/entities/created_appointment.dart';
+import 'package:zain/core/shared/domain/entities/booking.dart';
+import 'package:zain/features/booking/presentation/screens/booking_details_screen.dart';
 import 'package:zain/features/checkout/presentation/screens/checkout_screen.dart';
+import 'package:zain/features/checkout/presentation/screens/payment_webview_screen.dart';
 import 'package:zain/features/booking/presentation/cubit/bookings_cubit.dart';
 import 'package:zain/features/booking/presentation/screens/booking_view.dart';
 import 'package:zain/features/booking_schedule/presentation/booking_schedule_args.dart';
@@ -204,6 +207,21 @@ final appRouter = GoRouter(
       path: AppRoutes.checkout,
       builder: (context, state) =>
           CheckoutScreen(appointment: state.extra as CreatedAppointment),
+    ),
+    GoRoute(
+      path: AppRoutes.bookingDetails,
+      builder: (context, state) =>
+          BookingDetailsScreen(booking: state.extra as Booking),
+    ),
+    GoRoute(
+      path: AppRoutes.paymentWebview,
+      builder: (context, state) {
+        final args = state.extra as Map<String, String>;
+        return PaymentWebviewScreen(
+          checkoutUrl: args['checkoutUrl']!,
+          returnUrl: args['returnUrl']!,
+        );
+      },
     ),
     GoRoute(
       path: AppRoutes.packageDetails,

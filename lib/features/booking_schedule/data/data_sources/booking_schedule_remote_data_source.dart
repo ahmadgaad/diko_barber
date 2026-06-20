@@ -10,6 +10,7 @@ abstract class BookingScheduleRemoteDataSource {
     required int staffId,
     required List<int> serviceIds,
     required List<int> packageIds,
+    int? couponId,
   });
 }
 
@@ -27,22 +28,25 @@ class BookingScheduleRemoteDataSourceImpl
     required int staffId,
     required List<int> serviceIds,
     required List<int> packageIds,
+    int? couponId,
   }) {
     final services = [
       ...serviceIds.map((id) => {'service_id': id}),
       ...packageIds.map((id) => {'package_id': id}),
     ];
+    final body = <String, dynamic>{
+      'salon_id': salonId,
+      'appointment_date': appointmentDate,
+      'start_time': startTime,
+      'booking_type': 0,
+      'staff_id': staffId,
+      'user_address_id': null,
+      'services': services,
+    };
+    if (couponId != null) body['coupon_id'] = couponId;
     return _networkService.postData(
       endPoint: EndPoints.appointments,
-      body: {
-        'salon_id': salonId,
-        'appointment_date': appointmentDate,
-        'start_time': startTime,
-        'booking_type': 0,
-        'staff_id': staffId,
-        'user_address_id': null,
-        'services': services,
-      },
+      body: body,
     );
   }
 }

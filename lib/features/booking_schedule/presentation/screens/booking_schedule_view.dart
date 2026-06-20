@@ -247,7 +247,7 @@ class _DateScroller extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(
-                          DateFormat('EEE').format(date),
+                          DateFormat('EEE', context.locale.languageCode).format(date),
                           style: TextStyle(
                             fontSize: 10.sp,
                             fontWeight: FontWeight.w500,
@@ -258,7 +258,7 @@ class _DateScroller extends StatelessWidget {
                         ),
                         SizedBox(height: 4.h),
                         Text(
-                          DateFormat('d').format(date),
+                          DateFormat('d', context.locale.languageCode).format(date),
                           style: TextStyle(
                             fontSize: 18.sp,
                             fontWeight: FontWeight.w700,
@@ -269,7 +269,7 @@ class _DateScroller extends StatelessWidget {
                         ),
                         SizedBox(height: 2.h),
                         Text(
-                          DateFormat('MMM').format(date),
+                          DateFormat('MMM', context.locale.languageCode).format(date),
                           style: TextStyle(
                             fontSize: 9.sp,
                             color: isSelected

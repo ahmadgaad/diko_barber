@@ -10,5 +10,6 @@ abstract interface class BookingScheduleRepository {
     required int staffId,
     required List<int> serviceIds,
     required List<int> packageIds,
+    int? couponId,
   });
 }

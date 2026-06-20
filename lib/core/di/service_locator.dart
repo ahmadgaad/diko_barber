@@ -27,6 +27,7 @@ import 'package:zain/features/search/presentation/cubit/search_cubit.dart';
 import 'package:zain/features/booking/data/data_sources/bookings_remote_data_source.dart';
 import 'package:zain/features/booking/data/repositories/bookings_repository_impl.dart';
 import 'package:zain/features/booking/domain/repositories/bookings_repository.dart';
+import 'package:zain/features/booking/domain/use_cases/cancel_appointment_use_case.dart';
 import 'package:zain/features/booking/domain/use_cases/get_appointment_statuses_use_case.dart';
 import 'package:zain/features/booking/domain/use_cases/get_appointments_use_case.dart';
 import 'package:zain/features/booking/presentation/cubit/bookings_cubit.dart';
@@ -71,6 +72,7 @@ import 'package:zain/features/checkout/data/data_sources/checkout_remote_data_so
 import 'package:zain/features/checkout/data/repositories/checkout_repository_impl.dart';
 import 'package:zain/features/checkout/domain/repositories/checkout_repository.dart';
 import 'package:zain/features/checkout/domain/use_cases/get_payment_methods_use_case.dart';
+import 'package:zain/features/checkout/domain/use_cases/pay_appointment_use_case.dart';
 import 'package:zain/features/checkout/presentation/cubit/checkout_cubit.dart';
 import 'package:zain/features/booking_schedule/data/data_sources/booking_schedule_remote_data_source.dart';
 import 'package:zain/features/booking_schedule/data/repositories/booking_schedule_repository_impl.dart';
@@ -402,6 +404,7 @@ Future<void> setupServiceLocator() async {
       sl<GetCouponEligibleItemsUseCase>(),
       sl<GetAvailableSlotsUseCase>(),
       sl<GetAvailableBarbersUseCase>(),
+      sl<CreateAppointmentUseCase>(),
     ),
   );
 
@@ -426,8 +429,14 @@ Future<void> setupServiceLocator() async {
   sl.registerLazySingleton<GetPaymentMethodsUseCase>(
     () => GetPaymentMethodsUseCase(sl<CheckoutRepository>()),
   );
+  sl.registerLazySingleton<PayAppointmentUseCase>(
+    () => PayAppointmentUseCase(sl<CheckoutRepository>()),
+  );
   sl.registerFactory<CheckoutCubit>(
-    () => CheckoutCubit(sl<GetPaymentMethodsUseCase>()),
+    () => CheckoutCubit(
+      sl<GetPaymentMethodsUseCase>(),
+      sl<PayAppointmentUseCase>(),
+    ),
   );
 
   sl.registerFactory<HomeCubit>(
@@ -497,10 +506,14 @@ Future<void> setupServiceLocator() async {
   sl.registerLazySingleton<GetAppointmentsUseCase>(
     () => GetAppointmentsUseCase(sl<BookingsRepository>()),
   );
+  sl.registerLazySingleton<CancelAppointmentUseCase>(
+    () => CancelAppointmentUseCase(sl<BookingsRepository>()),
+  );
   sl.registerFactory<BookingsCubit>(
     () => BookingsCubit(
       sl<GetAppointmentStatusesUseCase>(),
       sl<GetAppointmentsUseCase>(),
+      sl<CancelAppointmentUseCase>(),
     ),
   );
   sl.registerFactory<FavoritesCubit>(

@@ -81,14 +81,44 @@ class _LoadedContent extends StatelessWidget {
                             BookingsEmptyState(colors: colors),
                           ],
                         )
-                      : ListView.separated(
-                          padding: EdgeInsets.only(bottom: 120.h, left: 16.w),
-                          physics: const ClampingScrollPhysics(),
-                          itemCount: state.bookings.length,
-                          separatorBuilder: (_, _) => SizedBox(height: 10.h),
-                          itemBuilder: (context, i) => BookingCard(
-                            booking: state.bookings[i],
-                            colors: colors,
+                      : NotificationListener<ScrollNotification>(
+                          onNotification: (notification) {
+                            if (notification is ScrollEndNotification &&
+                                notification.metrics.pixels >=
+                                    notification.metrics.maxScrollExtent - 200) {
+                              context.read<BookingsCubit>().loadMore();
+                            }
+                            return false;
+                          },
+                          child: ListView.separated(
+                            padding: EdgeInsets.only(bottom: 120.h, left: 16.w),
+                            physics: const ClampingScrollPhysics(),
+                            itemCount: state.bookings.length +
+                                (state.isLoadingMore ? 1 : 0),
+                            separatorBuilder: (_, _) =>
+                                SizedBox(height: 10.h),
+                            itemBuilder: (context, i) {
+                              if (i == state.bookings.length) {
+                                return Padding(
+                                  padding:
+                                      EdgeInsets.symmetric(vertical: 16.h),
+                                  child: Center(
+                                    child: SizedBox(
+                                      width: 24.r,
+                                      height: 24.r,
+                                      child: CircularProgressIndicator(
+                                        strokeWidth: 2.5,
+                                        color: splashOrange,
+                                      ),
+                                    ),
+                                  ),
+                                );
+                              }
+                              return BookingCard(
+                                booking: state.bookings[i],
+                                colors: colors,
+                              );
+                            },
                           ),
                         ),
                 ),

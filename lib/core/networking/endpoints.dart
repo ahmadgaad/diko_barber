@@ -48,6 +48,8 @@ abstract final class EndPoints {
 
   // Payment
   static const String paymentMethods = 'shared/payment-methods';
+  static String payAppointment(int id) => 'appointments/$id/pay';
+  static String cancelAppointment(int id) => 'appointments/$id/cancel';
 
   // Salon Auth
   static const String salonRegister = 'salon-auth/register';

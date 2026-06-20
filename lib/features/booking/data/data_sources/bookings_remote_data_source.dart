@@ -6,6 +6,10 @@ abstract class BookingsRemoteDataSource {
   Future<ApiResponse<dynamic>> getAppointmentStatuses();
   Future<ApiResponse<dynamic>> getAppointments(
       Map<String, dynamic> queryParams);
+  Future<ApiResponse<dynamic>> cancelAppointment({
+    required int appointmentId,
+    required String reason,
+  });
 }
 
 class BookingsRemoteDataSourceImpl implements BookingsRemoteDataSource {
@@ -24,5 +28,15 @@ class BookingsRemoteDataSourceImpl implements BookingsRemoteDataSource {
       _networkService.getData(
         endPoint: EndPoints.appointmentsList,
         queryParameters: queryParams,
+      );
+
+  @override
+  Future<ApiResponse<dynamic>> cancelAppointment({
+    required int appointmentId,
+    required String reason,
+  }) =>
+      _networkService.postData(
+        endPoint: EndPoints.cancelAppointment(appointmentId),
+        body: {'reason': reason},
       );
 }

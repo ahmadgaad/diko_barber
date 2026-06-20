@@ -10,9 +10,12 @@ import 'package:zain/core/widgets/app_gradient_button.dart';
 import 'package:zain/features/booking_schedule/domain/entities/created_appointment.dart';
 import '../components/checkout_info_row.dart';
 import '../components/checkout_service_tile.dart';
+import 'package:zain/core/widgets/app_snack_bar.dart';
+import 'package:zain/features/booking/presentation/cubit/bookings_cubit.dart';
 import '../components/payment_countdown_banner.dart';
 import '../components/payment_methods_sheet.dart';
 import '../cubit/checkout_cubit.dart';
+import '../cubit/checkout_state.dart';
 
 class CheckoutView extends StatelessWidget {
   const CheckoutView({super.key, required this.appointment});
@@ -22,22 +25,45 @@ class CheckoutView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colors = AppColors.of(context);
-    return Scaffold(
-      backgroundColor: colors.neutral50,
-      body: SafeArea(
-        bottom: false,
-        child: Column(
-          children: [
-            _TopBar(colors: colors),
-            Expanded(
-              child: _Content(appointment: appointment, colors: colors),
-            ),
-          ],
+    return BlocListener<CheckoutCubit, CheckoutState>(
+      listener: (context, state) async {
+        switch (state) {
+          case CheckoutPaymentRedirect(:final checkoutUrl, :final returnUrl):
+            context.push(AppRoutes.paymentWebview, extra: {
+              'checkoutUrl': checkoutUrl,
+              'returnUrl': returnUrl,
+            });
+          case CheckoutPaymentSuccess():
+            BookingsCubit.pendingRefresh = true;
+            context.go(AppRoutes.bookings);
+          case CheckoutPaymentMethodsLoaded(:final payError)
+              when payError != null:
+            AppSnackBar.show(
+              context,
+              message: payError,
+              type: SnackBarType.error,
+            );
+          default:
+            break;
+        }
+      },
+      child: Scaffold(
+        backgroundColor: colors.neutral50,
+        body: SafeArea(
+          bottom: false,
+          child: Column(
+            children: [
+              _TopBar(colors: colors),
+              Expanded(
+                child: _Content(appointment: appointment, colors: colors),
+              ),
+            ],
+          ),
         ),
-      ),
-      bottomNavigationBar: _BottomBar(
-        appointment: appointment,
-        colors: colors,
+        bottomNavigationBar: _BottomBar(
+          appointment: appointment,
+          colors: colors,
+        ),
       ),
     );
   }
@@ -490,7 +516,10 @@ class _BottomBar extends StatelessWidget {
       backgroundColor: Colors.transparent,
       builder: (_) => BlocProvider.value(
         value: cubit,
-        child: PaymentMethodsSheet(colors: colors),
+        child: PaymentMethodsSheet(
+          colors: colors,
+          appointmentId: appointment.id,
+        ),
       ),
     );
   }

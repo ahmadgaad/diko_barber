@@ -18,6 +18,7 @@ class BookingScheduleRepositoryImpl implements BookingScheduleRepository {
     required int staffId,
     required List<int> serviceIds,
     required List<int> packageIds,
+    int? couponId,
   }) async {
     try {
       final response = await _dataSource.createAppointment(
@@ -27,6 +28,7 @@ class BookingScheduleRepositoryImpl implements BookingScheduleRepository {
         staffId: staffId,
         serviceIds: serviceIds,
         packageIds: packageIds,
+        couponId: couponId,
       );
       if (response.isError || response.data == null) {
         return Failure(

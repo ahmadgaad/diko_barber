@@ -103,9 +103,14 @@ class _AppShellState extends State<AppShell>
   @override
   void didUpdateWidget(covariant AppShell oldWidget) {
     super.didUpdateWidget(oldWidget);
-    if (widget.navigationShell.currentIndex != oldWidget.navigationShell.currentIndex &&
-        _currentTab == HomeTab.bookings) {
-      context.read<BookingsCubit>().refresh();
+    if (widget.navigationShell.currentIndex !=
+        oldWidget.navigationShell.currentIndex) {
+      _navController.animateTo(0.0, curve: Curves.easeOut);
+      if (_currentTab == HomeTab.bookings) {
+        context.read<BookingsCubit>().refresh();
+      }
+    } else if (_currentTab == HomeTab.bookings) {
+      context.read<BookingsCubit>().refreshIfNeeded();
     }
   }
 
