@@ -481,6 +481,7 @@ Future<void> setupServiceLocator() async {
     () => HomeCubit(
       sl<SecureStorageCacheClient>(),
       sl<SharedPrefCacheClient>(),
+      sl<LocationService>(),
       sl<UpdateLocationUseCase>(),
     ),
   );

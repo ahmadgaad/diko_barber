@@ -1,12 +1,9 @@
-import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
-import 'package:zain/core/location_picker/presentation/screens/location_picker_screen.dart';
 import 'package:zain/core/router/app_routes.dart';
 import 'package:zain/core/theme/app_colors.dart';
-import 'package:zain/core/widgets/app_snack_bar.dart';
 import 'package:zain/features/home/presentation/components/banners_section.dart';
 import 'package:zain/features/home/presentation/components/categories_section.dart';
 import 'package:zain/features/home/presentation/components/coupons_section.dart';
@@ -27,55 +24,15 @@ import 'package:zain/features/home/presentation/cubit/featured_services_cubit.da
 class HomeView extends StatelessWidget {
   const HomeView({super.key});
 
-  Future<void> _pickLocation(BuildContext context) async {
-    final cubit = context.read<HomeCubit>();
-    final result =
-        await context.push<PickedLocation>(AppRoutes.locationPicker);
-    if (result == null) return;
-    await cubit.updateUserLocation(
-      lat: result.lat,
-      lng: result.lng,
-      address: result.address,
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
-    return MultiBlocListener(
-      listeners: [
-        BlocListener<SalonsCubit, SalonsState>(
-          listenWhen: (_, current) =>
-              current is SalonsLoaded && current.location != null,
-          listener: (context, state) {
-            final location = (state as SalonsLoaded).location!;
-            context.read<HomeCubit>().updateLocation(location);
-          },
-        ),
-        BlocListener<HomeCubit, HomeState>(
-          listenWhen: (previous, current) {
-            if (current is! HomeLoaded || previous is! HomeLoaded) return false;
-            return (current.locationUpdated && !previous.locationUpdated) ||
-                (current.locationError != null &&
-                    current.locationError != previous.locationError);
-          },
-          listener: (context, state) {
-            final loaded = state as HomeLoaded;
-            if (loaded.locationError != null) {
-              AppSnackBar.show(
-                context,
-                message: loaded.locationError!,
-                type: SnackBarType.error,
-              );
-            } else if (loaded.locationUpdated) {
-              AppSnackBar.show(
-                context,
-                message: tr('home.update_location_success'),
-                type: SnackBarType.success,
-              );
-            }
-          },
-        ),
-      ],
+    return BlocListener<SalonsCubit, SalonsState>(
+      listenWhen: (_, current) =>
+          current is SalonsLoaded && current.location != null,
+      listener: (context, state) {
+        final location = (state as SalonsLoaded).location!;
+        context.read<HomeCubit>().updateLocation(location);
+      },
       child: BlocBuilder<HomeCubit, HomeState>(
         builder: (context, state) {
           final loaded = state as HomeLoaded;
@@ -99,9 +56,7 @@ class HomeView extends StatelessWidget {
                   HomeHeader(
                     userName: loaded.userName,
                     location: loaded.location,
-                    isUpdatingLocation: loaded.isUpdatingLocation,
                     onSearchTap: () => context.push(AppRoutes.search),
-                    onLocationTap: () => _pickLocation(context),
                   ),
                   const BannersSection(),
                   const CategoriesSection(),

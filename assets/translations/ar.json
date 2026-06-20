@@ -252,8 +252,7 @@
     "valid_until_label": "صالح حتى",
     "remaining_uses": "الاستخدامات المتبقية",
     "uses_left": "{count} استخدام متبقي",
-    "max_discount": "الحد الأقصى للخصم",
-    "update_location_success": "تم تحديث الموقع بنجاح"
+    "max_discount": "الحد الأقصى للخصم"
   },
   "packages_list": {
     "search_hint": "ابحث عن باقة…",

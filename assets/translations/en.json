@@ -252,8 +252,7 @@
     "valid_until_label": "Valid until",
     "remaining_uses": "Remaining uses",
     "uses_left": "{count} uses left",
-    "max_discount": "Max discount",
-    "update_location_success": "Location updated successfully"
+    "max_discount": "Max discount"
   },
   "packages_list": {
     "search_hint": "Search packages…",
