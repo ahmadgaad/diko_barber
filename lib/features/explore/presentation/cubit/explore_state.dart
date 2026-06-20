@@ -22,6 +22,8 @@ class ExploreLoaded extends ExploreState {
     this.loadMoreFailed = false,
     this.userLat,
     this.userLng,
+    this.searchedLat,
+    this.searchedLng,
   });
 
   /// Salons currently displayed (may be stale while [isLoadingSalons] is true).
@@ -54,6 +56,10 @@ class ExploreLoaded extends ExploreState {
   final double? userLat;
   final double? userLng;
 
+  /// Map center selected via place search — null until the user searches a place.
+  final double? searchedLat;
+  final double? searchedLng;
+
   ExploreLoaded copyWith({
     List<Salon>? salons,
     List<Category>? categories,
@@ -66,6 +72,8 @@ class ExploreLoaded extends ExploreState {
     int? Function()? highlightedSalonId,
     double? Function()? userLat,
     double? Function()? userLng,
+    double? Function()? searchedLat,
+    double? Function()? searchedLng,
   }) {
     return ExploreLoaded(
       salons: salons ?? this.salons,
@@ -75,13 +83,16 @@ class ExploreLoaded extends ExploreState {
       isLoadingMore: isLoadingMore ?? this.isLoadingMore,
       hasMore: hasMore ?? this.hasMore,
       loadMoreFailed: loadMoreFailed ?? this.loadMoreFailed,
-      selectedCategory:
-          selectedCategory != null ? selectedCategory() : this.selectedCategory,
+      selectedCategory: selectedCategory != null
+          ? selectedCategory()
+          : this.selectedCategory,
       highlightedSalonId: highlightedSalonId != null
           ? highlightedSalonId()
           : this.highlightedSalonId,
       userLat: userLat != null ? userLat() : this.userLat,
       userLng: userLng != null ? userLng() : this.userLng,
+      searchedLat: searchedLat != null ? searchedLat() : this.searchedLat,
+      searchedLng: searchedLng != null ? searchedLng() : this.searchedLng,
     );
   }
 }

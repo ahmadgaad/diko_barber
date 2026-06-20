@@ -7,7 +7,10 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:zain/core/theme/app_colors.dart';
 import 'package:zain/core/widgets/app_snack_bar.dart';
 import 'package:zain/core/widgets/auth_gate.dart';
+import 'package:zain/core/di/service_locator.dart';
+import 'package:zain/core/location_picker/presentation/cubit/location_picker_cubit.dart';
 import 'package:zain/features/explore/presentation/components/explore_empty_state.dart';
+import 'package:zain/features/explore/presentation/components/explore_map_search_section.dart';
 import 'package:zain/features/explore/presentation/components/explore_sheet_header.dart';
 import 'package:zain/features/explore/presentation/components/explore_shimmer.dart';
 import 'package:zain/features/explore/presentation/components/salon_grid_card.dart';
@@ -27,8 +30,6 @@ class ExploreView extends StatefulWidget {
 
 class _ExploreViewState extends State<ExploreView> {
   final _sheetController = DraggableScrollableController();
-  final _searchController = TextEditingController();
-  final _searchFocusNode = FocusNode();
   ScrollController? _sheetScrollController;
 
   static const _maxSize = 0.92;
@@ -37,36 +38,32 @@ class _ExploreViewState extends State<ExploreView> {
   // Cached once so snap points stay identical across rebuilds.
   static const _snapSizes = [_midSize, _maxSize];
 
+  // Hide the floating search field while the sheet is opened past its rest size.
+  bool _searchHidden = false;
+
   @override
   void initState() {
     super.initState();
     _sheetController.addListener(_onSheetScroll);
-    _searchFocusNode.addListener(_onSearchFocusChanged);
-  }
-
-  void _onSearchFocusChanged() {
-    if (_searchFocusNode.hasFocus && _sheetController.isAttached) {
-      _sheetController.animateTo(
-        _maxSize,
-        duration: const Duration(milliseconds: 300),
-        curve: Curves.easeOut,
-      );
-    }
   }
 
   void _onSheetScroll() {
     if (!_sheetController.isAttached) return;
-    final callback = widget.onSheetSizeChanged ??
+    final callback =
+        widget.onSheetSizeChanged ??
         ExploreShellCallback.maybeOf(context)?.onSheetSizeChanged;
     callback?.call(_sheetController.size, _maxSize);
+
+    final hidden = _sheetController.size > _midSize + 0.02;
+    if (hidden != _searchHidden) {
+      setState(() => _searchHidden = hidden);
+    }
   }
 
   @override
   void dispose() {
     _sheetController.removeListener(_onSheetScroll);
     _sheetController.dispose();
-    _searchController.dispose();
-    _searchFocusNode.dispose();
     super.dispose();
   }
 
@@ -181,151 +178,173 @@ class _ExploreViewState extends State<ExploreView> {
     final colors = AppColors.of(context);
     final navBarHeight = 88.h + MediaQuery.paddingOf(context).bottom;
 
-    return BlocListener<ExploreCubit, ExploreState>(
-      listenWhen: (previous, current) =>
-          previous is ExploreLoaded &&
-          current is ExploreLoaded &&
-          !previous.loadMoreFailed &&
-          current.loadMoreFailed,
-      listener: (context, _) =>
-          AppSnackBar.show(context, message: tr('explore.load_more_failed')),
-      child: Stack(
-        children: [
-          // Map layer — only rebuilds on relevant state changes.
-          Positioned.fill(
-            child: BlocBuilder<ExploreCubit, ExploreState>(
-              buildWhen: (p, c) =>
-                  p.runtimeType != c.runtimeType ||
-                  (p is ExploreLoaded &&
-                      c is ExploreLoaded &&
-                      (p.salons != c.salons ||
-                          p.highlightedSalonId != c.highlightedSalonId ||
-                          p.userLat != c.userLat ||
-                          p.userLng != c.userLng)),
-              builder: (context, state) => state is ExploreLoaded
-                  ? SalonMapView(
-                      salons: state.salons,
-                      highlightedSalonId: state.highlightedSalonId,
-                      onPinTapped: (id) => _onPinTapped(state, id),
-                      userLocation:
-                          state.userLat != null && state.userLng != null
-                          ? LatLng(state.userLat!, state.userLng!)
-                          : null,
-                      locationButtonBottomPadding:
-                          _midSize * MediaQuery.sizeOf(context).height,
-                    )
-                  : Container(color: colors.neutral200),
+    return BlocProvider<LocationPickerCubit>(
+      create: (_) => sl<LocationPickerCubit>(),
+      child: BlocListener<ExploreCubit, ExploreState>(
+        listenWhen: (previous, current) =>
+            previous is ExploreLoaded &&
+            current is ExploreLoaded &&
+            !previous.loadMoreFailed &&
+            current.loadMoreFailed,
+        listener: (context, _) =>
+            AppSnackBar.show(context, message: tr('explore.load_more_failed')),
+        child: Stack(
+          children: [
+            // Map layer — only rebuilds on relevant state changes.
+            Positioned.fill(
+              child: BlocBuilder<ExploreCubit, ExploreState>(
+                buildWhen: (p, c) =>
+                    p.runtimeType != c.runtimeType ||
+                    (p is ExploreLoaded &&
+                        c is ExploreLoaded &&
+                        (p.salons != c.salons ||
+                            p.highlightedSalonId != c.highlightedSalonId ||
+                            p.userLat != c.userLat ||
+                            p.userLng != c.userLng ||
+                            p.searchedLat != c.searchedLat ||
+                            p.searchedLng != c.searchedLng)),
+                builder: (context, state) => state is ExploreLoaded
+                    ? SalonMapView(
+                        salons: state.salons,
+                        highlightedSalonId: state.highlightedSalonId,
+                        onPinTapped: (id) => _onPinTapped(state, id),
+                        userLocation:
+                            state.userLat != null && state.userLng != null
+                            ? LatLng(state.userLat!, state.userLng!)
+                            : null,
+                        cameraTarget:
+                            state.searchedLat != null &&
+                                state.searchedLng != null
+                            ? LatLng(state.searchedLat!, state.searchedLng!)
+                            : null,
+                        locationButtonBottomPadding:
+                            _midSize * MediaQuery.sizeOf(context).height,
+                      )
+                    : Container(color: colors.neutral200),
+              ),
             ),
-          ),
 
-          // Sheet — stable widget tree; BlocBuilder lives only inside the content.
-          DraggableScrollableSheet(
-            controller: _sheetController,
-            initialChildSize: _midSize,
-            minChildSize: _midSize,
-            maxChildSize: _maxSize,
-            snap: true,
-            snapSizes: _snapSizes,
-            builder: (context, scrollController) {
-              _sheetScrollController = scrollController;
-              return DecoratedBox(
-                decoration: BoxDecoration(
-                  color: colors.neutral50,
-                  borderRadius: BorderRadius.vertical(
-                    top: Radius.circular(24.r),
-                  ),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withValues(alpha: 0.10),
-                      blurRadius: 16,
-                      offset: const Offset(0, -4),
+            // Sheet — stable widget tree; BlocBuilder lives only inside the content.
+            DraggableScrollableSheet(
+              controller: _sheetController,
+              initialChildSize: _midSize,
+              minChildSize: _midSize,
+              maxChildSize: _maxSize,
+              snap: true,
+              snapSizes: _snapSizes,
+              builder: (context, scrollController) {
+                _sheetScrollController = scrollController;
+                return DecoratedBox(
+                  decoration: BoxDecoration(
+                    color: colors.neutral50,
+                    borderRadius: BorderRadius.vertical(
+                      top: Radius.circular(24.r),
                     ),
-                  ],
-                ),
-                child: Column(
-                  children: [
-                    // Fixed header — never scrolls; GestureDetector forwards
-                    // vertical drags to the sheet controller so the header drag
-                    // handle actually moves the sheet.
-                    GestureDetector(
-                      behavior: HitTestBehavior.translucent,
-                      onVerticalDragUpdate: (details) {
-                        if (!_sheetController.isAttached) return;
-                        final screenH = MediaQuery.sizeOf(context).height;
-                        _sheetController.jumpTo(
-                          (_sheetController.size -
-                                  details.primaryDelta! / screenH)
-                              .clamp(_midSize, _maxSize),
-                        );
-                      },
-                      onVerticalDragEnd: (details) {
-                        if (!_sheetController.isAttached) return;
-                        final velocity = details.primaryVelocity ?? 0;
-                        final current = _sheetController.size;
-                        final double target;
-                        if (velocity < -500) {
-                          target = _maxSize;
-                        } else if (velocity > 500) {
-                          target = _midSize;
-                        } else {
-                          target = _snapSizes.reduce(
-                            (a, b) => (a - current).abs() < (b - current).abs()
-                                ? a
-                                : b,
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withValues(alpha: 0.10),
+                        blurRadius: 16,
+                        offset: const Offset(0, -4),
+                      ),
+                    ],
+                  ),
+                  child: Column(
+                    children: [
+                      // Fixed header — never scrolls; GestureDetector forwards
+                      // vertical drags to the sheet controller so the header drag
+                      // handle actually moves the sheet.
+                      GestureDetector(
+                        behavior: HitTestBehavior.translucent,
+                        onVerticalDragUpdate: (details) {
+                          if (!_sheetController.isAttached) return;
+                          final screenH = MediaQuery.sizeOf(context).height;
+                          _sheetController.jumpTo(
+                            (_sheetController.size -
+                                    details.primaryDelta! / screenH)
+                                .clamp(_midSize, _maxSize),
                           );
-                        }
-                        _sheetController.animateTo(
-                          target,
-                          duration: const Duration(milliseconds: 300),
-                          curve: Curves.easeOut,
-                        );
-                      },
-                      child: BlocBuilder<ExploreCubit, ExploreState>(
-                        builder: (context, state) => ExploreSheetHeader(
-                          state: state,
-                          searchController: _searchController,
-                          searchFocusNode: _searchFocusNode,
-                          onSearch: (q) =>
-                              context.read<ExploreCubit>().search(q),
-                          onClearSearch: () {
-                            _searchController.clear();
-                            context.read<ExploreCubit>().search('');
-                          },
+                        },
+                        onVerticalDragEnd: (details) {
+                          if (!_sheetController.isAttached) return;
+                          final velocity = details.primaryVelocity ?? 0;
+                          final current = _sheetController.size;
+                          final double target;
+                          if (velocity < -500) {
+                            target = _maxSize;
+                          } else if (velocity > 500) {
+                            target = _midSize;
+                          } else {
+                            target = _snapSizes.reduce(
+                              (a, b) =>
+                                  (a - current).abs() < (b - current).abs()
+                                  ? a
+                                  : b,
+                            );
+                          }
+                          _sheetController.animateTo(
+                            target,
+                            duration: const Duration(milliseconds: 300),
+                            curve: Curves.easeOut,
+                          );
+                        },
+                        child: BlocBuilder<ExploreCubit, ExploreState>(
+                          builder: (context, state) =>
+                              ExploreSheetHeader(state: state),
                         ),
                       ),
-                    ),
-                    // Scrollable content only.
-                    Expanded(
-                      child: BlocBuilder<ExploreCubit, ExploreState>(
-                        builder: (context, state) =>
-                            NotificationListener<ScrollNotification>(
-                              onNotification: (notification) {
-                                if (notification is ScrollEndNotification &&
-                                    notification.metrics.pixels >=
-                                        notification.metrics.maxScrollExtent -
-                                            200) {
-                                  context.read<ExploreCubit>().loadMore();
-                                }
-                                return false;
-                              },
-                              child: CustomScrollView(
-                                controller: scrollController,
-                                physics: const ClampingScrollPhysics(),
-                                slivers: _buildSlivers(
-                                  context,
-                                  state,
-                                  navBarHeight,
+                      // Scrollable content only.
+                      Expanded(
+                        child: BlocBuilder<ExploreCubit, ExploreState>(
+                          builder: (context, state) =>
+                              NotificationListener<ScrollNotification>(
+                                onNotification: (notification) {
+                                  if (notification is ScrollEndNotification &&
+                                      notification.metrics.pixels >=
+                                          notification.metrics.maxScrollExtent -
+                                              200) {
+                                    context.read<ExploreCubit>().loadMore();
+                                  }
+                                  return false;
+                                },
+                                child: CustomScrollView(
+                                  controller: scrollController,
+                                  physics: const ClampingScrollPhysics(),
+                                  slivers: _buildSlivers(
+                                    context,
+                                    state,
+                                    navBarHeight,
+                                  ),
                                 ),
                               ),
-                            ),
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
+                );
+              },
+            ),
+
+            // Floating place search — pinned to the top of the map, above the
+            // sheet. Hidden while the sheet is opened. Selecting a place
+            // recenters the map and reloads salons.
+            Positioned(
+              top: 0,
+              left: 0,
+              right: 0,
+              child: IgnorePointer(
+                ignoring: _searchHidden,
+                child: AnimatedOpacity(
+                  opacity: _searchHidden ? 0.0 : 1.0,
+                  duration: const Duration(milliseconds: 200),
+                  child: ExploreMapSearchSection(
+                    onPlaceSelected: (lat, lng, _) =>
+                        context.read<ExploreCubit>().searchLocation(lat, lng),
+                  ),
                 ),
-              );
-            },
-          ),
-        ],
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

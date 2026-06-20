@@ -63,7 +63,9 @@ class ExploreCubit extends Cubit<ExploreState> {
         NearestSalonsParams(
           lat: _lat,
           long: _lng,
-          categoryIds: _selectedCategory != null ? [_selectedCategory!.id] : null,
+          categoryIds: _selectedCategory != null
+              ? [_selectedCategory!.id]
+              : null,
           page: 1,
         ),
       ),
@@ -80,14 +82,16 @@ class ExploreCubit extends Cubit<ExploreState> {
       case Success(:final data):
         _currentPage = 1;
         _hasMore = data.hasMore;
-        emit(ExploreLoaded(
-          salons: data.salons,
-          categories: _categories,
-          selectedCategory: _selectedCategory,
-          hasMore: _hasMore,
-          userLat: _lat,
-          userLng: _lng,
-        ));
+        emit(
+          ExploreLoaded(
+            salons: data.salons,
+            categories: _categories,
+            selectedCategory: _selectedCategory,
+            hasMore: _hasMore,
+            userLat: _lat,
+            userLng: _lng,
+          ),
+        );
       case Failure():
         emit(const ExploreError());
     }
@@ -108,10 +112,7 @@ class ExploreCubit extends Cubit<ExploreState> {
 
     final current = state;
     if (current is ExploreLoaded) {
-      emit(current.copyWith(
-        userLat: () => _lat,
-        userLng: () => _lng,
-      ));
+      emit(current.copyWith(userLat: () => _lat, userLng: () => _lng));
     }
 
     _fetchSalons();
@@ -124,6 +125,30 @@ class ExploreCubit extends Cubit<ExploreState> {
       _query = query.trim();
       _fetchSalons();
     });
+  }
+
+  /// Recenters the explore area on a place selected via search and reloads
+  /// salons around it. Device location ([userLat]/[userLng]) is left untouched
+  /// so the blue dot and "my location" button still point at the real GPS fix.
+  void searchLocation(double lat, double lng) {
+    _lat = lat;
+    _lng = lng;
+    final current = state;
+    if (current is ExploreLoaded) {
+      emit(current.copyWith(searchedLat: () => lat, searchedLng: () => lng));
+    }
+    _fetchSalons();
+  }
+
+  /// Resets the explore area back to the device location and reloads salons.
+  /// Triggered by the map's "my location" button — clears any searched place.
+  void goToMyLocation() {
+    final current = state;
+    if (current is! ExploreLoaded) return;
+    _lat = current.userLat;
+    _lng = current.userLng;
+    emit(current.copyWith(searchedLat: () => null, searchedLng: () => null));
+    _fetchSalons();
   }
 
   void selectCategory(Category? category) {
@@ -147,7 +172,11 @@ class ExploreCubit extends Cubit<ExploreState> {
     final salon = current.salons.firstWhere((s) => s.id == salonId);
     final newIsFavorite = !salon.isFavorite;
     _pendingToggles.add(salonId);
-    emit(current.copyWith(salons: _applyFavorite(current.salons, salonId, newIsFavorite)));
+    emit(
+      current.copyWith(
+        salons: _applyFavorite(current.salons, salonId, newIsFavorite),
+      ),
+    );
 
     final result = await _toggleFavoriteUseCase(
       id: salonId,
@@ -166,9 +195,11 @@ class ExploreCubit extends Cubit<ExploreState> {
     if (_pendingToggles.contains(event.id)) return;
     final current = state;
     if (current is! ExploreLoaded) return;
-    emit(current.copyWith(
-      salons: _applyFavorite(current.salons, event.id, event.isFavorite),
-    ));
+    emit(
+      current.copyWith(
+        salons: _applyFavorite(current.salons, event.id, event.isFavorite),
+      ),
+    );
   }
 
   List<Salon> _applyFavorite(List<Salon> salons, int id, bool isFavorite) =>
@@ -197,13 +228,15 @@ class ExploreCubit extends Cubit<ExploreState> {
 
     final current = state;
     if (current is ExploreLoaded) {
-      emit(current.copyWith(
-        isLoadingSalons: resetPage,
-        isLoadingMore: !resetPage,
-        loadMoreFailed: false,
-        selectedCategory: () => _selectedCategory,
-        query: _query,
-      ));
+      emit(
+        current.copyWith(
+          isLoadingSalons: resetPage,
+          isLoadingMore: !resetPage,
+          loadMoreFailed: false,
+          selectedCategory: () => _selectedCategory,
+          query: _query,
+        ),
+      );
     }
 
     final result = await _getNearestSalonsUseCase(
@@ -227,14 +260,16 @@ class ExploreCubit extends Cubit<ExploreState> {
           final newSalons = resetPage
               ? data.salons
               : [...current.salons, ...data.salons];
-          emit(current.copyWith(
-            salons: newSalons,
-            isLoadingSalons: false,
-            isLoadingMore: false,
-            hasMore: _hasMore,
-            selectedCategory: () => _selectedCategory,
-            query: _query,
-          ));
+          emit(
+            current.copyWith(
+              salons: newSalons,
+              isLoadingSalons: false,
+              isLoadingMore: false,
+              hasMore: _hasMore,
+              selectedCategory: () => _selectedCategory,
+              query: _query,
+            ),
+          );
         }
       case Failure():
         if (resetPage) {
