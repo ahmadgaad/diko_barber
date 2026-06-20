@@ -17,6 +17,11 @@ class LocationService {
   ///   new one — prevents duplicate hardware requests from concurrent callers
   ///   (e.g. SalonsCubit and CouponsCubit initialising at the same time).
   /// - Returns null if permission is denied or location is unavailable.
+  void clearCache() {
+    _cachedPosition = null;
+    _cacheTime = null;
+  }
+
   Future<Position?> getCurrentPosition() async {
     // Return fresh cache immediately.
     if (_cachedPosition != null && _cacheTime != null) {

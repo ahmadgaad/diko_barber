@@ -34,7 +34,9 @@ class BookNowBar extends StatelessWidget {
         final hasSelection = serviceIds.isNotEmpty || packageIds.isNotEmpty;
 
         return Container(
-          padding: EdgeInsets.fromLTRB(16.w, 12.h, 16.w, 24.h),
+          padding: EdgeInsets.fromLTRB(
+            16.w, 12.h, 16.w, MediaQuery.paddingOf(context).bottom + 12.h,
+          ),
           decoration: BoxDecoration(
             color: colors.neutral50,
             border: Border(top: BorderSide(color: colors.neutral200)),

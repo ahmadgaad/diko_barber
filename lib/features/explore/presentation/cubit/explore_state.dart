@@ -64,6 +64,8 @@ class ExploreLoaded extends ExploreState {
     bool? loadMoreFailed,
     Category? Function()? selectedCategory,
     int? Function()? highlightedSalonId,
+    double? Function()? userLat,
+    double? Function()? userLng,
   }) {
     return ExploreLoaded(
       salons: salons ?? this.salons,
@@ -78,8 +80,8 @@ class ExploreLoaded extends ExploreState {
       highlightedSalonId: highlightedSalonId != null
           ? highlightedSalonId()
           : this.highlightedSalonId,
-      userLat: userLat,
-      userLng: userLng,
+      userLat: userLat != null ? userLat() : this.userLat,
+      userLng: userLng != null ? userLng() : this.userLng,
     );
   }
 }

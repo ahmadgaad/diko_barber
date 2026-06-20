@@ -40,6 +40,9 @@ final class SalonRegisterFormState extends SalonRegisterState {
     this.description = '',
     this.location = '',
     this.commercialRegistrationNumber = '',
+    this.pickedLat,
+    this.pickedLng,
+    this.pickedAddress,
     this.logoPath,
     this.commercialRegistrationImagePath,
     // Step 2 errors
@@ -83,6 +86,9 @@ final class SalonRegisterFormState extends SalonRegisterState {
   final String description;
   final String location;
   final String commercialRegistrationNumber;
+  final double? pickedLat;
+  final double? pickedLng;
+  final String? pickedAddress;
   final String? logoPath;
   final String? commercialRegistrationImagePath;
   final String? specializationError;
@@ -121,6 +127,9 @@ final class SalonRegisterFormState extends SalonRegisterState {
     String? description,
     String? location,
     String? commercialRegistrationNumber,
+    double? Function()? pickedLat,
+    double? Function()? pickedLng,
+    String? Function()? pickedAddress,
     String? Function()? logoPath,
     String? Function()? commercialRegistrationImagePath,
     String? Function()? specializationError,
@@ -168,6 +177,10 @@ final class SalonRegisterFormState extends SalonRegisterState {
       location: location ?? this.location,
       commercialRegistrationNumber:
           commercialRegistrationNumber ?? this.commercialRegistrationNumber,
+      pickedLat: pickedLat != null ? pickedLat() : this.pickedLat,
+      pickedLng: pickedLng != null ? pickedLng() : this.pickedLng,
+      pickedAddress:
+          pickedAddress != null ? pickedAddress() : this.pickedAddress,
       logoPath: logoPath != null ? logoPath() : this.logoPath,
       commercialRegistrationImagePath: commercialRegistrationImagePath != null
           ? commercialRegistrationImagePath()
@@ -213,6 +226,9 @@ final class SalonRegisterFormState extends SalonRegisterState {
         description,
         location,
         commercialRegistrationNumber,
+        pickedLat,
+        pickedLng,
+        pickedAddress,
         logoPath,
         commercialRegistrationImagePath,
         specializationError,

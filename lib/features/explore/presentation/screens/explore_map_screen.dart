@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:zain/core/theme/app_colors.dart';
 import 'package:zain/features/explore/presentation/components/explore_back_button.dart';
 import 'package:zain/features/explore/presentation/components/explore_empty_state.dart';
 import 'package:zain/features/explore/presentation/components/explore_map_sheet_header.dart';
 import 'package:zain/features/explore/presentation/components/explore_shimmer.dart';
-import 'package:zain/features/explore/presentation/components/map_preview_card.dart';
 import 'package:zain/features/explore/presentation/components/salon_grid_card.dart';
 import 'package:zain/features/explore/presentation/components/salon_map_view.dart';
 import 'package:zain/features/explore/presentation/cubit/explore_cubit.dart';
@@ -67,7 +67,11 @@ class _ExploreMapScreenState extends State<ExploreMapScreen> {
                         salons: state.salons,
                         highlightedSalonId: state.highlightedSalonId,
                         onPinTapped: (id) => _onPinTapped(state, id),
-                        initialZoom: kExploreMapCamera.zoom,
+                        userLocation:
+                            state.userLat != null && state.userLng != null
+                                ? LatLng(state.userLat!, state.userLng!)
+                                : null,
+                        initialZoom: 11.5,
                       )
                     : Container(color: colors.neutral200),
               ),

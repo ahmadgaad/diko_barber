@@ -240,7 +240,10 @@ class SalonVerifyOtpView extends StatelessWidget {
         final cubit = context.read<SalonVerifyOtpCubit>();
 
         return Padding(
-          padding: EdgeInsets.only(bottom: 32.h, top: 8.h),
+          padding: EdgeInsets.only(
+            bottom: MediaQuery.paddingOf(context).bottom + 12.h,
+            top: 8.h,
+          ),
           child: Center(
             child: formState.isResending
                 ? SizedBox(

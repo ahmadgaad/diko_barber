@@ -1,3 +1,10 @@
+import 'package:zain/core/location_picker/data/data_sources/location_picker_remote_data_source.dart';
+import 'package:zain/core/location_picker/data/repositories/location_picker_repository_impl.dart';
+import 'package:zain/core/location_picker/domain/repositories/location_picker_repository.dart';
+import 'package:zain/core/location_picker/domain/use_cases/fetch_suggestions_use_case.dart';
+import 'package:zain/core/location_picker/domain/use_cases/geocode_by_place_id_use_case.dart';
+import 'package:zain/core/location_picker/domain/use_cases/reverse_geocode_use_case.dart';
+import 'package:zain/core/location_picker/presentation/cubit/location_picker_cubit.dart';
 import 'package:zain/core/networking/api_consumer.dart';
 import 'package:zain/core/services/location_service.dart';
 import 'package:zain/core/services/user_session.dart';
@@ -162,6 +169,34 @@ Future<void> setupServiceLocator() async {
   );
   sl.registerLazySingleton<SecureStorageCacheClient>(
     () => SecureStorageCacheClient(sl<FlutterSecureStorage>()),
+  );
+
+  // ─── Location Picker ───────────────────────────────────────────────────────
+  sl.registerLazySingleton<LocationPickerRemoteDataSource>(
+    () => LocationPickerRemoteDataSourceImpl(Dio()),
+  );
+  sl.registerLazySingleton<LocationPickerRepository>(
+    () => LocationPickerRepositoryImpl(
+      sl<LocationPickerRemoteDataSource>(),
+      sl<SharedPreferences>(),
+    ),
+  );
+  sl.registerLazySingleton<ReverseGeocodeUseCase>(
+    () => ReverseGeocodeUseCase(sl<LocationPickerRepository>()),
+  );
+  sl.registerLazySingleton<FetchSuggestionsUseCase>(
+    () => FetchSuggestionsUseCase(sl<LocationPickerRepository>()),
+  );
+  sl.registerLazySingleton<GeocodeByPlaceIdUseCase>(
+    () => GeocodeByPlaceIdUseCase(sl<LocationPickerRepository>()),
+  );
+  sl.registerFactory<LocationPickerCubit>(
+    () => LocationPickerCubit(
+      reverseGeocodeUseCase: sl<ReverseGeocodeUseCase>(),
+      fetchSuggestionsUseCase: sl<FetchSuggestionsUseCase>(),
+      geocodeByPlaceIdUseCase: sl<GeocodeByPlaceIdUseCase>(),
+      locationService: sl<LocationService>(),
+    ),
   );
 
   // ─── Repositories ─────────────────────────────────────────────────────────
@@ -373,7 +408,6 @@ Future<void> setupServiceLocator() async {
       getCitiesUseCase: sl<GetCitiesUseCase>(),
       getNeighborhoodsUseCase: sl<GetNeighborhoodsUseCase>(),
       getCategoriesUseCase: sl<GetCategoriesUseCase>(),
-      locationService: sl<LocationService>(),
     ),
   );
   sl.registerFactoryParam<SalonVerifyOtpCubit, String, void>(

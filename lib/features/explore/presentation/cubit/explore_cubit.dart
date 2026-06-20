@@ -93,6 +93,30 @@ class ExploreCubit extends Cubit<ExploreState> {
     }
   }
 
+  Future<void> recheckLocation() async {
+    _locationService.clearCache();
+    final position = await _locationService.getCurrentPosition();
+    if (isClosed) return;
+
+    final hadLocation = _lat != null && _lng != null;
+    final hasLocation = position != null;
+
+    if (hadLocation == hasLocation) return;
+
+    _lat = position?.latitude;
+    _lng = position?.longitude;
+
+    final current = state;
+    if (current is ExploreLoaded) {
+      emit(current.copyWith(
+        userLat: () => _lat,
+        userLng: () => _lng,
+      ));
+    }
+
+    _fetchSalons();
+  }
+
   void search(String query) {
     _debounce?.cancel();
     _debounce = Timer(const Duration(milliseconds: 400), () {

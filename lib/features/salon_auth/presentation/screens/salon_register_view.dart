@@ -8,8 +8,9 @@ import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:zain/core/router/app_routes.dart';
 import 'package:zain/core/theme/app_colors.dart';
-import 'package:zain/core/widgets/app_dropdown_field.dart';
+import 'package:zain/core/widgets/app_cupertino_select_field.dart';
 import 'package:zain/core/widgets/app_gradient_button.dart';
+import 'package:zain/core/location_picker/presentation/screens/location_picker_screen.dart';
 import 'package:zain/core/widgets/app_snack_bar.dart';
 import 'package:zain/core/widgets/app_text_form_field.dart';
 import 'package:zain/core/widgets/user_type_toggle.dart';
@@ -342,6 +343,7 @@ class _SalonRegisterViewState extends State<SalonRegisterView> {
 
   Widget _buildStep2(BuildContext context, SalonRegisterFormState state) {
     final cubit = context.read<SalonRegisterCubit>();
+    final colors = AppColors.of(context);
 
     return Padding(
       padding: EdgeInsets.all(16.w),
@@ -352,7 +354,7 @@ class _SalonRegisterViewState extends State<SalonRegisterView> {
           SizedBox(height: 16.h),
           _buildCategoriesSection(context, state, cubit),
           SizedBox(height: 16.h),
-          AppDropdownField(
+          AppCupertinoSelectField(
             label: tr('salon_auth.city_label'),
             hint: tr('salon_auth.city_hint'),
             items: state.cities,
@@ -365,7 +367,7 @@ class _SalonRegisterViewState extends State<SalonRegisterView> {
             },
           ),
           SizedBox(height: 16.h),
-          AppDropdownField(
+          AppCupertinoSelectField(
             label: tr('salon_auth.neighborhood_label'),
             hint: tr('salon_auth.neighborhood_hint'),
             items: state.neighborhoods,
@@ -394,6 +396,34 @@ class _SalonRegisterViewState extends State<SalonRegisterView> {
             onChanged: cubit.onLocationChanged,
             keyboardType: TextInputType.streetAddress,
             textInputAction: TextInputAction.next,
+          ),
+          SizedBox(height: 8.h),
+          _PickLocationButton(
+            hasPicked: state.pickedLat != null,
+            colors: colors,
+            onTap: () async {
+              final result = await Navigator.of(context).push<PickedLocation>(
+                MaterialPageRoute(
+                  builder: (_) => LocationPickerScreen(
+                    initialLocation: state.pickedLat != null
+                        ? PickedLocation(
+                            lat: state.pickedLat!,
+                            lng: state.pickedLng!,
+                            address: state.pickedAddress,
+                          )
+                        : null,
+                  ),
+                ),
+              );
+              if (result != null) {
+                cubit.setPickedLocation(
+                  lat: result.lat,
+                  lng: result.lng,
+                  address: result.address,
+                );
+                _locationController.text = result.address ?? '';
+              }
+            },
           ),
           SizedBox(height: 16.h),
           AppTextFormField(
@@ -847,5 +877,55 @@ class _SalonRegisterViewState extends State<SalonRegisterView> {
     if (picked != null) {
       onPicked(picked.path);
     }
+  }
+}
+
+class _PickLocationButton extends StatelessWidget {
+  const _PickLocationButton({
+    required this.hasPicked,
+    required this.colors,
+    required this.onTap,
+  });
+
+  final bool hasPicked;
+  final AppColors colors;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 10.h),
+        decoration: BoxDecoration(
+          color: hasPicked ? colors.success100 : colors.neutral100,
+          borderRadius: BorderRadius.circular(10.r),
+          border: Border.all(
+            color: hasPicked ? colors.success500 : colors.neutral200,
+          ),
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              hasPicked ? Icons.check_circle_rounded : Icons.map_outlined,
+              size: 18.r,
+              color: hasPicked ? colors.success600 : splashOrange,
+            ),
+            SizedBox(width: 8.w),
+            Text(
+              hasPicked
+                  ? tr('salon_auth.location_picked')
+                  : tr('salon_auth.pick_on_map'),
+              style: TextStyle(
+                fontSize: 13.sp,
+                fontWeight: FontWeight.w600,
+                color: hasPicked ? colors.success600 : splashOrange,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 }

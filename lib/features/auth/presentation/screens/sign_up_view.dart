@@ -8,7 +8,7 @@ import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:zain/core/router/app_routes.dart';
 import 'package:zain/core/theme/app_colors.dart';
-import 'package:zain/core/widgets/app_dropdown_field.dart';
+import 'package:zain/core/widgets/app_cupertino_select_field.dart';
 import 'package:zain/core/widgets/app_gradient_button.dart';
 import 'package:zain/core/widgets/app_snack_bar.dart';
 import 'package:zain/core/widgets/app_text_form_field.dart';
@@ -335,7 +335,7 @@ class _SignUpViewState extends State<SignUpView> {
           SizedBox(height: 24.h),
           _buildGenderSelector(context, state, cubit),
           SizedBox(height: 16.h),
-          AppDropdownField(
+          AppCupertinoSelectField(
             label: tr('auth.city_label'),
             hint: tr('auth.city_hint'),
             items: state.cities,
@@ -347,7 +347,7 @@ class _SignUpViewState extends State<SignUpView> {
             },
           ),
           SizedBox(height: 16.h),
-          AppDropdownField(
+          AppCupertinoSelectField(
             label: tr('auth.neighborhood_label'),
             hint: tr('auth.neighborhood_hint'),
             items: state.neighborhoods,

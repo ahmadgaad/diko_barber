@@ -3,6 +3,10 @@
   "app": {
     "back_to_exit": "اضغط مرة أخرى للخروج"
   },
+  "picker": {
+    "done": "تم",
+    "cancel": "إلغاء"
+  },
   "claim_coupon": {
     "title": "استخدام الكوبون",
     "select_item": "اختر خدمة أو باقة",
@@ -167,6 +171,8 @@
     "description_hint": "أخبر العملاء عن صالونك",
     "location_label": "العنوان",
     "location_hint": "أدخل عنوان صالونك",
+    "pick_on_map": "اختر الموقع على الخريطة",
+    "location_picked": "تم تحديد الموقع",
     "cr_number_label": "رقم السجل التجاري",
     "cr_number_hint": "أدخل رقم السجل التجاري (اختياري)",
     "logo_label": "شعار الصالون",
@@ -276,7 +282,10 @@
     "error_title": "حدث خطأ ما",
     "error_body": "يرجى المحاولة مرة أخرى لاحقًا",
     "view_map": "عرض الخريطة",
-    "load_more_failed": "تعذّر تحميل المزيد، يرجى المحاولة مجدداً"
+    "load_more_failed": "تعذّر تحميل المزيد، يرجى المحاولة مجدداً",
+    "location_required_title": "يجب تفعيل الموقع",
+    "location_required_body": "فعّل الموقع لعرض الصالونات القريبة على الخريطة",
+    "enable_location": "تفعيل الموقع"
   },
   "profile": {
     "section_account": "الحساب",
@@ -329,6 +338,17 @@
     "cancel_yes": "تأكيد",
     "cancel_no": "رجوع",
     "cancel_success": "تم إلغاء الحجز بنجاح"
+  },
+  "location_picker": {
+    "title": "اختر الموقع",
+    "confirm": "تأكيد الموقع",
+    "loading_address": "جاري تحميل العنوان...",
+    "unknown_address": "عنوان غير معروف",
+    "select_hint": "حدد موقعك",
+    "search_hint": "ابحث عن موقع...",
+    "no_results": "لا توجد نتائج",
+    "gps_error": "تعذر تحديد موقعك",
+    "select_first": "حدد موقعاً على الخريطة أولاً"
   },
   "service_details": {
     "duration": "المدة",

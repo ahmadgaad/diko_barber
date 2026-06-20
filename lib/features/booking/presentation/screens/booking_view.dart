@@ -74,12 +74,20 @@ class _LoadedContent extends StatelessWidget {
                   color: splashOrange,
                   onRefresh: () => context.read<BookingsCubit>().refresh(),
                   child: state.bookings.isEmpty
-                      ? ListView(
-                          physics: const AlwaysScrollableScrollPhysics(),
-                          children: [
-                            SizedBox(height: 120.h),
-                            BookingsEmptyState(colors: colors),
-                          ],
+                      ? LayoutBuilder(
+                          builder: (context, constraints) => ListView(
+                            physics: const AlwaysScrollableScrollPhysics(),
+                            children: [
+                              ConstrainedBox(
+                                constraints: BoxConstraints(
+                                  minHeight: constraints.maxHeight,
+                                ),
+                                child: Center(
+                                  child: BookingsEmptyState(colors: colors),
+                                ),
+                              ),
+                            ],
+                          ),
                         )
                       : NotificationListener<ScrollNotification>(
                           onNotification: (notification) {

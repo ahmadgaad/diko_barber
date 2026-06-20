@@ -199,7 +199,9 @@ class _ExploreViewState extends State<ExploreView> {
                   (p is ExploreLoaded &&
                       c is ExploreLoaded &&
                       (p.salons != c.salons ||
-                          p.highlightedSalonId != c.highlightedSalonId)),
+                          p.highlightedSalonId != c.highlightedSalonId ||
+                          p.userLat != c.userLat ||
+                          p.userLng != c.userLng)),
               builder: (context, state) => state is ExploreLoaded
                   ? SalonMapView(
                       salons: state.salons,

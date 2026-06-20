@@ -3,6 +3,10 @@
   "app": {
     "back_to_exit": "Press back again to exit"
   },
+  "picker": {
+    "done": "Done",
+    "cancel": "Cancel"
+  },
   "claim_coupon": {
     "title": "Claim Coupon",
     "select_item": "Select a service or package",
@@ -167,6 +171,8 @@
     "description_hint": "Tell clients about your salon",
     "location_label": "Address",
     "location_hint": "Enter your salon address",
+    "pick_on_map": "Pick location on map",
+    "location_picked": "Location selected",
     "cr_number_label": "Commercial Registration Number",
     "cr_number_hint": "Enter CR number (optional)",
     "logo_label": "Salon Logo",
@@ -276,7 +282,10 @@
     "error_title": "Something went wrong",
     "error_body": "Please try again later",
     "view_map": "View map",
-    "load_more_failed": "Failed to load more, please try again"
+    "load_more_failed": "Failed to load more, please try again",
+    "location_required_title": "Location Access Required",
+    "location_required_body": "Enable location to see nearby salons on the map",
+    "enable_location": "Enable Location"
   },
   "profile": {
     "section_account": "Account",
@@ -329,6 +338,17 @@
     "cancel_yes": "Confirm",
     "cancel_no": "Back",
     "cancel_success": "Booking cancelled successfully"
+  },
+  "location_picker": {
+    "title": "Pick Location",
+    "confirm": "Confirm Location",
+    "loading_address": "Loading address...",
+    "unknown_address": "Unknown address",
+    "select_hint": "Select your location",
+    "search_hint": "Search for a location...",
+    "no_results": "No results found",
+    "gps_error": "Unable to get your location",
+    "select_first": "Select a location on the map first"
   },
   "service_details": {
     "duration": "Duration",

@@ -1,7 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:zain/core/networking/result.dart';
 import 'package:zain/core/router/app_routes.dart';
-import 'package:zain/core/services/location_service.dart';
 import 'package:zain/core/shared/domain/entities/city.dart';
 import 'package:zain/core/shared/domain/entities/neighborhood.dart';
 import 'package:zain/core/shared/domain/use_cases/get_categories_use_case.dart';
@@ -18,12 +17,10 @@ class SalonRegisterCubit extends Cubit<SalonRegisterState> {
     required GetCitiesUseCase getCitiesUseCase,
     required GetNeighborhoodsUseCase getNeighborhoodsUseCase,
     required GetCategoriesUseCase getCategoriesUseCase,
-    required LocationService locationService,
   })  : _salonRegisterUseCase = salonRegisterUseCase,
         _getCitiesUseCase = getCitiesUseCase,
         _getNeighborhoodsUseCase = getNeighborhoodsUseCase,
         _getCategoriesUseCase = getCategoriesUseCase,
-        _locationService = locationService,
         super(const SalonRegisterFormState()) {
     _loadCities();
   }
@@ -32,7 +29,6 @@ class SalonRegisterCubit extends Cubit<SalonRegisterState> {
   final GetCitiesUseCase _getCitiesUseCase;
   final GetNeighborhoodsUseCase _getNeighborhoodsUseCase;
   final GetCategoriesUseCase _getCategoriesUseCase;
-  final LocationService _locationService;
 
   static final _emailRegex = RegExp(
     r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$',
@@ -142,6 +138,20 @@ class SalonRegisterCubit extends Cubit<SalonRegisterState> {
     emit(_formState.copyWith(location: value));
   }
 
+  void setPickedLocation({
+    required double lat,
+    required double lng,
+    String? address,
+  }) {
+    if (state is! SalonRegisterFormState) return;
+    emit(_formState.copyWith(
+      pickedLat: () => lat,
+      pickedLng: () => lng,
+      pickedAddress: () => address,
+      location: address ?? _formState.location,
+    ));
+  }
+
   void onCrNumberChanged(String value) {
     if (state is! SalonRegisterFormState) return;
     emit(_formState.copyWith(commercialRegistrationNumber: value));
@@ -239,15 +249,10 @@ class SalonRegisterCubit extends Cubit<SalonRegisterState> {
 
     emit(_formState.copyWith(isSubmitting: true, apiError: () => null));
 
-    final position = await _locationService.getCurrentPosition();
-    String? address;
-    if (position != null) {
-      address = await _locationService.getAddressFromCoordinates(
-        position.latitude,
-        position.longitude,
-      );
-    }
-    address ??= _buildLocationFallback();
+    final address = _formState.pickedAddress ??
+        (_formState.location.isNotEmpty
+            ? _formState.location
+            : _buildLocationFallback());
 
     final params = SalonRegisterParams(
       ownerName: _formState.ownerName,
@@ -262,9 +267,9 @@ class SalonRegisterCubit extends Cubit<SalonRegisterState> {
       neighborhoodId: _formState.selectedNeighborhood?.id,
       description:
           _formState.description.isNotEmpty ? _formState.description : null,
-      location: address ?? (_formState.location.isNotEmpty ? _formState.location : null),
-      lat: position?.latitude,
-      lng: position?.longitude,
+      location: address,
+      lat: _formState.pickedLat,
+      lng: _formState.pickedLng,
       commercialRegistrationNumber:
           _formState.commercialRegistrationNumber.isNotEmpty
               ? _formState.commercialRegistrationNumber
