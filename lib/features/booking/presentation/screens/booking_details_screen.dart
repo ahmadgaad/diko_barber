@@ -12,6 +12,7 @@ import 'package:zain/core/widgets/app_snack_bar.dart';
 import 'package:zain/features/booking/domain/use_cases/cancel_appointment_use_case.dart';
 import 'package:zain/features/booking/presentation/components/booking_status_badge.dart';
 import 'package:zain/features/booking/presentation/components/cancel_booking_dialog.dart';
+import 'package:zain/features/booking/presentation/components/rate_salon_dialog.dart';
 import 'package:zain/features/booking/presentation/cubit/bookings_cubit.dart';
 
 class BookingDetailsScreen extends StatelessWidget {
@@ -638,6 +639,23 @@ class _BottomActions extends StatelessWidget {
     );
   }
 
+  Future<void> _handleRate(BuildContext context) async {
+    final result = await RateSalonDialog.show(
+      context,
+      colors,
+      salonName: booking.salon.name,
+    );
+    if (result == null || !context.mounted) return;
+
+    // TODO: submit via a RateSalonUseCase once the rating endpoint is available
+    // — uses booking.salon.id, result.rating, result.comment.
+    AppSnackBar.show(
+      context,
+      message: tr('bookings.rate_success'),
+      type: SnackBarType.success,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     if (!booking.actions.hasAny) return const SizedBox.shrink();
@@ -672,11 +690,11 @@ class _BottomActions extends StatelessWidget {
                 ),
               ),
             ),
-          if (booking.actions.canRate)
+          if (booking.actions.canComplete)
             Expanded(
               child: AppGradientButton(
-                label: tr('bookings.rate'),
-                onTap: () {},
+                label: tr('bookings.rate_salon'),
+                onTap: () => _handleRate(context),
               ),
             ),
         ],

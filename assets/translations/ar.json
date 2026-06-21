@@ -337,7 +337,13 @@
     "cancel_reason_hint": "سبب الإلغاء (اختياري)",
     "cancel_yes": "تأكيد",
     "cancel_no": "رجوع",
-    "cancel_success": "تم إلغاء الحجز بنجاح"
+    "cancel_success": "تم إلغاء الحجز بنجاح",
+    "rate_salon": "قيّم الصالون",
+    "rate_title": "قيّم تجربتك",
+    "rate_subtitle": "كيف كانت زيارتك لـ {name}؟",
+    "rate_comment_hint": "أضف تعليقًا (اختياري)",
+    "rate_submit": "إرسال التقييم",
+    "rate_success": "شكرًا لتقييمك!"
   },
   "location_picker": {
     "title": "اختر الموقع",
@@ -393,7 +399,7 @@
     "tab_shifts": "أوقات العمل",
     "tab_gallery": "المعرض",
     "tab_reviews": "التقييمات",
-    "reviews": "تقييم",
+    "reviews": "لا يوجد تقييمات بعد",
     "min": "دقيقة",
     "book_now": "احجز الآن",
     "coupon_applied": "تم تطبيق الكوبون",
@@ -401,7 +407,8 @@
     "no_gallery": "لا توجد صور في المعرض",
     "no_coupons": "لا توجد كوبونات متاحة",
     "no_staff": "لا يوجد فريق عمل",
-    "no_shifts": "لا توجد أوقات عمل محددة"
+    "no_shifts": "لا توجد أوقات عمل محددة",
+    "no_packages": "لا توجد باقات متاحة"
   },
   "book_appointment": {
     "title": "حجز موعد",
@@ -451,6 +458,10 @@
     "processing": "جاري المعالجة...",
     "payment": "الدفع",
     "retry": "إعادة المحاولة",
-    "payment_hint": "يجب الدفع خلال ٥ دقائق من وقت حجزك وإلا سيتم إلغاؤه"
+    "payment_hint": "يجب الدفع خلال ٨ دقائق من وقت حجزك وإلا سيتم إلغاؤه"
+  },
+  "time": {
+    "am": "ص",
+    "pm": "م"
   }
 }

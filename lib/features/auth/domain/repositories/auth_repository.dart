@@ -39,4 +39,10 @@ abstract class AuthRepository {
   });
 
   Future<Result<ApiErrorModel, void>> logout();
+
+  Future<Result<ApiErrorModel, void>> updateLocation({
+    required double lat,
+    required double long,
+    required String location,
+  });
 }

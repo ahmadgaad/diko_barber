@@ -17,6 +17,7 @@ class SalonMapView extends StatefulWidget {
     required this.highlightedSalonId,
     required this.onPinTapped,
     this.userLocation,
+    this.cameraTarget,
     this.locationButtonBottomPadding = 0,
     this.initialZoom = 13,
   });
@@ -25,6 +26,10 @@ class SalonMapView extends StatefulWidget {
   final int? highlightedSalonId;
   final ValueChanged<int> onPinTapped;
   final LatLng? userLocation;
+
+  /// Camera destination selected via place search. When it changes the map
+  /// animates to it without affecting the device-location marker.
+  final LatLng? cameraTarget;
   final double locationButtonBottomPadding;
   final double initialZoom;
 
@@ -70,6 +75,13 @@ class SalonMapViewState extends State<SalonMapView> {
     if (highlightChanged && widget.highlightedSalonId != null) {
       _animateToSalon(widget.highlightedSalonId!);
     }
+
+    if (widget.cameraTarget != oldWidget.cameraTarget &&
+        widget.cameraTarget != null) {
+      _controller?.animateCamera(
+        CameraUpdate.newLatLngZoom(widget.cameraTarget!, 13),
+      );
+    }
   }
 
   void _animateToSalon(int id) {
@@ -84,6 +96,7 @@ class SalonMapViewState extends State<SalonMapView> {
     final loc = widget.userLocation;
     if (loc == null || _controller == null) return;
     _controller!.animateCamera(CameraUpdate.newLatLngZoom(loc, 15));
+    context.read<ExploreCubit>().goToMyLocation();
   }
 
   Set<Marker> _buildMarkers() {
@@ -169,7 +182,7 @@ class _LocationPermissionPrompt extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-    color: colors.neutral100,
+      color: colors.neutral100,
       padding: EdgeInsets.only(bottom: bottomPadding),
       child: Center(
         child: Padding(

@@ -6,12 +6,14 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:zain/core/router/app_routes.dart';
 import 'package:zain/core/theme/app_colors.dart';
+import 'package:zain/core/utils/time_formatter.dart';
 import 'package:zain/core/widgets/app_gradient_button.dart';
-import 'package:zain/features/booking_schedule/domain/entities/created_appointment.dart';
-import '../components/checkout_info_row.dart';
-import '../components/checkout_service_tile.dart';
 import 'package:zain/core/widgets/app_snack_bar.dart';
 import 'package:zain/features/booking/presentation/cubit/bookings_cubit.dart';
+import 'package:zain/features/booking_schedule/domain/entities/created_appointment.dart';
+
+import '../components/checkout_info_row.dart';
+import '../components/checkout_service_tile.dart';
 import '../components/payment_countdown_banner.dart';
 import '../components/payment_methods_sheet.dart';
 import '../cubit/checkout_cubit.dart';
@@ -29,10 +31,10 @@ class CheckoutView extends StatelessWidget {
       listener: (context, state) async {
         switch (state) {
           case CheckoutPaymentRedirect(:final checkoutUrl, :final returnUrl):
-            context.push(AppRoutes.paymentWebview, extra: {
-              'checkoutUrl': checkoutUrl,
-              'returnUrl': returnUrl,
-            });
+            context.push(
+              AppRoutes.paymentWebview,
+              extra: {'checkoutUrl': checkoutUrl, 'returnUrl': returnUrl},
+            );
           case CheckoutPaymentSuccess():
             BookingsCubit.pendingRefresh = true;
             context.go(AppRoutes.bookings);
@@ -136,8 +138,7 @@ class _Content extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final purchase = appointment.purchase;
-    final hasCoupon =
-        purchase.couponCode != null && purchase.couponAmount > 0;
+    final hasCoupon = purchase.couponCode != null && purchase.couponAmount > 0;
 
     return ListView(
       padding: EdgeInsets.fromLTRB(16.w, 8.h, 16.w, 24.h),
@@ -151,7 +152,10 @@ class _Content extends StatelessWidget {
         SizedBox(height: 20.h),
 
         // ── Appointment details ──────────────────────────────────────
-        _SectionTitle(label: tr('checkout.appointment_details'), colors: colors),
+        _SectionTitle(
+          label: tr('checkout.appointment_details'),
+          colors: colors,
+        ),
         SizedBox(height: 8.h),
         _DetailsCard(appointment: appointment, colors: colors),
         SizedBox(height: 20.h),
@@ -181,7 +185,8 @@ class _Content extends StatelessWidget {
             children: [
               CheckoutInfoRow(
                 label: tr('checkout.subtotal'),
-                value: '${purchase.subTotal.toStringAsFixed(2)} ${tr('checkout.currency')}',
+                value:
+                    '${purchase.subTotal.toStringAsFixed(2)} ${tr('checkout.currency')}',
                 colors: colors,
               ),
               if (hasCoupon) ...[
@@ -191,7 +196,8 @@ class _Content extends StatelessWidget {
                     'checkout.coupon_discount',
                     namedArgs: {'code': purchase.couponCode!},
                   ),
-                  value: '-${purchase.couponAmount.toStringAsFixed(2)} ${tr('checkout.currency')}',
+                  value:
+                      '-${purchase.couponAmount.toStringAsFixed(2)} ${tr('checkout.currency')}',
                   colors: colors,
                   valueColor: Colors.green,
                 ),
@@ -199,8 +205,10 @@ class _Content extends StatelessWidget {
               if (purchase.tax > 0) ...[
                 SizedBox(height: 10.h),
                 CheckoutInfoRow(
-                  label: '${tr('checkout.tax')} (${purchase.taxPercentage.toStringAsFixed(0)}%)',
-                  value: '${purchase.tax.toStringAsFixed(2)} ${tr('checkout.currency')}',
+                  label:
+                      '${tr('checkout.tax')} (${purchase.taxPercentage.toStringAsFixed(0)}%)',
+                  value:
+                      '${purchase.tax.toStringAsFixed(2)} ${tr('checkout.currency')}',
                   colors: colors,
                 ),
               ],
@@ -208,15 +216,18 @@ class _Content extends StatelessWidget {
                 SizedBox(height: 10.h),
                 CheckoutInfoRow(
                   label: tr('checkout.home_service_fee'),
-                  value: '${purchase.homeServiceFee.toStringAsFixed(2)} ${tr('checkout.currency')}',
+                  value:
+                      '${purchase.homeServiceFee.toStringAsFixed(2)} ${tr('checkout.currency')}',
                   colors: colors,
                 ),
               ],
               if (purchase.commissionAmount > 0) ...[
                 SizedBox(height: 10.h),
                 CheckoutInfoRow(
-                  label: '${tr('checkout.commission')} (${purchase.platformCommissionPercentage.toStringAsFixed(0)}%)',
-                  value: '${purchase.commissionAmount.toStringAsFixed(2)} ${tr('checkout.currency')}',
+                  label:
+                      '${tr('checkout.commission')} (${purchase.platformCommissionPercentage}%)',
+                  value:
+                      '${purchase.commissionAmount.toStringAsFixed(2)} ${tr('checkout.currency')}',
                   colors: colors,
                 ),
               ],
@@ -226,7 +237,8 @@ class _Content extends StatelessWidget {
               ),
               CheckoutInfoRow(
                 label: tr('checkout.total'),
-                value: '${purchase.totalAmount.toStringAsFixed(2)} ${tr('checkout.currency')}',
+                value:
+                    '${purchase.totalAmount.toStringAsFixed(2)} ${tr('checkout.currency')}',
                 colors: colors,
                 isBold: true,
               ),
@@ -404,7 +416,7 @@ class _DetailsCard extends StatelessWidget {
           CheckoutInfoRow(
             label: tr('checkout.time'),
             value:
-                '${_formatTime(appointment.startTime)} - ${_formatTime(appointment.endTime)}',
+                '${formatTimeOfDay(appointment.startTime)} - ${formatTimeOfDay(appointment.endTime)}',
             colors: colors,
           ),
         ],
@@ -421,19 +433,6 @@ class _DetailsCard extends StatelessWidget {
       return dateStr;
     }
   }
-
-  String _formatTime(String time) {
-    try {
-      final parts = time.split(':');
-      final hour = int.parse(parts[0]);
-      final minute = parts[1];
-      final period = hour >= 12 ? 'PM' : 'AM';
-      final displayHour = hour > 12 ? hour - 12 : (hour == 0 ? 12 : hour);
-      return '$displayHour:$minute $period';
-    } catch (_) {
-      return time;
-    }
-  }
 }
 
 // ── Bottom bar ───────────────────────────────────────────────────────────────
@@ -448,7 +447,10 @@ class _BottomBar extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       padding: EdgeInsets.fromLTRB(
-        16.w, 12.h, 16.w, MediaQuery.paddingOf(context).bottom + 12.h,
+        16.w,
+        12.h,
+        16.w,
+        MediaQuery.paddingOf(context).bottom + 12.h,
       ),
       decoration: BoxDecoration(
         color: colors.neutral50,

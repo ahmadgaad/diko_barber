@@ -540,42 +540,6 @@ class _ThemeTile extends StatelessWidget {
   }
 }
 
-// ── Language tile ─────────────────────────────────────────────────────────────
-
-class _LanguageTile extends StatelessWidget {
-  const _LanguageTile({required this.colors});
-  final AppColors colors;
-
-  @override
-  Widget build(BuildContext context) {
-    final isArabic = context.locale.languageCode == 'ar';
-    return _SettingsTile(
-      asset: SvgResources.language,
-      accent: colors.success600,
-      label: tr('profile.language'),
-      colors: colors,
-      isLast: true,
-      onTap: () =>
-          context.setLocale(isArabic ? const Locale('en') : const Locale('ar')),
-      trailing: Container(
-        padding: EdgeInsets.symmetric(horizontal: 11.w, vertical: 5.h),
-        decoration: BoxDecoration(
-          color: colors.neutral200,
-          borderRadius: BorderRadius.circular(999.r),
-        ),
-        child: Text(
-          isArabic ? 'English' : 'عربي',
-          style: TextStyle(
-            fontSize: 12.sp,
-            fontWeight: FontWeight.w600,
-            color: colors.neutral700,
-          ),
-        ),
-      ),
-    );
-  }
-}
-
 // ── Sign out button ───────────────────────────────────────────────────────────
 
 class _SignOutButton extends StatelessWidget {

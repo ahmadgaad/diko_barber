@@ -6,6 +6,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:zain/core/theme/app_colors.dart';
 import 'package:zain/features/salon_details/domain/entities/package.dart';
 import 'package:zain/features/salon_details/domain/entities/salon_service.dart';
+import 'package:zain/features/salon_details/presentation/components/empty_tab.dart';
 import 'package:zain/features/salon_details/presentation/cubit/salon_details_cubit.dart';
 
 class PackagesTab extends StatelessWidget {
@@ -22,6 +23,13 @@ class PackagesTab extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    if (packages.isEmpty) {
+      return EmptyTab(
+        icon: Icons.inventory_2_outlined,
+        message: tr('salon_details.no_packages'),
+        colors: colors,
+      );
+    }
     return ListView.separated(
       padding: EdgeInsets.all(16.w),
       physics: const BouncingScrollPhysics(),

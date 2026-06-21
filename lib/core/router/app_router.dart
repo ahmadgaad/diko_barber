@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:zain/core/di/service_locator.dart';
+import 'package:zain/core/location_picker/presentation/screens/location_picker_screen.dart';
 import 'package:zain/core/observers/app_router_observer.dart';
 import 'package:zain/core/widgets/app_shell.dart';
 import 'package:zain/features/book_appointment/presentation/book_appointment_args.dart';
@@ -124,6 +125,11 @@ final appRouter = GoRouter(
     GoRoute(
       path: AppRoutes.search,
       builder: (context, state) => const SearchScreen(),
+    ),
+    GoRoute(
+      path: AppRoutes.locationPicker,
+      builder: (context, state) =>
+          LocationPickerScreen(initialLocation: state.extra as PickedLocation?),
     ),
     GoRoute(
       path: AppRoutes.exploreMap,

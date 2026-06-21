@@ -402,18 +402,15 @@ class _SalonRegisterViewState extends State<SalonRegisterView> {
             hasPicked: state.pickedLat != null,
             colors: colors,
             onTap: () async {
-              final result = await Navigator.of(context).push<PickedLocation>(
-                MaterialPageRoute(
-                  builder: (_) => LocationPickerScreen(
-                    initialLocation: state.pickedLat != null
-                        ? PickedLocation(
-                            lat: state.pickedLat!,
-                            lng: state.pickedLng!,
-                            address: state.pickedAddress,
-                          )
-                        : null,
-                  ),
-                ),
+              final result = await context.push<PickedLocation>(
+                AppRoutes.locationPicker,
+                extra: state.pickedLat != null
+                    ? PickedLocation(
+                        lat: state.pickedLat!,
+                        lng: state.pickedLng!,
+                        address: state.pickedAddress,
+                      )
+                    : null,
               );
               if (result != null) {
                 cubit.setPickedLocation(

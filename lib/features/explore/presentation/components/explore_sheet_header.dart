@@ -4,23 +4,11 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:zain/core/theme/app_colors.dart';
 import 'package:zain/features/explore/presentation/cubit/explore_state.dart';
 import 'category_filter_chips.dart';
-import 'explore_search_bar.dart';
 
 class ExploreSheetHeader extends StatelessWidget {
-  const ExploreSheetHeader({
-    super.key,
-    required this.state,
-    required this.searchController,
-    required this.searchFocusNode,
-    required this.onSearch,
-    required this.onClearSearch,
-  });
+  const ExploreSheetHeader({super.key, required this.state});
 
   final ExploreState state;
-  final TextEditingController searchController;
-  final FocusNode searchFocusNode;
-  final ValueChanged<String> onSearch;
-  final VoidCallback onClearSearch;
 
   @override
   Widget build(BuildContext context) {
@@ -70,15 +58,6 @@ class ExploreSheetHeader extends StatelessWidget {
                 ),
               ],
             ],
-          ),
-        ),
-        Padding(
-          padding: EdgeInsets.fromLTRB(16.w, 0, 16.w, 12.h),
-          child: ExploreSearchBar(
-            controller: searchController,
-            focusNode: searchFocusNode,
-            onChanged: onSearch,
-            onClear: onClearSearch,
           ),
         ),
         if (state case ExploreLoaded(
