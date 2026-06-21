@@ -337,7 +337,13 @@
     "cancel_reason_hint": "Reason for cancellation (optional)",
     "cancel_yes": "Confirm",
     "cancel_no": "Back",
-    "cancel_success": "Booking cancelled successfully"
+    "cancel_success": "Booking cancelled successfully",
+    "rate_salon": "Rate salon",
+    "rate_title": "Rate your experience",
+    "rate_subtitle": "How was your visit to {name}?",
+    "rate_comment_hint": "Add a comment (optional)",
+    "rate_submit": "Submit Rating",
+    "rate_success": "Thanks for your rating!"
   },
   "location_picker": {
     "title": "Pick Location",
@@ -401,7 +407,8 @@
     "no_gallery": "No gallery images",
     "no_coupons": "No coupons available",
     "no_staff": "No team members",
-    "no_shifts": "No working hours set"
+    "no_shifts": "No working hours set",
+    "no_packages": "No packages available"
   },
   "book_appointment": {
     "title": "Book Appointment",
@@ -452,5 +459,9 @@
     "payment": "Payment",
     "retry": "Retry",
     "payment_hint": "Payment must be completed within 5 minutes of your booking time or it will be cancelled"
+  },
+  "time": {
+    "am": "AM",
+    "pm": "PM"
   }
 }

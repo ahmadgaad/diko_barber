@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:zain/core/theme/app_colors.dart';
+import 'package:zain/core/utils/time_formatter.dart';
 import 'package:go_router/go_router.dart';
 import 'package:zain/core/router/app_routes.dart';
 import 'package:zain/core/widgets/app_gradient_button.dart';
@@ -27,15 +28,12 @@ class BookingScheduleView extends StatelessWidget {
       },
       listener: (context, state) {
         if (state is BookingScheduleSuccess) {
-          context.pushReplacement(
-            AppRoutes.checkout,
-            extra: state.appointment,
-          );
+          context.pushReplacement(AppRoutes.checkout, extra: state.appointment);
         }
         if (state is BookingScheduleForm && state.apiError != null) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text(state.apiError!)),
-          );
+          ScaffoldMessenger.of(
+            context,
+          ).showSnackBar(SnackBar(content: Text(state.apiError!)));
         }
       },
       buildWhen: (prev, curr) => curr is BookingScheduleForm,
@@ -64,7 +62,9 @@ class _ScheduleScaffold extends StatelessWidget {
         child: Column(
           children: [
             _TopBar(state: state, colors: colors),
-            Expanded(child: _Content(state: state, colors: colors)),
+            Expanded(
+              child: _Content(state: state, colors: colors),
+            ),
           ],
         ),
       ),
@@ -225,7 +225,8 @@ class _DateScroller extends StatelessWidget {
               separatorBuilder: (_, _) => SizedBox(width: 8.w),
               itemBuilder: (context, i) {
                 final date = dates[i];
-                final isSelected = selected != null &&
+                final isSelected =
+                    selected != null &&
                     date.year == selected.year &&
                     date.month == selected.month &&
                     date.day == selected.day;
@@ -239,15 +240,17 @@ class _DateScroller extends StatelessWidget {
                       color: isSelected ? splashOrange : colors.neutral100,
                       borderRadius: BorderRadius.circular(12.r),
                       border: Border.all(
-                        color:
-                            isSelected ? splashOrange : colors.neutral200,
+                        color: isSelected ? splashOrange : colors.neutral200,
                       ),
                     ),
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(
-                          DateFormat('EEE', context.locale.languageCode).format(date),
+                          DateFormat(
+                            'EEE',
+                            context.locale.languageCode,
+                          ).format(date),
                           style: TextStyle(
                             fontSize: 10.sp,
                             fontWeight: FontWeight.w500,
@@ -258,7 +261,10 @@ class _DateScroller extends StatelessWidget {
                         ),
                         SizedBox(height: 4.h),
                         Text(
-                          DateFormat('d', context.locale.languageCode).format(date),
+                          DateFormat(
+                            'd',
+                            context.locale.languageCode,
+                          ).format(date),
                           style: TextStyle(
                             fontSize: 18.sp,
                             fontWeight: FontWeight.w700,
@@ -269,7 +275,10 @@ class _DateScroller extends StatelessWidget {
                         ),
                         SizedBox(height: 2.h),
                         Text(
-                          DateFormat('MMM', context.locale.languageCode).format(date),
+                          DateFormat(
+                            'MMM',
+                            context.locale.languageCode,
+                          ).format(date),
                           style: TextStyle(
                             fontSize: 9.sp,
                             color: isSelected
@@ -339,7 +348,7 @@ class _SlotsGrid extends StatelessWidget {
       children: state.availableSlots.map((slot) {
         final isSelected =
             state.selectedSlot?.startTime == slot.startTime &&
-                state.selectedSlot?.endTime == slot.endTime;
+            state.selectedSlot?.endTime == slot.endTime;
         return GestureDetector(
           onTap: () {
             context.read<BookingScheduleCubit>().selectSlot(slot);
@@ -347,8 +356,7 @@ class _SlotsGrid extends StatelessWidget {
           },
           child: AnimatedContainer(
             duration: const Duration(milliseconds: 180),
-            padding:
-                EdgeInsets.symmetric(horizontal: 14.w, vertical: 10.h),
+            padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 10.h),
             decoration: BoxDecoration(
               color: isSelected ? splashOrange : colors.neutral100,
               borderRadius: BorderRadius.circular(10.r),
@@ -357,7 +365,7 @@ class _SlotsGrid extends StatelessWidget {
               ),
             ),
             child: Text(
-              _formatTime(slot.startTime),
+              formatTimeOfDay(slot.startTime),
               style: TextStyle(
                 fontSize: 13.sp,
                 fontWeight: FontWeight.w600,
@@ -368,19 +376,6 @@ class _SlotsGrid extends StatelessWidget {
         );
       }).toList(),
     );
-  }
-
-  String _formatTime(String time) {
-    try {
-      final parts = time.split(':');
-      final hour = int.parse(parts[0]);
-      final minute = parts[1];
-      final period = hour >= 12 ? 'PM' : 'AM';
-      final displayHour = hour > 12 ? hour - 12 : (hour == 0 ? 12 : hour);
-      return '$displayHour:$minute $period';
-    } catch (_) {
-      return time;
-    }
   }
 
   void _showBarberSheet(BuildContext context) {
@@ -443,14 +438,20 @@ class _SelectedBarberSummary extends StatelessWidget {
                   height: 36.r,
                   fit: BoxFit.cover,
                   placeholder: (_, _) => Container(
-                      width: 36.r, height: 36.r, color: colors.neutral200),
+                    width: 36.r,
+                    height: 36.r,
+                    color: colors.neutral200,
+                  ),
                   errorWidget: (_, _, _) => Container(
                     width: 36.r,
                     height: 36.r,
                     color: colors.neutral200,
                     alignment: Alignment.center,
-                    child: Icon(Icons.person_outline_rounded,
-                        size: 18.r, color: colors.neutral400),
+                    child: Icon(
+                      Icons.person_outline_rounded,
+                      size: 18.r,
+                      color: colors.neutral400,
+                    ),
                   ),
                 ),
               )
@@ -462,8 +463,11 @@ class _SelectedBarberSummary extends StatelessWidget {
                   color: colors.neutral200,
                   shape: BoxShape.circle,
                 ),
-                child: Icon(Icons.person_outline_rounded,
-                    size: 18.r, color: colors.neutral400),
+                child: Icon(
+                  Icons.person_outline_rounded,
+                  size: 18.r,
+                  color: colors.neutral400,
+                ),
               ),
             SizedBox(width: 12.w),
             Expanded(
@@ -472,10 +476,7 @@ class _SelectedBarberSummary extends StatelessWidget {
                 children: [
                   Text(
                     tr('claim_coupon.choose_barber'),
-                    style: TextStyle(
-                      fontSize: 11.sp,
-                      color: colors.neutral500,
-                    ),
+                    style: TextStyle(fontSize: 11.sp, color: colors.neutral500),
                   ),
                   SizedBox(height: 2.h),
                   Text(
@@ -491,8 +492,11 @@ class _SelectedBarberSummary extends StatelessWidget {
                 ],
               ),
             ),
-            Icon(Icons.chevron_right_rounded,
-                size: 20.r, color: colors.neutral400),
+            Icon(
+              Icons.chevron_right_rounded,
+              size: 20.r,
+              color: colors.neutral400,
+            ),
           ],
         ),
       ),
@@ -544,9 +548,7 @@ class _BarberSheet extends StatelessWidget {
               ),
               SizedBox(height: 16.h),
               _BarberSheetBody(state: state, colors: colors),
-              SizedBox(
-                height: MediaQuery.paddingOf(context).bottom + 20.h,
-              ),
+              SizedBox(height: MediaQuery.paddingOf(context).bottom + 20.h),
             ],
           ),
         );
@@ -658,14 +660,20 @@ class _BarberCard extends StatelessWidget {
               height: 44.r,
               fit: BoxFit.cover,
               placeholder: (_, _) => Container(
-                  width: 44.r, height: 44.r, color: colors.neutral200),
+                width: 44.r,
+                height: 44.r,
+                color: colors.neutral200,
+              ),
               errorWidget: (_, _, _) => Container(
                 width: 44.r,
                 height: 44.r,
                 color: colors.neutral200,
                 alignment: Alignment.center,
-                child: Icon(Icons.person_outline_rounded,
-                    color: colors.neutral400, size: 22.r),
+                child: Icon(
+                  Icons.person_outline_rounded,
+                  color: colors.neutral400,
+                  size: 22.r,
+                ),
               ),
             ),
           ),
@@ -686,8 +694,7 @@ class _BarberCard extends StatelessWidget {
                   SizedBox(height: 2.h),
                   Text(
                     barber.specialization,
-                    style: TextStyle(
-                        fontSize: 11.sp, color: colors.neutral500),
+                    style: TextStyle(fontSize: 11.sp, color: colors.neutral500),
                   ),
                 ],
               ],
@@ -701,8 +708,7 @@ class _BarberCard extends StatelessWidget {
                 color: splashOrange,
                 shape: BoxShape.circle,
               ),
-              child:
-                  Icon(Icons.check_rounded, size: 13.r, color: Colors.white),
+              child: Icon(Icons.check_rounded, size: 13.r, color: Colors.white),
             ),
         ],
       ),
@@ -722,7 +728,10 @@ class _BottomBar extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       padding: EdgeInsets.fromLTRB(
-        16.w, 12.h, 16.w, MediaQuery.paddingOf(context).bottom + 12.h,
+        16.w,
+        12.h,
+        16.w,
+        MediaQuery.paddingOf(context).bottom + 12.h,
       ),
       decoration: BoxDecoration(
         color: colors.neutral50,
