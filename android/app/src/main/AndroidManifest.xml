@@ -1,5 +1,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <application
@@ -38,6 +39,11 @@
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyA9qAuIoE8Si1fcagTUWFzfTv52HFIvfD8" />
+
+        <!-- Firebase Cloud Messaging Default Notification Channel -->
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_channel_id"
+            android:value="high_importance_channel" />
 
         <!-- Facebook SDK -->
         <meta-data

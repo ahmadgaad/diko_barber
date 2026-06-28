@@ -1,4 +1,5 @@
 import 'dart:developer' as dev;
+import 'dart:io';
 
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -127,6 +128,11 @@ class FirebaseMessagingService {
       dev.log('📱 Alert enabled: ${settings.alert}');
       dev.log('📱 Badge enabled: ${settings.badge}');
       dev.log('📱 Sound enabled: ${settings.sound}');
+
+      // On Android 13+, flutter_local_notifications also needs POST_NOTIFICATIONS
+      if (Platform.isAndroid) {
+        await LocalNotificationService.requestAndroidPermission();
+      }
 
       return isGranted;
     } on Exception catch (e) {

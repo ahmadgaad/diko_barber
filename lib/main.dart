@@ -62,7 +62,7 @@ void main() async {
   final mapsImpl = GoogleMapsFlutterPlatform.instance;
   if (mapsImpl is GoogleMapsFlutterAndroid) {
     try {
-      mapsImpl.initializeWithRenderer(AndroidMapRenderer.latest);
+      await mapsImpl.initializeWithRenderer(AndroidMapRenderer.latest);
     } catch (_) {}
   }
 
@@ -75,13 +75,9 @@ void main() async {
     FirebaseCrashlytics.instance.recordError(error, stack, fatal: true);
     return true;
   };
-  // Disable in debug so we don't pollute the Crashlytics dashboard
+
   await FirebaseCrashlytics.instance.setCrashlyticsCollectionEnabled(!kDebugMode);
-
-  // Register background message handler BEFORE initializing the service
   FirebaseMessaging.onBackgroundMessage(_backgroundMessageHandler);
-
-  // Initialize Push Notification Services
   await _initializeNotifications();
   await EasyLocalization.ensureInitialized();
   await initializeDateFormatting();

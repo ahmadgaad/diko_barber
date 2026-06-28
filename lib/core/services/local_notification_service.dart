@@ -21,8 +21,7 @@ class LocalNotificationService {
       'Channel for high priority push notifications';
   static const String _androidIcon = '@mipmap/ic_launcher';
 
-  static final FlutterLocalNotificationsPlugin _notificationsPlugin =
-      FlutterLocalNotificationsPlugin();
+  static final FlutterLocalNotificationsPlugin _notificationsPlugin = FlutterLocalNotificationsPlugin();
 
   static bool _isInitialized = false;
 
@@ -80,6 +79,12 @@ class LocalNotificationService {
       dev.log('Stack trace: $stackTrace');
       throw Exception('Failed to initialize local notifications: $e');
     }
+  }
+
+  /// Requests POST_NOTIFICATIONS permission on Android 13+.
+  static Future<void> requestAndroidPermission() async {
+    if (!Platform.isAndroid) return;
+    await _notificationsPlugin.resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>()?.requestNotificationsPermission();
   }
 
   /// Requests notification permissions for iOS devices.
@@ -155,10 +160,16 @@ class LocalNotificationService {
         return false;
       }
 
+      if (Platform.isAndroid && !await areNotificationsEnabled()) {
+        dev.log('⚠️ Notifications are disabled — cannot display notification');
+        return false;
+      }
+
       final notification = message.notification!;
       final id =
-          message.messageId?.hashCode ??
-          DateTime.now().millisecondsSinceEpoch ~/ 1000;
+          (message.messageId?.hashCode ??
+              DateTime.now().millisecondsSinceEpoch ~/ 1000)
+          .abs();
 
       dev.log('📬 Displaying notification: ${notification.title}');
 
@@ -166,6 +177,7 @@ class LocalNotificationService {
       final notificationDetails = _buildNotificationDetails(
         channelId: _channelId,
         channelName: _channelName,
+        body: notification.body ?? '',
       );
 
       // Show the notification
@@ -190,6 +202,7 @@ class LocalNotificationService {
   static NotificationDetails _buildNotificationDetails({
     required String channelId,
     required String channelName,
+    String body = '',
   }) {
     final androidDetails = AndroidNotificationDetails(
       channelId,
@@ -198,8 +211,7 @@ class LocalNotificationService {
       importance: Importance.max,
       priority: Priority.high,
       ticker: 'New notification',
-      styleInformation: const BigTextStyleInformation(''),
-      // Don't specify sound property to use default system sound
+      styleInformation: BigTextStyleInformation(body),
     );
 
     const iosDetails = DarwinNotificationDetails(
