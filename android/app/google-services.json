@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "531623715892",
+    "project_id": "ronaq-83025",
+    "storage_bucket": "ronaq-83025.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:531623715892:android:f9d72028c6d11d207f1661",
+        "android_client_info": {
+          "package_name": "com.example.ronaq_barber"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB2mJp3wUmdmzU-Dv3NUxU0BUd5uNDkUio"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

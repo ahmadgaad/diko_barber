@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:zain/core/router/app_routes.dart';
+import 'package:zain/core/services/firebase_messaging_service.dart';
 import 'package:pinput/pinput.dart';
 import 'package:zain/core/theme/app_colors.dart';
 import 'package:zain/core/utils/arabic_digits_formatter.dart';
@@ -18,8 +19,10 @@ class VerifyOtpView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocListener<VerifyOtpCubit, VerifyOtpState>(
-      listener: (context, state) {
+      listener: (context, state) async {
         if (state is VerifyOtpSuccess) {
+          await FirebaseMessagingService.requestPermission();
+          if (!context.mounted) return;
           context.go(AppRoutes.home);
         }
       },

@@ -1,10 +1,12 @@
 import 'package:easy_localization/easy_localization.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:zain/core/di/service_locator.dart';
 import 'package:zain/core/router/app_routes.dart';
+import 'package:zain/core/services/firebase_messaging_service.dart';
 import 'package:zain/core/services/user_session.dart';
 import 'package:zain/core/theme/app_colors.dart';
 import 'package:zain/core/widgets/app_divider_with_text.dart';
@@ -48,11 +50,16 @@ class _SignInViewState extends State<SignInView> {
         }
         return true;
       },
-      listener: (context, state) {
+      listener: (context, state) async {
         switch (state) {
           case SignInNavigate(:final target):
             context.push(target);
           case SignInSuccess():
+            final status = await FirebaseMessagingService.getAuthorizationStatus();
+            if (status == AuthorizationStatus.notDetermined) {
+              await FirebaseMessagingService.requestPermission();
+            }
+            if (!context.mounted) return;
             context.go(AppRoutes.home);
           case SignInNeedsVerification(:final contact):
             context.push(AppRoutes.verifyOtp, extra: contact);

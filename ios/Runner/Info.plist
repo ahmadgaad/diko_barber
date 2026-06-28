@@ -67,6 +67,8 @@
 			</array>
 		</dict>
 	</dict>
+	<key>NSUserNotificationsUsageDescription</key>
+	<string>نريد إرسال إشعارات لتذكيرك بمواعيدك وأحدث العروض</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>نحتاج إلى موقعك لعرض أقرب الصالونات إليك</string>
 	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
