@@ -15,11 +15,13 @@ class AuthRepositoryImpl implements AuthRepository {
   Future<Result<ApiErrorModel, AuthResponse>> signIn({
     required String email,
     required String password,
+    String? fcmToken,
   }) async {
     try {
       final response = await _remoteDataSource.signIn(
         login: email,
         password: password,
+        fcmToken: fcmToken,
       );
 
       if (response.isError || response.data == null) {

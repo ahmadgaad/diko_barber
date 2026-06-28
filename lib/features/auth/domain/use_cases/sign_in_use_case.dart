@@ -12,5 +12,6 @@ class SignInUseCase {
   Future<Result<ApiErrorModel, AuthResponse>> call({
     required String email,
     required String password,
-  }) => _repository.signIn(email: email, password: password);
+    String? fcmToken,
+  }) => _repository.signIn(email: email, password: password, fcmToken: fcmToken);
 }

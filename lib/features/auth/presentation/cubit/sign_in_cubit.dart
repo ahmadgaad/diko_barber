@@ -5,6 +5,7 @@ import 'package:zain/core/cache/secure_storage_cache_client.dart';
 import 'package:zain/core/cache/shared_pref_cache_client.dart';
 import 'package:zain/core/networking/result.dart';
 import 'package:zain/core/router/app_routes.dart';
+import 'package:zain/core/services/firebase_messaging_service.dart';
 import 'package:zain/features/auth/domain/use_cases/sign_in_use_case.dart';
 import 'package:zain/features/auth/domain/use_cases/social_login_use_case.dart';
 
@@ -65,9 +66,11 @@ class SignInCubit extends Cubit<SignInState> {
 
     emit(_formState.copyWith(isSubmitting: true, apiError: () => null));
 
+    final fcmToken = await FirebaseMessagingService.getFcmToken();
     final result = await _signInUseCase(
       email: _formState.email,
       password: _formState.password,
+      fcmToken: fcmToken,
     );
 
     switch (result) {
@@ -108,10 +111,12 @@ class SignInCubit extends Cubit<SignInState> {
     }
 
     final accessToken = loginResult.accessToken!.tokenString;
+    final fcmToken = await FirebaseMessagingService.getFcmToken();
 
     final result = await _socialLoginUseCase(
       provider: 'facebook',
       accessToken: accessToken,
+      fcmToken: fcmToken,
     );
 
     switch (result) {

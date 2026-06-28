@@ -4,6 +4,7 @@ import 'package:zain/core/cache/cache_keys.dart';
 import 'package:zain/core/cache/secure_storage_cache_client.dart';
 import 'package:zain/core/networking/result.dart';
 import 'package:zain/core/router/app_routes.dart';
+import 'package:zain/core/services/firebase_messaging_service.dart';
 import 'package:zain/core/services/location_service.dart';
 import 'package:zain/core/shared/domain/entities/city.dart';
 import 'package:zain/core/shared/domain/entities/neighborhood.dart';
@@ -192,10 +193,12 @@ class SignUpCubit extends Cubit<SignUpState> {
     }
 
     final accessToken = loginResult.accessToken!.tokenString;
+    final fcmToken = await FirebaseMessagingService.getFcmToken();
 
     final result = await _socialLoginUseCase(
       provider: 'facebook',
       accessToken: accessToken,
+      fcmToken: fcmToken,
     );
 
     switch (result) {
@@ -240,6 +243,8 @@ class SignUpCubit extends Cubit<SignUpState> {
     }
     address ??= _buildLocationFallback();
 
+    final fcmToken = await FirebaseMessagingService.getFcmToken();
+
     final params = SignUpParams(
       name: _formState.name,
       phone: _formState.phone.isNotEmpty ? _formState.phone : null,
@@ -254,6 +259,7 @@ class SignUpCubit extends Cubit<SignUpState> {
       lat: position?.latitude,
       lng: position?.longitude,
       location: address,
+      fcmToken: fcmToken,
     );
 
     final result = await _signUpUseCase(params);

@@ -8,6 +8,7 @@ abstract class AuthRepository {
   Future<Result<ApiErrorModel, AuthResponse>> signIn({
     required String email,
     required String password,
+    String? fcmToken,
   });
 
   Future<Result<ApiErrorModel, AuthResponse>> signUp(SignUpParams params);
