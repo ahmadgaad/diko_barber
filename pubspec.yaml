@@ -13,6 +13,7 @@ dependencies:
   easy_localization: ^3.0.8
   equatable: ^2.0.8
   firebase_core: ^4.11.0
+  firebase_crashlytics: ^5.2.4
   firebase_messaging: ^16.4.1
   flutter:
     sdk: flutter

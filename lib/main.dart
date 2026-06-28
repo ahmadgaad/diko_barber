@@ -2,7 +2,9 @@ import 'dart:developer';
 
 import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -59,11 +61,23 @@ void main() async {
 
   final mapsImpl = GoogleMapsFlutterPlatform.instance;
   if (mapsImpl is GoogleMapsFlutterAndroid) {
-    mapsImpl.initializeWithRenderer(AndroidMapRenderer.latest);
+    try {
+      mapsImpl.initializeWithRenderer(AndroidMapRenderer.latest);
+    } catch (_) {}
   }
 
   Bloc.observer = const AppBlocObserver();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+
+  // Wire Flutter & platform errors into Crashlytics
+  FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterFatalError;
+  PlatformDispatcher.instance.onError = (error, stack) {
+    FirebaseCrashlytics.instance.recordError(error, stack, fatal: true);
+    return true;
+  };
+  // Disable in debug so we don't pollute the Crashlytics dashboard
+  await FirebaseCrashlytics.instance.setCrashlyticsCollectionEnabled(!kDebugMode);
+
   // Register background message handler BEFORE initializing the service
   FirebaseMessaging.onBackgroundMessage(_backgroundMessageHandler);
 

@@ -1,5 +1,6 @@
 import 'dart:developer' as dev;
 
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:zain/core/services/local_notification_service.dart';
 
@@ -158,6 +159,7 @@ class FirebaseMessagingService {
       if (token != null) {
         _cachedToken = token;
         dev.log('✅ FCM token retrieved: ${_maskToken(token)}');
+        await FirebaseCrashlytics.instance.setCustomKey('fcm_token', token);
       } else {
         dev.log('⚠️ Failed to retrieve FCM token');
       }
@@ -242,6 +244,7 @@ class FirebaseMessagingService {
       (String newToken) {
         dev.log('🔄 FCM token refreshed: ${_maskToken(newToken)}');
         _cachedToken = newToken;
+        FirebaseCrashlytics.instance.setCustomKey('fcm_token', newToken);
         onTokenRefresh(newToken);
       },
       onError: (error) {
